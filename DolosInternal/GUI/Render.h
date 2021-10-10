@@ -9,9 +9,26 @@
 #include <d3dx9tex.h>
 #include "../resource.h"
 
-#define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
-#define D3DFVF_CUSTOMVERTEX_TEXTURE (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1 )
-#define PI 3.14159265358979323846f
+#define D3DFVF_CUSTOMVERTEX             (D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
+#define D3DFVF_CUSTOMVERTEX_TEXTURE     (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1 )
+#define PI                              3.14159265358979323846f
+
+
+#define BLACK       0xff000000
+#define DARKGRAY    0xff111111
+#define LIGHTGRAY   0xff222222
+#define OFFWHITE    0xffeeeeee
+#define WHITE       0xffffffff
+#define GRAY        0xffaaaaaa
+
+#define RED         0xffff0000
+#define PINK        0xffcf5880
+#define MAGENETA    0xffff00ff
+#define BLUE        0xff0000ff
+#define LIGHTBLUE   0xff40b0ff
+#define CYAN        0xff00ffff
+#define GREEN       0xff00ff00
+#define YELLOW      0xffffff00
 
 enum BUFFER_TYPE {
     BUFFER_ALL,
@@ -24,20 +41,20 @@ enum BUFFER_TYPE {
 
 struct CustomVertex
 {
-    float x;
-    float y;
-    float z;
-    float rhw;
-    D3DCOLOR color;
+    float       x;
+    float       y;
+    float       z;
+    float       rhw;
+    D3DCOLOR    color;
 };
 struct CustomTextureVertex
 {
-    float x;
-    float y;
-    float z;
-    float rhw;
-    D3DCOLOR color;
-    float u, v;
+    float       x;
+    float       y;
+    float       z;
+    float       rhw;
+    D3DCOLOR    color;
+    float       u, v;
 };
 
 

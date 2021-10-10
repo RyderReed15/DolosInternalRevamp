@@ -11,6 +11,6 @@
 #include "GUI/FontManager.h"
 #include "GUI/GUI.h"
 
-bool InitializeCheat(HMODULE hMod);
-
+bool InitializeCheat    (HMODULE hMod);
+bool UninitializeCheat  (HMODULE hMod);
 #endif

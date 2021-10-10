@@ -23,6 +23,7 @@
     <ClCompile Include="GUI\FontManager.cpp" />
     <ClCompile Include="GUI\GUI.cpp" />
     <ClCompile Include="GUI\Render.cpp" />
+    <ClCompile Include="GUI\Widgets\CGUIElement.cpp" />
     <ClCompile Include="Hooks.cpp" />
     <ClCompile Include="Initializer.cpp" />
     <ClCompile Include="SDK\Math\Vector2D.cpp" />
@@ -48,6 +49,7 @@
     <ClInclude Include="GUI\FontManager.h" />
     <ClInclude Include="GUI\GUI.h" />
     <ClInclude Include="GUI\Render.h" />
+    <ClInclude Include="GUI\Widgets\IGUIElement.h" />
     <ClInclude Include="Hooks.h" />
     <ClInclude Include="Initializer.h" />
     <ClInclude Include="resource.h" />

@@ -41,6 +41,9 @@
     <Filter Include="GUI\Widgets">
       <UniqueIdentifier>{b3eb316f-716b-41d6-bf63-294ddc7cfc35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI\Widgets\Headers">
+      <UniqueIdentifier>{d10f57b8-f548-4ef9-90c4-b832c7473c64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -81,6 +84,9 @@
     </ClCompile>
     <ClCompile Include="SDK\Math\VMatrix.cpp">
       <Filter>SDK\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Widgets\CGUIElement.cpp">
+      <Filter>GUI\Widgets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -248,6 +254,9 @@
     </ClInclude>
     <ClInclude Include="SDK\Interfaces\IClientMode.h">
       <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Widgets\IGUIElement.h">
+      <Filter>GUI\Widgets\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

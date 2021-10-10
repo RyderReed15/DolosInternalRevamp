@@ -24,6 +24,7 @@ bool InitializeCheat(HMODULE hMod) {
 		return false;
 	}
 
+
 	if (!InitializeFonts(hMod)) {
 
 		UninitializeHooks();
@@ -39,5 +40,25 @@ bool InitializeCheat(HMODULE hMod) {
 	}
 	
 	
+	return true;
+}
+
+bool UnitializeCheat(HMODULE hMod) {
+	if (!UninitializeHooks()) {
+		FreeLibraryAndExitThread(hMod, 0);
+		return false;
+	}
+
+	if (!UninitializeHooks()) {
+		FreeLibraryAndExitThread(hMod, 0);
+		return false;
+	}
+
+	if (!UninitializeFonts()) {
+		FreeLibraryAndExitThread(hMod, 0);
+		return false;
+	}
+
+	FreeLibraryAndExitThread(hMod, 0);
 	return true;
 }

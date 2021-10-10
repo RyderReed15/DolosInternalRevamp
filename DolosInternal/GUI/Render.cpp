@@ -2,23 +2,23 @@
 
 
 Render::Render() {
-	m_pTriIndex = nullptr;
-	m_pTriVertex = nullptr;
-	m_pLineIndex = nullptr;
-	m_pLineVertex = nullptr;
-	m_pDevice = nullptr;
-	m_iMaxVertices = 0;
-	m_iLineCount = m_iTriangleCount = 0;
-	m_iLineIndices = m_iTriangleIndices = 0;
-	m_iLineVertices = m_iTriangleVertices = 0;
-	m_pLineVertexBuffer = nullptr;
-	m_pLineIndexBuffer = nullptr;
-	m_pTriVertexBuffer = nullptr;
-	m_pTriIndexBuffer = nullptr;
+	m_pTriIndex		= nullptr;
+	m_pTriVertex	= nullptr;
+	m_pLineIndex	= nullptr;
+	m_pLineVertex	= nullptr;
+	m_pDevice		= nullptr;
+	m_iMaxVertices	= 0;
+	m_iLineCount		= m_iTriangleCount			= 0;
+	m_iLineIndices		= m_iTriangleIndices		= 0;
+	m_iLineVertices		= m_iTriangleVertices		= 0;
+	m_pLineVertexBuffer		= nullptr;
+	m_pLineIndexBuffer		= nullptr;
+	m_pTriVertexBuffer		= nullptr;
+	m_pTriIndexBuffer		= nullptr;
 }
 Render::Render(IDirect3DDevice9* pDevice, HMODULE hMod) {
 	Initialize(pDevice, hMod);
-}
+} 
 
 IDirect3DDevice9* Render::GetDevice() {
 	return m_pDevice;
@@ -28,31 +28,31 @@ void Render::Initialize(IDirect3DDevice9* pDevice, HMODULE hMod) {
 	D3DXCreateTextureFromResource(pDevice, hMod, MAKEINTRESOURCE(ICON_ATLAS), &m_pTextureAtlas);
 	D3DXCreateSprite(pDevice, &m_pSprite);
 
-	m_pTriIndex = nullptr;
-	m_pTriVertex = nullptr;
-	m_pLineIndex = nullptr;
-	m_pLineVertex = nullptr;
-	m_pDevice = pDevice;
+	m_pTriIndex		= nullptr;
+	m_pTriVertex	= nullptr;
+	m_pLineIndex	= nullptr;
+	m_pLineVertex	= nullptr;
+	m_pDevice		= pDevice;
 
-	m_iMaxVertices = MAXSHORT;
-	m_iLineIndices = m_iTriangleIndices = 0;
-	m_iLineCount = m_iTriangleCount = 0;
-	m_iLineVertices = m_iTriangleVertices = 0;
+	m_iMaxVertices	= MAXSHORT;
+	m_iLineIndices	= m_iTriangleIndices	= 0;
+	m_iLineCount	= m_iTriangleCount		= 0;
+	m_iLineVertices = m_iTriangleVertices	= 0;
 
-	m_pDevice->CreateVertexBuffer(m_iMaxVertices * sizeof(CustomVertex), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &m_pLineVertexBuffer, NULL);
-	m_pDevice->CreateIndexBuffer(m_iMaxVertices * 2 * sizeof(int), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX32, D3DPOOL_DEFAULT, &m_pLineIndexBuffer, NULL);
-	m_pDevice->CreateVertexBuffer(m_iMaxVertices * sizeof(CustomVertex), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &m_pTriVertexBuffer, NULL);
-	m_pDevice->CreateIndexBuffer(m_iMaxVertices * 2 * sizeof(int), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX32, D3DPOOL_DEFAULT, &m_pTriIndexBuffer, NULL);
+	m_pDevice->CreateVertexBuffer	(m_iMaxVertices * sizeof(CustomVertex), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &m_pLineVertexBuffer, NULL);
+	m_pDevice->CreateIndexBuffer	(m_iMaxVertices * 2 * sizeof(int), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX32, D3DPOOL_DEFAULT, &m_pLineIndexBuffer, NULL);
+	m_pDevice->CreateVertexBuffer	(m_iMaxVertices * sizeof(CustomVertex), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &m_pTriVertexBuffer, NULL);
+	m_pDevice->CreateIndexBuffer	(m_iMaxVertices * 2 * sizeof(int), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX32, D3DPOOL_DEFAULT, &m_pTriIndexBuffer, NULL);
 }
 
 Render::~Render() {
 	Release();
 
-	m_pDevice = nullptr;
-	m_iMaxVertices = 0;
-	m_iLineIndices = m_iTriangleIndices = 0;
-	m_iLineCount = m_iTriangleCount = 0;
-	m_iLineVertices = m_iTriangleVertices = 0;
+	m_pDevice		= nullptr;
+	m_iMaxVertices	= 0;
+	m_iLineIndices	= m_iTriangleIndices	= 0;
+	m_iLineCount	= m_iTriangleCount		= 0;
+	m_iLineVertices = m_iTriangleVertices	= 0;
 }
 
 void Render::Release() {
@@ -122,7 +122,7 @@ void Render::End(BUFFER_TYPE tBufferType) {
 
 		m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX);
 
-		//m_pDevice->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
+		
 		switch (tBufferType) {
 		case BUFFER_ALL:
 			m_pLineVertexBuffer->Unlock();
