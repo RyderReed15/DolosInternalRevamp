@@ -61,6 +61,8 @@ inline IVEngineClient*			g_pEngineClient;
 inline IVModelInfoClient*		g_pModelInfo;
 inline IVModelRender*			g_pModelRender;
 
+inline void*					g_pClientMode;
+
 
 typedef void* (__cdecl* fnCreateInterface)(const char* szName, int* pReturnCode);
 
