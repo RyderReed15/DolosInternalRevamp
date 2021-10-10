@@ -1,7 +1,16 @@
 #include "IGUIElement.h"
 
 
+IGUIElement::IGUIElement(D3DXVECTOR4 vBounds, IGUIElement* pParent) {
+	m_vBounds = vBounds;
 
+	if (pParent) {
+		pParent->AddChild(this);
+		D3DXVECTOR2 vCoords = pParent->GetCoords();
+		m_vBounds.x += vCoords.x;
+		m_vBounds.y += vCoords.y;
+	}
+}
 
 bool IGUIElement::OnClick(D3DXVECTOR2 vLocation) {
 	if (CheckBounds(vLocation)) {
@@ -28,8 +37,23 @@ bool IGUIElement::OnHover(D3DXVECTOR2 vLocation) {
 	return false;
 }
 
+void IGUIElement::SetAnimStartTick(void) {
+	m_iAnimStartTick = GetTickCount();
+}
+float IGUIElement::GetAnimLerp(float flAnimLength) {
+	if (m_iAnimStartTick == 0) {
+		return 1;
+	}
+	float flAnimLerp = ((GetTickCount() - m_iAnimStartTick) / 1000.f) / flAnimLength;
+	if (flAnimLength > 1) {
+		m_iAnimStartTick = 0;
+		return 1;
+	}
+	return flAnimLerp;
+}
 
 void IGUIElement::SetDrawState(bool bDrawState) {
+
 	m_bShouldDraw = bDrawState;
 }
 bool IGUIElement::GetDrawState(void) {

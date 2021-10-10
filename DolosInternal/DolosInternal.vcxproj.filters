@@ -88,6 +88,9 @@
     <ClCompile Include="GUI\Widgets\CGUIElement.cpp">
       <Filter>GUI\Widgets</Filter>
     </ClCompile>
+    <ClCompile Include="GUI\Widgets\Panel.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Initializer.h">
@@ -256,6 +259,9 @@
       <Filter>SDK\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Widgets\IGUIElement.h">
+      <Filter>GUI\Widgets\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Widgets\Panel.h">
       <Filter>GUI\Widgets\Headers</Filter>
     </ClInclude>
   </ItemGroup>

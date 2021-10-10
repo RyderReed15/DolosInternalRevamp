@@ -240,6 +240,39 @@ void Render::AddTriangle(unsigned int iVertexPosOne, unsigned int iVertexPosTwo,
 	m_iTriangleCount++;
 }
 
+D3DCOLOR Render::LerpColor(D3DCOLOR cColorOne, D3DCOLOR cColorTwo, float flPercent) {
+	if (flPercent <= 0) {
+		return cColorOne;
+	}
+	if (flPercent >= 1) {
+		return cColorTwo;
+	}
+
+	byte a1 = (cColorOne >> 24);
+	byte a2 = (cColorOne >> 24);
+	byte r1 = (cColorOne >> 16);
+	byte r2 = (cColorOne >> 16);
+	byte g1 = (cColorOne >> 8);
+	byte g2 = (cColorOne >> 8);
+	byte b1 = (cColorOne);
+	byte b2 = (cColorOne);
+	return (int)((a2 - a1) * flPercent + a1) << 24 |
+		(int)((r2 - r1) * flPercent + r1) << 16 |
+		(int)((g2 - g1) * flPercent + g1) << 8 |
+		(int)((b2 - b1) * flPercent + b1);
+
+}
+D3DCOLOR Render::LerpAlpha(D3DCOLOR cColor, float flPercent, bool bToZero) {
+	if (flPercent >= 1) {
+		return bToZero ? EMPTY : cColor;
+	}
+	if (bToZero) {
+		return (cColor & 0x00FFFFFF) + (1 - flPercent) * 0xFF000000;
+	}
+	return (cColor & 0x00FFFFFF) + flPercent * 0xFF000000;
+}
+
+
 HRESULT Render::DrawSprite(D3DXVECTOR4 vRect, D3DXVECTOR2 vLocation, D3DCOLOR cColor, float flScale, float flRotation) {
 	RECT rRect = { vRect.x, vRect.y, vRect.z + vRect.x, vRect.w + vRect.y };
 	D3DXMATRIX mMatrix, mOldMatrix;
