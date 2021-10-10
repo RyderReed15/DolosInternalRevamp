@@ -45,23 +45,23 @@
 #include "Interfaces/IVModelRender.h"
 
 
-inline IClientEntity*			g_pLocalPlayer;
+inline IClientEntity*               g_pLocalPlayer;
 
-inline CGlobalVarsBase*			g_pGlobalVars;
-inline IBaseClientDLL*			g_pBaseClient;
-inline IClientEntityList*		g_pClientEntityList;
-inline IClientMode*				g_pClientMode;
-inline ICVar*					g_pCVar;
-inline IEngineTrace*			g_pEngineTrace;
-inline IGameEventManager*		g_pEventManager;
-inline IGameMovement*			g_pGameMovement;
-inline IMaterialSystem*			g_pMaterialSystem;
-inline IMDLCache*				g_pMDLCache;
-inline IMoveHelper*				g_pMoveHelper;
-inline IPrediction*				g_pPrediction;
-inline IVEngineClient*			g_pEngineClient;
-inline IVModelInfoClient*		g_pModelInfo;
-inline IVModelRender*			g_pModelRender;
+inline CGlobalVarsBase*             g_pGlobalVars;
+inline IBaseClientDLL*              g_pBaseClient;
+inline IClientEntityList*           g_pClientEntityList;
+inline IClientMode*                 g_pClientMode;
+inline ICVar*                       g_pCVar;
+inline IEngineTrace*                g_pEngineTrace;
+inline IGameEventManager*           g_pEventManager;
+inline IGameMovement*               g_pGameMovement;
+inline IMaterialSystem*             g_pMaterialSystem;
+inline IMDLCache*                   g_pMDLCache;
+inline IMoveHelper*                 g_pMoveHelper;
+inline IPrediction*                 g_pPrediction;
+inline IVEngineClient*              g_pEngineClient;
+inline IVModelInfoClient*           g_pModelInfo;
+inline IVModelRender*               g_pModelRender;
 
 
 
@@ -69,8 +69,8 @@ inline IVModelRender*			g_pModelRender;
 typedef void* (__cdecl* fnCreateInterface)(const char* szName, int* pReturnCode);
 
 
-fnCreateInterface	GetFactory		(const char* szDLLName);
-void*				GetInterface	(fnCreateInterface pFactory, const char* szInterface);
-bool				InitializeSDK	(void);
+fnCreateInterface    GetFactory         (const char* szDLLName);
+void*                GetInterface       (fnCreateInterface pFactory, const char* szInterface);
+bool                 InitializeSDK      (void);
 
 #endif
