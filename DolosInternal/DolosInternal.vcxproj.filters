@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{b0ba3439-3e6b-47a5-91dd-bfc15a9fdf20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK">
+      <UniqueIdentifier>{e9505ae8-c701-4ff9-8bf4-2af83ff4fc2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Features">
+      <UniqueIdentifier>{1ad27dfc-2538-4349-96d2-677fc90c84f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{606dee2c-4e12-4449-ae44-ebd0f44c22cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{b6135f9e-3eeb-4f7c-96b4-27037192b9a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Headers">
+      <UniqueIdentifier>{5dab60f0-cadf-4d52-8a5e-5d4695e9ce4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\Headers">
+      <UniqueIdentifier>{a5b946f9-4b76-466d-8a58-fd9d251afd80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Interfaces">
+      <UniqueIdentifier>{6c0da7e0-9227-4c8e-9e14-7edb55a8eea5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Math">
+      <UniqueIdentifier>{a46d994a-3f6e-470d-b6fb-c8c7c5f3caff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{fe1ebbfe-f68c-49f1-aa51-f4d9c21b1cb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Features\Headers">
+      <UniqueIdentifier>{22dbfc4a-4009-4e9b-a093-0fc355eda38e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Widgets">
+      <UniqueIdentifier>{b3eb316f-716b-41d6-bf63-294ddc7cfc35}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Initializer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\NetvarManager.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="SDK\SDK.cpp">
+      <Filter>SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\PatternScanner.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\HookManager.cpp">
+      <Filter>Utils\Headers</Filter>
+    </ClCompile>
+    <ClCompile Include="Hooks.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\GUI.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Render.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\FontManager.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="SDK\Math\Vector2D.cpp">
+      <Filter>SDK\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SDK\Math\Vector4D.cpp">
+      <Filter>SDK\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SDK\Math\VMatrix.cpp">
+      <Filter>SDK\Math</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Initializer.h">
+      <Filter>Source\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Macros.h">
+      <Filter>Utils\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\NetvarManager.h">
+      <Filter>Utils\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\SDK.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\PatternScanner.h">
+      <Filter>Utils\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\SkinChanger.h">
+      <Filter>Features\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Backtrack.h">
+      <Filter>Features\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Misc.h">
+      <Filter>Features\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Triggerbot.h">
+      <Filter>Features\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Aimbot.h">
+      <Filter>Features\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Chams.h">
+      <Filter>Features\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\ESP.h">
+      <Filter>Features\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\EnginePrediction.h">
+      <Filter>Features\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\RecoilControl.h">
+      <Filter>Features\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\AntiAim.h">
+      <Filter>Features\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Bhop.h">
+      <Filter>Features\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\HookManager.h">
+      <Filter>Utils\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Hooks.h">
+      <Filter>Source\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUI.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Render.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\FontManager.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Math\QAngle.h">
+      <Filter>SDK\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Math\Vector.h">
+      <Filter>SDK\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Math\Vector2D.h">
+      <Filter>SDK\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Math\Vector4D.h">
+      <Filter>SDK\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Math\VMatrix.h">
+      <Filter>SDK\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IClientEntity.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IClientUnknown.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IClientNetworkable.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IClientRenderable.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IClientThinkable.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IHandleEntity.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\CBaseCombatWeapon.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IClientEntityList.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\ICollideable.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IBaseClientDLL.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\CGlobalVars.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IVModelRender.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IMaterialSystem.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IAppSystem.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Studio.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IVModelInfoClient.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IEngineTrace.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IPrediction.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IMoveHelper.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IVEngineClient.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\INetChannelInfo.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IMDLCache.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IGameMovement.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IPanel.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IConVar.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IGameEventListener.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Math\UtlVector.h">
+      <Filter>SDK\Math</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\TextureAtlas.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Resources\AvenirLTProBlack.otf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="Resources\csgo_icons.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="Resources\csgo_icons_outline.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resources\Netvar.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
