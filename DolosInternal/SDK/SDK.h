@@ -23,6 +23,7 @@
 #include "Interfaces/IBaseClientDLL.h"
 #include "Interfaces/IClientEntity.h"
 #include "Interfaces/IClientEntityList.h"
+#include "Interfaces/IClientMode.h"
 #include "Interfaces/IClientNetworkable.h"
 #include "Interfaces/IClientRenderable.h"
 #include "Interfaces/IClientThinkable.h"
@@ -49,6 +50,7 @@ inline IClientEntity*			g_pLocalPlayer;
 inline CGlobalVarsBase*			g_pGlobalVars;
 inline IBaseClientDLL*			g_pBaseClient;
 inline IClientEntityList*		g_pClientEntityList;
+inline IClientMode*				g_pClientMode;
 inline ICVar*					g_pCVar;
 inline IEngineTrace*			g_pEngineTrace;
 inline IGameEventManager*		g_pEventManager;
@@ -61,7 +63,7 @@ inline IVEngineClient*			g_pEngineClient;
 inline IVModelInfoClient*		g_pModelInfo;
 inline IVModelRender*			g_pModelRender;
 
-inline void*					g_pClientMode;
+
 
 
 typedef void* (__cdecl* fnCreateInterface)(const char* szName, int* pReturnCode);

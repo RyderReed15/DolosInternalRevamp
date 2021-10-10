@@ -57,6 +57,7 @@
     <ClInclude Include="SDK\Interfaces\IBaseClientDLL.h" />
     <ClInclude Include="SDK\Interfaces\IClientEntity.h" />
     <ClInclude Include="SDK\Interfaces\IClientEntityList.h" />
+    <ClInclude Include="SDK\Interfaces\IClientMode.h" />
     <ClInclude Include="SDK\Interfaces\IClientNetworkable.h" />
     <ClInclude Include="SDK\Interfaces\IClientRenderable.h" />
     <ClInclude Include="SDK\Interfaces\IClientThinkable.h" />

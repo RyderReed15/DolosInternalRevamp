@@ -31,7 +31,7 @@ bool InitializeSDK() {
 
     if (g_pBaseClient) {
 
-        g_pClientMode       = **(void***)               ((*(uintptr_t**)g_pBaseClient)[10] + 5);
+        g_pClientMode       = **(IClientMode***)        ((*(uintptr_t**)g_pBaseClient)[10] + 5);
         g_pGlobalVars       = **(CGlobalVarsBase***)    ((*(uintptr_t**)g_pBaseClient)[11] + 10);
         g_pMoveHelper       = **(IMoveHelper***)        ((*(uintptr_t**)g_pGameMovement)[31] + 0x2df);
        
