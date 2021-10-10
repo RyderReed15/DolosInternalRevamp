@@ -7,9 +7,9 @@
 #include <winnt.h>
 #include <Psapi.h>
 
-char*	ResolveOffsets	(char* pAddress, int iOffsets[], int iOffsetsSize);
-bool	ParsePattern	(const char* szInPattern, char szOutPattern[64], char szOutMask[64]);
-char*	FindPattern		(void* pDLLBase, const char* szPattern, bool bRelative = false, int aOffsets[] = { 0 }, int iOffsetsSize = 0);
+char*   ResolveOffsets  (char* pAddress, int iOffsets[], int iOffsetsSize);
+bool    ParsePattern    (const char* szInPattern, char szOutPattern[64], char szOutMask[64]);
+char*   FindPattern     (void* pDLLBase, const char* szPattern, bool bRelative = false, int aOffsets[] = { 0 }, int iOffsetsSize = 0);
 
 
 
