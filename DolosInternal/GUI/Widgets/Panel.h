@@ -8,13 +8,15 @@
 class Panel : public IGUIElement {
 public:
             Panel       (D3DXVECTOR4 vBounds, bool bMoveable, D3DCOLOR cColor, D3DCOLOR cColor2 = EMPTY, IGUIElement * pParent = nullptr);
+
     HRESULT Draw        (ID3DXFont* pFont, Render* pRender);
-    bool    OnClick     (D3DXVECTOR2 vLocation);
-    bool    OnDrag      (D3DXVECTOR2 vLocation);
-    bool    OnRelease   (D3DXVECTOR2 vLocation);
+
+    bool    OnClick     (POINT pLocation);
+    bool    OnDrag      (POINT pLocation);
+    bool    OnRelease   (POINT pLocation);
 private:
     D3DCOLOR    m_cColor1, m_cColor2;
-    D3DXVECTOR2 m_vMoveOrigin;
+    POINT       m_pMoveOrigin;
     bool        m_bMoving;
     bool        m_bCanMove;
 };

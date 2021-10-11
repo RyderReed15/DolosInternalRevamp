@@ -91,6 +91,18 @@
     <ClCompile Include="GUI\Widgets\Panel.cpp">
       <Filter>GUI\Widgets</Filter>
     </ClCompile>
+    <ClCompile Include="GUI\Widgets\Button.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Widgets\Slider.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\GUIEventHandler.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\GUIContainer.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Initializer.h">
@@ -263,6 +275,18 @@
     </ClInclude>
     <ClInclude Include="GUI\Widgets\Panel.h">
       <Filter>GUI\Widgets\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Widgets\Button.h">
+      <Filter>GUI\Widgets\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Widgets\Slider.h">
+      <Filter>GUI\Widgets\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUIEventHandler.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUIContainer.h">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -338,3 +338,7 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/DolosInternal/GUI/GUIEventHandler.h
+/DolosInternal/GUI/GUIEventHandler.cpp
+/DolosInternal/GUI/GUIContainer.h
+/DolosInternal/GUI/GUIContainer.cpp

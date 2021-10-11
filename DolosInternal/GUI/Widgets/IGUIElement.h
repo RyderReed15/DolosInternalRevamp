@@ -14,10 +14,10 @@ public:
 
 	virtual HRESULT Draw			(ID3DXFont* pFont, Render* pRender) = 0;
 
-	virtual bool	OnClick			(D3DXVECTOR2 vLocation);
-	virtual bool	OnDrag			(D3DXVECTOR2 vLocation);
-	virtual bool	OnRelease		(D3DXVECTOR2 vLocation);
-	virtual bool	OnHover			(D3DXVECTOR2 vLocation);
+	virtual bool	OnClick			(POINT pLocation);
+	virtual bool	OnDrag			(POINT pLocation);
+	virtual bool	OnRelease		(POINT pLocation);
+	virtual bool	OnHover			(POINT pLocation);
 
 	void			SetAnimStartTick(void);
 	float			GetAnimLerp		(float flAnimLength);
@@ -27,8 +27,9 @@ public:
 	bool			GetEnabled		(void);
 
 	D3DXVECTOR2		GetCoords		(void);
-	bool			CheckBounds		(D3DXVECTOR2 vLocation);
-	void			MoveDelta		(D3DXVECTOR2 vLocation);
+	D3DXVECTOR4		GetBounds		(void);
+	bool			CheckBounds		(POINT pLocation);
+	void			MoveDelta		(POINT pLocation);
 
 	void			AddChild		(IGUIElement* pElement);
 	IGUIElement*	GetFirstChild	(void);
