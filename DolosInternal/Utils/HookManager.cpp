@@ -1,5 +1,9 @@
 #include "HookManager.h"
 
+#include <Windows.h>
+#include <stdlib.h>
+#include <winnt.h>
+#include <Psapi.h>
 
 VMTManager::VMTManager() {
 	m_iSize = 0;
@@ -10,15 +14,14 @@ VMTManager::VMTManager() {
 VMTManager::VMTManager(void*** pVMT) {
 	m_iSize = GetTableSize(*pVMT);
 	m_pOldTable = new void* [m_iSize];
-
-
 	DWORD old;
-	VirtualProtect(pVMT, m_iSize * 4, PAGE_EXECUTE_READWRITE, &old);
+	VirtualProtect(pVMT, m_iSize * sizeof(void*), PAGE_EXECUTE_READWRITE, &old);
 
-	memcpy(m_pOldTable, *pVMT, m_iSize * 4);
+	memcpy(m_pOldTable, *pVMT, m_iSize * sizeof(void*));
+	
 	m_pTable = *pVMT;
 
-	VirtualProtect(pVMT, m_iSize * 4, old, &old);
+	VirtualProtect(pVMT, m_iSize * sizeof(void*), old, &old);
 
 }
 
@@ -28,7 +31,10 @@ VMTManager::~VMTManager() {
 			std::cout << "Failed to unhook function " << i << std::endl;
 		}
 	}
+	
 	delete[] m_pOldTable;
+	
+	
 }
 
 
@@ -36,22 +42,22 @@ void* VMTManager::HookFunction(int iFuncIndex, void* pHookAddress)
 {
 
 	DWORD old;
-	VirtualProtect(m_pTable + iFuncIndex, 4, PAGE_EXECUTE_READWRITE, &old);
+	VirtualProtect(m_pTable + iFuncIndex, sizeof(void*), PAGE_EXECUTE_READWRITE, &old);
 	m_pTable[iFuncIndex] = pHookAddress;
 	if (m_pTable[iFuncIndex] != pHookAddress) {
 		return 0;
 	}
 
-	VirtualProtect(m_pTable + iFuncIndex, 4, old, &old);
+	VirtualProtect(m_pTable + iFuncIndex, sizeof(void*), old, &old);
 	return m_pOldTable[iFuncIndex];
 }
 
 bool VMTManager::FreeFunction(int iFuncIndex) {
 	DWORD old;
-	VirtualProtect(m_pTable + iFuncIndex, 4, PAGE_EXECUTE_READWRITE, &old);
+	VirtualProtect(m_pTable + iFuncIndex, sizeof(void*), PAGE_EXECUTE_READWRITE, &old);
 	m_pTable[iFuncIndex] = m_pOldTable[iFuncIndex];
 	bool out = m_pTable[iFuncIndex] == m_pOldTable[iFuncIndex];
-	VirtualProtect(m_pTable + iFuncIndex, 4, old, &old);
+	VirtualProtect(m_pTable + iFuncIndex, sizeof(void*), old, &old);
 	return out;
 }
 
@@ -65,8 +71,9 @@ bool VMTManager::IsPopulated() {
 
 int VMTManager::GetTableSize(void** pVMT) {
 	int iSize = 0;
-	for (; pVMT[iSize]; iSize++) {
-
-	}
+	MEMORY_BASIC_INFORMATION memInfo = { 0 };
+	while (VirtualQuery(pVMT[iSize], &memInfo, sizeof(memInfo)) && memInfo.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY)) iSize++;
+		
+	
 	return iSize;
 }

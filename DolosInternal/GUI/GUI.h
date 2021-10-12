@@ -5,9 +5,20 @@
 
 #include <d3d9.h>
 #include <d3dx9.h>
+#include "GUIContainer.h"
+#include "GUIEventHandler.h"
+#include "Widgets/IGUIElement.h"
+#include "Widgets/Panel.h"
+#include "Widgets/Button.h"
+#include "Widgets/Slider.h"
+#include "../SDK/SDK.h"
+
+inline GUIContainer*    g_pGUIContainer;
+inline Render*          g_pRender;
 
 
-bool InitializeGUI();
+bool InitializeGUI      (HMODULE hMod);
+bool UninitializeGUI    ();
 
 
 #endif // !GUI_H

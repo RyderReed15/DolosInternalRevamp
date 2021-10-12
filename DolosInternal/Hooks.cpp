@@ -3,47 +3,69 @@
 
 bool InitializeHooks() {
 
-	g_vClient			= VMTManager((void***)g_pClientMode);
-	g_vClientBase		= VMTManager((void***)g_pBaseClient);
-	g_vD3D				= VMTManager((void***)g_pD3Device);
-	g_vModelRender		= VMTManager((void***)g_pModelRender);
+	
+	g_vClient			= new VMTManager((void***)g_pClientMode);
+	g_vClientBase		= new VMTManager((void***)g_pBaseClient);
+	g_vD3D				= new VMTManager((void***)g_pD3DDevice);
+	g_vModelRender		= new VMTManager((void***)g_pModelRender);
 	
 
-	oCreateMove				= (fnCreateMove)			g_vClient.HookFunction		(CREATE_MOVE_INDEX			, hkCreateMove);
+	oCreateMove				= (fnCreateMove)			g_vClient->HookFunction			(CREATE_MOVE_INDEX			, hkCreateMove);
 
-	oFrameStageNotify		= (fnFrameStageNotify)		g_vClientBase.HookFunction	(FRAME_STAGE_INDEX			, hkFrameStageNotify);
+	oFrameStageNotify		= (fnFrameStageNotify)		g_vClientBase->HookFunction		(FRAME_STAGE_INDEX			, hkFrameStageNotify);
 
-	oDrawModelExecute		= (fnDrawModelExecute)		g_vModelRender.HookFunction	(DRAW_MODEL_EXECUTE_INDEX	, hkDrawModelExecute);
+	oDrawModelExecute		= (fnDrawModelExecute)		g_vModelRender->HookFunction	(DRAW_MODEL_EXECUTE_INDEX	, hkDrawModelExecute);
 
-	oBeginScene				= (fnBeginScene)			g_vD3D.HookFunction			(BEGIN_SCENE_INDEX			, hkBeginScene);
-	oDrawIndexedPrimitive	= (fnDrawIndexedPrimitive)	g_vD3D.HookFunction			(DRAW_INDEXED_PRIM_INDEX	, hkDrawIndexedPrimitive);
-	oPresent				= (fnPresent)				g_vD3D.HookFunction			(PRESENT_INDEX				, hkPresent);
-	oEndScene				= (fnEndScene)				g_vD3D.HookFunction			(END_SCENE_INDEX			, hkEndscene);
-	oReset					= (fnReset)					g_vD3D.HookFunction			(RESET_INDEX				, hkReset);
+	oBeginScene				= (fnBeginScene)			g_vD3D->HookFunction			(BEGIN_SCENE_INDEX			, hkBeginScene);
+	oDrawIndexedPrimitive	= (fnDrawIndexedPrimitive)	g_vD3D->HookFunction			(DRAW_INDEXED_PRIM_INDEX	, hkDrawIndexedPrimitive);
+	oPresent				= (fnPresent)				g_vD3D->HookFunction			(PRESENT_INDEX				, hkPresent);
+	oEndScene				= (fnEndScene)				g_vD3D->HookFunction			(END_SCENE_INDEX			, hkEndscene);
+	oReset					= (fnReset)					g_vD3D->HookFunction			(RESET_INDEX				, hkReset);
+
+	oWndProc = SetWindowLongPtrW(FindWindowW(L"Valve001", NULL), GWLP_WNDPROC, LONG_PTR(&hkWndProc));
+	
 
 	return true;
 }
 
 bool UninitializeHooks() {
-	g_vClient.FreeFunction		(CREATE_MOVE_INDEX);
+	g_vClient->FreeFunction			(CREATE_MOVE_INDEX);
 
-	g_vClientBase.FreeFunction	(FRAME_STAGE_INDEX);
+	g_vClientBase->FreeFunction		(FRAME_STAGE_INDEX);
 	
-	g_vModelRender.FreeFunction	(DRAW_MODEL_EXECUTE_INDEX);
+	g_vModelRender->FreeFunction	(DRAW_MODEL_EXECUTE_INDEX);
 
-	g_vD3D.FreeFunction			(BEGIN_SCENE_INDEX);
-	g_vD3D.FreeFunction			(DRAW_INDEXED_PRIM_INDEX);
-	g_vD3D.FreeFunction			(PRESENT_INDEX);
-	g_vD3D.FreeFunction			(END_SCENE_INDEX);
-	g_vD3D.FreeFunction			(RESET_INDEX);
+	g_vD3D->FreeFunction			(BEGIN_SCENE_INDEX);
+	g_vD3D->FreeFunction			(DRAW_INDEXED_PRIM_INDEX);
+	g_vD3D->FreeFunction			(PRESENT_INDEX);
+	g_vD3D->FreeFunction			(END_SCENE_INDEX);
+	g_vD3D->FreeFunction			(RESET_INDEX);
 
-	g_vClient.~VMTManager();
-	g_vClientBase.~VMTManager();
-	g_vModelRender.~VMTManager();
-	g_vD3D.~VMTManager();
-
+	delete g_vClient;
+	delete g_vClientBase;
+	delete g_vD3D;
+	delete g_vModelRender;
+	SetWindowLongPtrW(FindWindowW(L"Valve001", NULL), GWLP_WNDPROC, oWndProc);
 	return true;
 }
+
+LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	switch (uMsg) {
+	case WM_MOUSEMOVE:
+		if (wParam & MK_LBUTTON) {
+
+		}
+		break;
+	case WM_LBUTTONDOWN:
+		POINTS pLoc = *(POINTS*)&lParam;
+
+		g_pGUIContainer->GetEventHandler()->HandleInput(GUI_EVENT_TYPE::CLICK, { pLoc.x, pLoc.y });
+		
+		break;
+	}
+	return CallWindowProc((WNDPROC)oWndProc, hWnd, uMsg, wParam, lParam);
+}
+
 
 void __fastcall hkFrameStageNotify(void* _this, void* edx, ClientFrameStage_t stage) {
 
@@ -82,6 +104,12 @@ HRESULT APIENTRY hkPresent(IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST R
 HRESULT APIENTRY hkEndscene(IDirect3DDevice9* pDevice) {
 
 	HRESULT hReturn = oEndScene(pDevice);
+	if (g_pGUIContainer && g_pRender) {
+		g_pGUIContainer->GetEventHandler()->ProccessEvents();
+		g_pGUIContainer->DrawElements(g_pRender, g_pAvenirFont);
+		FixD3D((void***)pDevice);
+	}
+	
 	return hReturn;
 }
 
@@ -91,11 +119,11 @@ HRESULT APIENTRY hkReset(IDirect3DDevice9* pDevice, D3DPRESENT_PARAMETERS* pPres
 	return hReturn;
 }
 
-void FixD3D(void** pDevice) {
-	pDevice[BEGIN_SCENE_INDEX]			= hkBeginScene;
-	pDevice[END_SCENE_INDEX]			= hkEndscene;
-	pDevice[RESET_INDEX]				= hkReset;
-	pDevice[PRESENT_INDEX]				= hkPresent;
-	pDevice[DRAW_INDEXED_PRIM_INDEX]	= hkDrawIndexedPrimitive;
+void FixD3D(void*** pDevice) {
+	(*pDevice)[BEGIN_SCENE_INDEX]			= hkBeginScene;
+	(*pDevice)[END_SCENE_INDEX]				= hkEndscene;
+	(*pDevice)[RESET_INDEX]					= hkReset;
+	(*pDevice)[PRESENT_INDEX]				= hkPresent;
+	(*pDevice)[DRAW_INDEXED_PRIM_INDEX]		= hkDrawIndexedPrimitive;
 }
 

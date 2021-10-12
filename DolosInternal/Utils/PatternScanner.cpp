@@ -3,8 +3,8 @@
 
 
 char* FindPattern(void* pDLLBase, const char* szPattern, bool bRelative, int aOffsets[], int iOffsetsSize) {
-	char szParsedPattern[64];
-	char szMask[64];
+	char szParsedPattern[64]{ '\0' };
+	char szMask[64]{ '\0' };
 
 	MEMORY_BASIC_INFORMATION32 memInfo = { 0 };
 

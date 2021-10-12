@@ -2,6 +2,9 @@
 
 
 Render::Render() {
+	m_pTextureAtlas = nullptr;
+	m_pSprite		= nullptr;
+
 	m_pTriIndex		= nullptr;
 	m_pTriVertex	= nullptr;
 	m_pLineIndex	= nullptr;
@@ -92,22 +95,22 @@ void Render::Begin(BUFFER_TYPE tBufferType) {
 	m_pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	switch (tBufferType) {
-	case BUFFER_ALL:
+	case BUFFER_TYPE::BUFFER_ALL:
 		m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
 		m_pLineVertexBuffer->Lock(0, 0, (void**)&m_pLineVertex, D3DLOCK_DISCARD);
 		m_pLineIndexBuffer->Lock(0, 0, (void**)&m_pLineIndex, D3DLOCK_DISCARD);
 		m_pTriVertexBuffer->Lock(0, 0, (void**)&m_pTriVertex, D3DLOCK_DISCARD);
 		m_pTriIndexBuffer->Lock(0, 0, (void**)&m_pTriIndex, D3DLOCK_DISCARD);
 		break;
-	case BUFFER_LINE:
+	case BUFFER_TYPE::BUFFER_LINE:
 		m_pLineVertexBuffer->Lock(0, 0, (void**)&m_pLineVertex, D3DLOCK_DISCARD);
 		m_pLineIndexBuffer->Lock(0, 0, (void**)&m_pLineIndex, D3DLOCK_DISCARD);
 		break;
-	case BUFFER_TRI:
+	case BUFFER_TYPE::BUFFER_TRI:
 		m_pTriVertexBuffer->Lock(0, 0, (void**)&m_pTriVertex, D3DLOCK_DISCARD);
 		m_pTriIndexBuffer->Lock(0, 0, (void**)&m_pTriIndex, D3DLOCK_DISCARD);
 		break;
-	case BUFFER_TEXT:
+	case BUFFER_TYPE::BUFFER_TEXT:
 		m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
 		break;
 	}
@@ -124,7 +127,7 @@ void Render::End(BUFFER_TYPE tBufferType) {
 
 		
 		switch (tBufferType) {
-		case BUFFER_ALL:
+		case BUFFER_TYPE::BUFFER_ALL:
 			m_pLineVertexBuffer->Unlock();
 			m_pLineIndexBuffer->Unlock();
 			m_pTriVertexBuffer->Unlock();
@@ -146,7 +149,7 @@ void Render::End(BUFFER_TYPE tBufferType) {
 			m_pSprite->End();
 
 			break;
-		case BUFFER_LINE:
+		case BUFFER_TYPE::BUFFER_LINE:
 			m_pLineVertexBuffer->Unlock();
 			m_pLineIndexBuffer->Unlock();
 
@@ -157,7 +160,7 @@ void Render::End(BUFFER_TYPE tBufferType) {
 			m_iLineCount = m_iLineIndices = m_iLineVertices = 0;
 
 			break;
-		case BUFFER_TRI:
+		case BUFFER_TYPE::BUFFER_TRI:
 			m_pTriVertexBuffer->Unlock();
 			m_pTriIndexBuffer->Unlock();
 
@@ -168,7 +171,7 @@ void Render::End(BUFFER_TYPE tBufferType) {
 			m_iTriangleCount = m_iTriangleIndices = m_iTriangleVertices = 0;
 
 			break;
-		case BUFFER_TEXT:
+		case BUFFER_TYPE::BUFFER_TEXT:
 			m_pSprite->End();
 			break;
 		}
@@ -187,15 +190,15 @@ void Render::ManageBatch(D3DPRIMITIVETYPE tPrimitiveType, int iNeededVerts, int 
 	switch (tPrimitiveType) {
 	case D3DPT_LINELIST:
 		if (m_iLineIndices + iNeededIndices > m_iMaxVertices * 2 || m_iLineVertices + iNeededVerts > m_iMaxVertices) {
-			End(BUFFER_LINE);
-			Begin(BUFFER_LINE);
+			End(BUFFER_TYPE::BUFFER_LINE);
+			Begin(BUFFER_TYPE::BUFFER_LINE);
 		}
 
 		break;
 	case D3DPT_TRIANGLELIST:
 		if (m_iTriangleIndices + iNeededIndices > m_iMaxVertices * 2 || m_iTriangleVertices + iNeededVerts > m_iMaxVertices) {
-			End(BUFFER_TRI);
-			Begin(BUFFER_TRI);
+			End(BUFFER_TYPE::BUFFER_TRI);
+			Begin(BUFFER_TYPE::BUFFER_TRI);
 		}
 
 		break;
@@ -333,39 +336,39 @@ HRESULT Render::DrawOutlinedRect(D3DXVECTOR4 vBounds, int iThickness, D3DCOLOR c
 	}
 	return OLE_E_BLANK;
 }
-HRESULT Render::DrawRoundedRectangle(D3DXVECTOR4 vBounds, int iCornerSize, D3DCOLOR cColor, D3DCOLOR cColor2, bool bVertical) {
+HRESULT Render::DrawRoundedRectangle(D3DXVECTOR4 vBounds, float flCornerSize, D3DCOLOR cColor, D3DCOLOR cColor2, bool bVertical) {
 
 	if (IsInitialized()) {
 
 		if (bVertical) {
 			D3DXCOLOR cLerp;
 			if (cColor2) {
-				DrawFadingCircle({ vBounds.x + iCornerSize, vBounds.y + iCornerSize }, iCornerSize, 3, cColor, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, iCornerSize * 2 / vBounds.w), bVertical, .25, 180);
-				DrawFadingCircle({ vBounds.x + vBounds.z - iCornerSize, vBounds.y + iCornerSize }, iCornerSize, 3, cColor, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, iCornerSize * 2 / vBounds.w), bVertical, .25, 270);
-				DrawFadingCircle({ vBounds.x + iCornerSize, vBounds.y + vBounds.w - iCornerSize }, iCornerSize, 3, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, iCornerSize * 2 / vBounds.w), cColor2, bVertical, .25, 90);
-				DrawFadingCircle({ vBounds.x + vBounds.z - iCornerSize, vBounds.y + vBounds.w - iCornerSize }, iCornerSize, 3, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, iCornerSize * 2 / vBounds.w), cColor2, bVertical, .25, 0);
-				DrawRectangle({ vBounds.x, vBounds.y + iCornerSize, vBounds.z, vBounds.w - iCornerSize * 2 }, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, iCornerSize / vBounds.w), *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, iCornerSize / vBounds.w), bVertical);
+				DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, flCornerSize * 2 / vBounds.w), bVertical, .25, 180);
+				DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, flCornerSize * 2 / vBounds.w), bVertical, .25, 270);
+				DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, flCornerSize * 2 / vBounds.w), cColor2, bVertical, .25, 90);
+				DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, flCornerSize * 2 / vBounds.w), cColor2, bVertical, .25, 0);
+				DrawRectangle({ vBounds.x, vBounds.y + flCornerSize, vBounds.z, vBounds.w - flCornerSize * 2 }, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, flCornerSize / vBounds.w), *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, flCornerSize / vBounds.w), bVertical);
 
 			}
 			else {
-				DrawCircle({ vBounds.x + iCornerSize, vBounds.y + iCornerSize }, iCornerSize, 3, cColor, .25, 180);
-				DrawCircle({ vBounds.x + vBounds.z - iCornerSize, vBounds.y + iCornerSize }, iCornerSize, 3, cColor, .25, 270);
-				DrawCircle({ vBounds.x + iCornerSize, vBounds.y + vBounds.w - iCornerSize }, iCornerSize, 3, cColor, .25, 90);
-				DrawCircle({ vBounds.x + vBounds.z - iCornerSize, vBounds.y + vBounds.w - iCornerSize }, iCornerSize, 3, cColor, .25, 0);
-				DrawRectangle({ vBounds.x, vBounds.y + iCornerSize, vBounds.z, vBounds.w - iCornerSize * 2 }, cColor, cColor2, bVertical);
+				DrawCircle({ vBounds.x + flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, .25, 180);
+				DrawCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, .25, 270);
+				DrawCircle({ vBounds.x + flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, cColor, .25, 90);
+				DrawCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, cColor, .25, 0);
+				DrawRectangle({ vBounds.x, vBounds.y + flCornerSize, vBounds.z, vBounds.w - flCornerSize * 2 }, cColor, cColor2, bVertical);
 
 			}
-			DrawRectangle({ vBounds.x + iCornerSize, vBounds.y, vBounds.z - iCornerSize * 2, vBounds.w }, cColor, cColor2, bVertical);
+			DrawRectangle({ vBounds.x + flCornerSize, vBounds.y, vBounds.z - flCornerSize * 2, vBounds.w }, cColor, cColor2, bVertical);
 		}
 		else {
 			D3DXCOLOR cLerp;
-			DrawFadingCircle({ vBounds.x + iCornerSize, vBounds.y + iCornerSize }, iCornerSize, 3, cColor, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, iCornerSize * 2 / vBounds.z), bVertical, .25, 180);
-			DrawFadingCircle({ vBounds.x + vBounds.z - iCornerSize, vBounds.y + iCornerSize }, iCornerSize, 3, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, iCornerSize * 2 / vBounds.z), cColor2, bVertical, .25, 270);
-			DrawFadingCircle({ vBounds.x + iCornerSize, vBounds.y + vBounds.w - iCornerSize }, iCornerSize, 3, cColor, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, iCornerSize * 2 / vBounds.z), bVertical, .25, 90);
-			DrawFadingCircle({ vBounds.x + vBounds.z - iCornerSize, vBounds.y + vBounds.w - iCornerSize }, iCornerSize, 3, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, iCornerSize * 2 / vBounds.z), cColor2, bVertical, .25, 0);
+			DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, flCornerSize * 2 / vBounds.z), bVertical, .25, 180);
+			DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, flCornerSize * 2 / vBounds.z), cColor2, bVertical, .25, 270);
+			DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, cColor, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, flCornerSize * 2 / vBounds.z), bVertical, .25, 90);
+			DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, flCornerSize * 2 / vBounds.z), cColor2, bVertical, .25, 0);
 
-			DrawRectangle({ vBounds.x + iCornerSize, vBounds.y, vBounds.z - iCornerSize * 2, vBounds.w }, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, iCornerSize / vBounds.z), *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, iCornerSize / vBounds.z), bVertical);
-			DrawRectangle({ vBounds.x, vBounds.y + iCornerSize, vBounds.z, vBounds.w - iCornerSize * 2 }, cColor, cColor2, bVertical);
+			DrawRectangle({ vBounds.x + flCornerSize, vBounds.y, vBounds.z - flCornerSize * 2, vBounds.w }, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, flCornerSize / vBounds.z), *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, flCornerSize / vBounds.z), bVertical);
+			DrawRectangle({ vBounds.x, vBounds.y + flCornerSize, vBounds.z, vBounds.w - flCornerSize * 2 }, cColor, cColor2, bVertical);
 		}
 
 		return S_OK;
@@ -378,10 +381,10 @@ HRESULT Render::DrawRoundedRectangle(D3DXVECTOR4 vBounds, int iCornerSize, D3DCO
 HRESULT Render::DrawFadingCircle(D3DXVECTOR2 vLocation, float flRadius, int iSides, D3DCOLOR cColor, D3DCOLOR cColor2, bool bVertical, float flFraction, float flRotation) {
 	if (IsInitialized()) {
 		ManageBatch(D3DPT_TRIANGLELIST, iSides + 2, iSides * 3);
-		float flCos = cos(2 * PI / iSides * flFraction);
-		float flSin = sin(2 * PI / iSides * flFraction);
-		float flFracCos = cos(flRotation / 180 * PI);
-		float flFracSin = sin(flRotation / 180 * PI);
+		float flCos = cosf(2 * PI / iSides * flFraction);
+		float flSin = sinf(2 * PI / iSides * flFraction);
+		float flFracCos = cosf(flRotation / 180.f * PI);
+		float flFracSin = sinf(flRotation / 180.f * PI);
 		float flR = flRadius * flFracCos;
 		float flD = flRadius * flFracSin;
 		float flTemp;
@@ -411,10 +414,10 @@ HRESULT Render::DrawFadingCircle(D3DXVECTOR2 vLocation, float flRadius, int iSid
 HRESULT Render::DrawCircleOutline(D3DXVECTOR2 vLocation, float flRadius, int iSides, D3DCOLOR cColor, float flFraction, float flRotation) {
 	if (IsInitialized()) {
 		ManageBatch(D3DPT_LINELIST, iSides + 1, iSides * 2);
-		float flCos = cos(2 * PI / iSides * flFraction);
-		float flSin = sin(2 * PI / iSides * flFraction);
-		float flFracCos = cos(flRotation / 180 * PI);
-		float flFracSin = sin(flRotation / 180 * PI);
+		float flCos = cosf(2 * PI / iSides * flFraction);
+		float flSin = sinf(2 * PI / iSides * flFraction);
+		float flFracCos = cosf(flRotation / 180.f * PI);
+		float flFracSin = sinf(flRotation / 180.f * PI);
 		float flR = flRadius * flFracCos;
 		float flD = flRadius * flFracSin;
 		float flTemp;
@@ -448,10 +451,10 @@ HRESULT Render::DrawCircleOutline(D3DXVECTOR2 vLocation, float flRadius, int iSi
 HRESULT Render::DrawCircle(D3DXVECTOR2 vLocation, float flRadius, int iSides, D3DCOLOR cColor, float flFraction, float flRotation) {
 	if (IsInitialized()) {
 		ManageBatch(D3DPT_TRIANGLELIST, iSides + 2, iSides * 3);
-		float flCos = cos(2 * PI / iSides * flFraction);
-		float flSin = sin(2 * PI / iSides * flFraction);
-		float flFracCos = cos(flRotation / 180 * PI);
-		float flFracSin = sin(flRotation / 180 * PI);
+		float flCos = cosf(2 * PI / iSides * flFraction);
+		float flSin = sinf(2 * PI / iSides * flFraction);
+		float flFracCos = cosf(flRotation / 180.f * PI);
+		float flFracSin = sinf(flRotation / 180.f * PI);
 		float flR = flRadius * flFracCos;
 		float flD = flRadius * flFracSin;
 		float flTemp;

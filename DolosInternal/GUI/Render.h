@@ -31,7 +31,7 @@
 #define GREEN       0xff00ff00
 #define YELLOW      0xffffff00
 
-enum BUFFER_TYPE {
+enum class BUFFER_TYPE {
     BUFFER_ALL,
     BUFFER_LINE,
     BUFFER_TRI,
@@ -67,8 +67,8 @@ public:
     void                Initialize              (IDirect3DDevice9* pDevice, HMODULE hMod);
 
     void                Release                 (void);
-    void                Begin                   (BUFFER_TYPE tBufferType = BUFFER_ALL);
-    void                End                     (BUFFER_TYPE tBufferType = BUFFER_ALL);
+    void                Begin                   (BUFFER_TYPE tBufferType = BUFFER_TYPE::BUFFER_ALL);
+    void                End                     (BUFFER_TYPE tBufferType = BUFFER_TYPE::BUFFER_ALL);
 
     IDirect3DDevice9*   GetDevice               (void);
     bool                IsInitialized           (void);
@@ -92,7 +92,7 @@ public:
     HRESULT             DrawBox                 (float flX, float flY, float flWidth, float flHeight, float flThickness, D3DCOLOR cColor);
     HRESULT             DrawCircle              (D3DXVECTOR2 vLocation, float flRadius, int iSides, D3DCOLOR cColor, float flFraction = 1, float flRotation = 0);
     HRESULT             DrawCircleOutline       (D3DXVECTOR2 vLocation, float flRadius, int iSides, D3DCOLOR cColor, float flFraction = 1, float flRotation = 0);
-    HRESULT             DrawRoundedRectangle    (D3DXVECTOR4 vBounds, int iCornerSize, D3DCOLOR cColor, D3DCOLOR cColor2 = 0, bool bVertical = true);
+    HRESULT             DrawRoundedRectangle    (D3DXVECTOR4 vBounds, float flCornerSize, D3DCOLOR cColor, D3DCOLOR cColor2 = 0, bool bVertical = true);
 private:
     HRESULT             DrawFadingCircle        (D3DXVECTOR2 vLocation, float flRadius, int iSides, D3DCOLOR cColor, D3DCOLOR cColor2, bool bVertical = true, float flFraction = 1, float flRotation = 0);
 

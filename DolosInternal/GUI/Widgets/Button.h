@@ -10,7 +10,7 @@ typedef void(__fastcall* fnVoid)(IGUIElement* pThis);
 
 class Button : public IGUIElement {
 public:
-			Button		(const char* szText, void* pFunc, D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent = nullptr);
+			Button		(const char* szText, std::function<void()> pFunc, D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent = nullptr);
 
 	HRESULT Draw		(ID3DXFont* pFont, Render* pRender);
 

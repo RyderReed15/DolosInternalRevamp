@@ -1,10 +1,10 @@
 #include "Button.h"
 
-Button::Button(const char* szText, void* pFunc, D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
+Button::Button(const char* szText, std::function<void()> pFunc, D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
 
-	m_cColor = cColor;
-	m_szText = szText;
-	m_pClickFunc = (fnVoid)pFunc;
+	m_cColor		= cColor;
+	m_szText		= szText;
+	m_pClickFunc	= pFunc;
 }
 
 HRESULT Button::Draw(ID3DXFont* pFont, Render* pRender) {

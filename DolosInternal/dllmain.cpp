@@ -14,7 +14,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     case DLL_THREAD_ATTACH:
     case DLL_THREAD_DETACH:
     case DLL_PROCESS_DETACH:
-        UninitializeCheat(hModule);
+        //UninitializeCheat(hModule);
         break;
     }
     return TRUE;
