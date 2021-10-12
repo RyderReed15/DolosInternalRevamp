@@ -50,19 +50,33 @@ bool UninitializeHooks() {
 }
 
 LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	POINTS ptLoc = *(POINTS*)&lParam;
+	short iKeyCode = wParam;
 	switch (uMsg) {
+	case WM_KEYDOWN:
+		break;
+	case WM_LBUTTONDOWN:
+
+		g_pGUIContainer->GetEventHandler()->HandleMouseInput(GUI_EVENT_TYPE::CLICK, { ptLoc.x, ptLoc.y });
+
+		break;
+	
+	case WM_LBUTTONUP:
+
+		g_pGUIContainer->GetEventHandler()->HandleMouseInput(GUI_EVENT_TYPE::RELEASE, { ptLoc.x, ptLoc.y });
+
+		break;
 	case WM_MOUSEMOVE:
 		if (wParam & MK_LBUTTON) {
 
+			g_pGUIContainer->GetEventHandler()->HandleMouseInput(GUI_EVENT_TYPE::DRAG, { ptLoc.x, ptLoc.y });
 		}
+		//Hover maybe?
 		break;
-	case WM_LBUTTONDOWN:
-		POINTS pLoc = *(POINTS*)&lParam;
 
-		g_pGUIContainer->GetEventHandler()->HandleInput(GUI_EVENT_TYPE::CLICK, { pLoc.x, pLoc.y });
-		
-		break;
 	}
+
+	
 	return CallWindowProc((WNDPROC)oWndProc, hWnd, uMsg, wParam, lParam);
 }
 

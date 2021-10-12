@@ -4,6 +4,10 @@
 #define GUI_PANEL_H
 
 #include "IGUIElement.h"
+#include "../GUIEventHandler.h"
+
+
+class GUIEventHandler;
 
 class Panel : public IGUIElement {
 public:
@@ -11,12 +15,12 @@ public:
 
     HRESULT Draw        (ID3DXFont* pFont, Render* pRender);
 
-    bool    OnClick     (POINT pLocation);
-    bool    OnDrag      (POINT pLocation);
-    bool    OnRelease   (POINT pLocation);
+    void    OnClick     (GUIEventHandler* pEventHandler, POINT ptLocation);
+    void    OnDrag      (GUIEventHandler* pEventHandler, POINT ptLocation);
+    void    OnRelease   (GUIEventHandler* pEventHandler, POINT ptLocation);
 private:
     D3DCOLOR    m_cColor1, m_cColor2;
-    POINT       m_pMoveOrigin;
+    POINT       m_ptMoveOrigin;
     bool        m_bMoving;
     bool        m_bCanMove;
 };

@@ -4,9 +4,12 @@
 #define GUI_BUTTON_H
 
 #include "IGUIElement.h"
+#include "../GUIEventHandler.h"
 #include <functional>
 
-typedef void(__fastcall* fnVoid)(IGUIElement* pThis);
+class GUIEventHandler;
+
+
 
 class Button : public IGUIElement {
 public:
@@ -14,7 +17,7 @@ public:
 
 	HRESULT Draw		(ID3DXFont* pFont, Render* pRender);
 
-	bool	OnRelease	(POINT pLocation);
+	void	OnRelease	(GUIEventHandler* pEventHandler, POINT ptLocation);
 private:
 	D3DCOLOR					m_cColor;
 	const char*					m_szText		= nullptr;

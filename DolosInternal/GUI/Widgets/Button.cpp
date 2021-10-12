@@ -19,11 +19,7 @@ HRESULT Button::Draw(ID3DXFont* pFont, Render* pRender) {
 
 }
 
-bool Button::OnRelease(POINT pLocation) {
-	if (CheckBounds(pLocation) && m_bShouldDraw && m_bEnabled) {
-		//Change to be handled by GUI Event Handler
-		
-		return true;
-	}
-	return false;
+void Button::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
+	pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::BUTTON, m_pClickFunc);
+
 }

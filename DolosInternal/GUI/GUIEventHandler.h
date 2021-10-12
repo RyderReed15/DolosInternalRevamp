@@ -28,16 +28,19 @@ public:
 
 class GUIEventHandler {
 public:
-            GUIEventHandler     (GUIContainer* pGUI);
-            ~GUIEventHandler    (void);
+                    GUIEventHandler     (GUIContainer* pGUI);
+                    ~GUIEventHandler    (void);
 
-    void    HandleInput         (GUI_EVENT_TYPE tType, POINT pLocation);
-    void    HandleClick         (POINT pLocation);
-    void    HandleDrag          (POINT pLocation);
-    void    HandleRelease       (POINT pLocation);
-    void    HandleHover         (POINT pLocation);
-    bool    CreateGUIEvent      (GUI_EVENT_TYPE tEventType, std::function<void()> pFunc);
-    void    ProccessEvents      (void);
+    void            HandleMouseInput    (GUI_EVENT_TYPE tType, POINT ptLocation);
+    void            HandleClick         (POINT ptLocation);
+    void            HandleDrag          (POINT ptLocation);
+    void            HandleRelease       (POINT ptLocation);
+    void            HandleHover         (POINT ptLocation);
+
+    bool            CreateGUIEvent      (GUI_EVENT_TYPE tEventType, std::function<void()> pFunc);
+    void            ProccessEvents      (void);
+
+    GUIContainer*   GetContainer        (void);
 
     template <typename callable, typename ...Args>
     std::function<void()> BuildFunction(callable&& caFunction, Args&&... args);

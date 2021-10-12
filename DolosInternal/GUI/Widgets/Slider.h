@@ -4,6 +4,10 @@
 #define GUI_SLIDER_H
 
 #include "IGUIElement.h"
+#include "../GUIEventHandler.h"
+
+
+class GUIEventHandler;
 
 class Slider : public IGUIElement {
 public:
@@ -11,9 +15,9 @@ public:
 
 	HRESULT Draw(ID3DXFont* pFont, Render* pRender);
 
-	//bool	OnClick(POINT pLocation);
-	//bool	OnDrag(POINT pLocation);
-	//bool	OnRelease(POINT pLocation);
+	//void	OnClick(GUIEventHandler* pEventHandler, POINT ptLocation);
+	//void	OnDrag(GUIEventHandler* pEventHandler, POINT ptLocation);
+	//void	OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation);
 	void	UpdateSlider();
 private:
 	D3DCOLOR		m_cBackground, m_cFillOne, m_cFillTwo;

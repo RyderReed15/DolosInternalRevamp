@@ -1,8 +1,9 @@
 #include "GUIContainer.h"
+#include <iostream>
 
-GUIContainer::GUIContainer(POINT pScreenSize) {
+GUIContainer::GUIContainer(POINT ptScreenSize) {
    
-    m_pScreenSize       = pScreenSize;
+    m_ptScreenSize       = ptScreenSize;
     m_pEventHandler     = new GUIEventHandler(this);
     InitializeMap();
 }
@@ -12,7 +13,7 @@ GUIContainer::~GUIContainer() {
    
     m_vElements.clear();
   
-    m_pScreenSize   = { 0, 0 };
+    m_ptScreenSize   = { 0, 0 };
     m_aMap          = nullptr;
     delete          m_pEventHandler;
 }
@@ -24,11 +25,11 @@ void GUIContainer::RemoveElement(int iElement) {
     m_vElements.erase(m_vElements.begin() + iElement);
 }
 
-void GUIContainer::ResizeScreen(POINT pScreenSize) {
+void GUIContainer::ResizeScreen(POINT ptScreenSize) {
 
     DeleteMap();
 
-    m_pScreenSize = pScreenSize;
+    m_ptScreenSize = ptScreenSize;
 
     InitializeMap();
     GenerateMap();
@@ -36,31 +37,35 @@ void GUIContainer::ResizeScreen(POINT pScreenSize) {
 
 void GUIContainer::DeleteMap() {
     if (m_aMap) {
-        for (int i = 0; i < m_pScreenSize.x; i++) {
+        for (int i = 0; i < m_ptScreenSize.x; i++) {
             delete[] m_aMap[i];
         }
         delete[] m_aMap;
     }
 }
 void GUIContainer::InitializeMap() {
-    m_aMap = new short* [m_pScreenSize.x];
-    for (int i = 0; i < m_pScreenSize.x; i++) {
-        m_aMap[i] = new short[m_pScreenSize.y]{ -1 };
+    m_aMap = new short* [m_ptScreenSize.x];
+    for (int i = 0; i < m_ptScreenSize.x; i++) {
+        m_aMap[i] = new short[m_ptScreenSize.y]{ -1 };
     }
 }
 void GUIContainer::GenerateMap() {
     
-    for (int x = 0; x < m_pScreenSize.x; x++)
+    for (int x = 0; x < m_ptScreenSize.x; x++)
     {
-        memset(m_aMap[x], -1, m_pScreenSize.y * sizeof(short));
+        memset(m_aMap[x], -1, m_ptScreenSize.y * sizeof(short));
     }
     for (int i = 0; i < m_vElements.size(); i++) {
         if (m_vElements[i]->GetEnabled() && m_vElements[i]->GetDrawState()) {
             D3DXVECTOR4 vBounds = m_vElements[i]->GetBounds();
             RECT rBounds = { vBounds.x, vBounds.y, vBounds.z, vBounds.w };
-            for (int x = rBounds.left; x <= rBounds.right; x++)
+
+            int iXSize = min(rBounds.left + rBounds.right, m_ptScreenSize.x);
+            int iYSize = min(rBounds.top + rBounds.bottom, m_ptScreenSize.y);
+       
+            for (int x = rBounds.left; x < iXSize; x++)
             {
-                memset((char*)m_aMap[x] + rBounds.top, i, (rBounds.bottom - rBounds.top) * sizeof(short));
+                memset((short*)m_aMap[x] + rBounds.top, i, (iYSize - rBounds.top) * sizeof(short));
                 
             }
         }
@@ -71,8 +76,8 @@ GUIEventHandler* GUIContainer::GetEventHandler() {
     return m_pEventHandler;
 }
 
-IGUIElement* GUIContainer::GetWidgetAt(POINT pLocation) {
-    short iElement = m_aMap[pLocation.x][pLocation.y];
+IGUIElement* GUIContainer::GetWidgetAt(POINT ptLocation) {
+    short iElement = m_aMap[ptLocation.x][ptLocation.y];
     if (iElement == -1) {
         return nullptr;
     }

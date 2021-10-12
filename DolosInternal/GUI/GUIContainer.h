@@ -14,26 +14,26 @@ class IGUIElement;
 
 class GUIContainer {
 public:
-                        GUIContainer        (POINT pScreenSize);
+                        GUIContainer        (POINT ptScreenSize);
                         ~GUIContainer       (void);
 
     void                AddElement          (IGUIElement* pElement);
     void                RemoveElement       (int iElement);
 
-    void                ResizeScreen        (POINT pScreenSize);
+    void                ResizeScreen        (POINT ptScreenSize);
     void                DeleteMap           (void);
     void                InitializeMap       (void);
     void                GenerateMap         (void);
         
     GUIEventHandler*    GetEventHandler     (void);
 
-    IGUIElement*        GetWidgetAt         (POINT pLocation);
+    IGUIElement*        GetWidgetAt         (POINT ptLocation);
     IGUIElement*        GetWidgetById       (int iElement);
 
     void                DrawElements        (Render* pRender, ID3DXFont* pFont);
 private:
     GUIEventHandler*            m_pEventHandler;
-    POINT                       m_pScreenSize;
+    POINT                       m_ptScreenSize;
     short**                     m_aMap;
     std::vector<IGUIElement*>   m_vElements;
 

@@ -12,29 +12,17 @@ IGUIElement::IGUIElement(D3DXVECTOR4 vBounds, IGUIElement* pParent) {
 	}
 }
 
-bool IGUIElement::OnClick(POINT pLocation) {
-	if (CheckBounds(pLocation)) {
-		return true;
-	}
-	return false;
+void IGUIElement::OnClick(GUIEventHandler* pEventHandler, POINT ptLocation) {
+	return;
 }
-bool IGUIElement::OnDrag(POINT pLocation) {
-	if (CheckBounds(pLocation)) {
-		return true;
-	}
-	return false;
+void IGUIElement::OnDrag(GUIEventHandler* pEventHandler, POINT ptLocation) {
+	return;
 }
-bool IGUIElement::OnRelease(POINT pLocation) {
-	if (CheckBounds(pLocation)) {
-		return true;
-	}
-	return false;
+void IGUIElement::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
+	return;
 }
-bool IGUIElement::OnHover(POINT pLocation) {
-	if (CheckBounds(pLocation)) {
-		return true;
-	}
-	return false;
+void IGUIElement::OnHover(GUIEventHandler* pEventHandler, POINT ptLocation) {
+	return;
 }
 
 void IGUIElement::SetAnimStartTick(void) {
@@ -73,15 +61,15 @@ D3DXVECTOR2 IGUIElement::GetCoords(void) {
 D3DXVECTOR4 IGUIElement::GetBounds(void) {
 	return m_vBounds;
 }
-bool IGUIElement::CheckBounds(POINT pLocation) {
-	return (pLocation.x >= m_vBounds.x && pLocation.x <= m_vBounds.x + m_vBounds.z && pLocation.y >= m_vBounds.y && pLocation.y <= m_vBounds.y + m_vBounds.w);
+bool IGUIElement::CheckBounds(POINT ptLocation) {
+	return (ptLocation.x >= m_vBounds.x && ptLocation.x <= m_vBounds.x + m_vBounds.z && ptLocation.y >= m_vBounds.y && ptLocation.y <= m_vBounds.y + m_vBounds.w);
 }
-void IGUIElement::MoveDelta(POINT pLocation) {
-	m_vBounds.x += pLocation.x;
-	m_vBounds.y += pLocation.y;
+void IGUIElement::MoveDelta(POINT ptLocation) {
+	m_vBounds.x += ptLocation.x;
+	m_vBounds.y += ptLocation.y;
 	IGUIElement* pCurr = m_pFirstChild;
 	while (pCurr) {
-		pCurr->MoveDelta(pLocation);
+		pCurr->MoveDelta(ptLocation);
 		pCurr = pCurr->GetSibling();
 	}
 }
