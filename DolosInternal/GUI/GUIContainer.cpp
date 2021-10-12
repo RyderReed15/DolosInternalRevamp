@@ -19,6 +19,7 @@ GUIContainer::~GUIContainer() {
 }
 
 void GUIContainer::AddElement(IGUIElement* pElement) {
+
     m_vElements.push_back(pElement);
 }
 void GUIContainer::RemoveElement(int iElement) {
@@ -51,22 +52,22 @@ void GUIContainer::InitializeMap() {
 }
 void GUIContainer::GenerateMap() {
     
-    for (int x = 0; x < m_ptScreenSize.x; x++)
+    for (short x = 0; x < m_ptScreenSize.x; x++)
     {
-        memset(m_aMap[x], -1, m_ptScreenSize.y * sizeof(short));
+        wmemset((wchar_t*)m_aMap[x], -1, m_ptScreenSize.y);
     }
-    for (int i = 0; i < m_vElements.size(); i++) {
+    for (short i = 0; i < m_vElements.size(); i++) {
         if (m_vElements[i]->GetEnabled() && m_vElements[i]->GetDrawState()) {
             D3DXVECTOR4 vBounds = m_vElements[i]->GetBounds();
             RECT rBounds = { vBounds.x, vBounds.y, vBounds.z, vBounds.w };
 
-            int iXSize = min(rBounds.left + rBounds.right, m_ptScreenSize.x);
-            int iYSize = min(rBounds.top + rBounds.bottom, m_ptScreenSize.y);
-       
-            for (int x = rBounds.left; x < iXSize; x++)
+            short iXSize = min(rBounds.left + rBounds.right, m_ptScreenSize.x);
+            short iYSize = min(rBounds.top + rBounds.bottom, m_ptScreenSize.y);
+
+            for (short x = rBounds.left; x < iXSize; x++)
             {
-                memset((short*)m_aMap[x] + rBounds.top, i, (iYSize - rBounds.top) * sizeof(short));
-                
+                wmemset((wchar_t*)(m_aMap[x] + rBounds.top), i, (iYSize - rBounds.top));
+               
             }
         }
     }

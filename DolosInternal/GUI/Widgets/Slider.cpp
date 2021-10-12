@@ -21,17 +21,19 @@ Slider::Slider(const char* szName, float* pValue, float flMaxValue, float flMinV
 
 
 HRESULT Slider::Draw(ID3DXFont* pFont, Render* pRender) {
-	if (m_bShouldDraw) {
-		float flBarStart = m_vBounds.x + m_vBounds.z - m_flBarSize;
-		char szValue[33]; _itoa_s((int)*m_pValue, szValue, 10);
-		D3DXVECTOR2 vSize = pRender->GetStringSize(pFont, m_szName);
-		D3DXVECTOR2 vSize2 = pRender->GetStringSize(pFont, szValue);
-		pRender->DrawString({ m_vBounds.x, m_vBounds.y - 2 }, (m_bEnabled) ? WHITE : GRAY, pFont, m_szName);
-		pRender->DrawString({ flBarStart - vSize2.x - 10, m_vBounds.y - 2 }, (m_bEnabled) ? WHITE : GRAY, pFont, szValue);
-		pRender->DrawRoundedRectangle({ flBarStart, m_vBounds.y, m_flBarSize, m_vBounds.w }, m_vBounds.w / 2, m_cBackground);
-		return pRender->DrawRoundedRectangle({ flBarStart, m_vBounds.y, m_flBarPercent, m_vBounds.w }, m_vBounds.w / 2, m_cFillOne, pRender->LerpColor(m_cFillOne, m_cFillTwo, m_flBarPercent / m_flBarSize), false);
+	
+	float flBarStart = m_vBounds.x + m_vBounds.z - m_flBarSize;
+	char szValue[33]; _itoa_s((int)*m_pValue, szValue, 10);
 
-	}
-	return S_OK;
+	D3DXVECTOR2 vSize	= pRender->GetStringSize(pFont, m_szName);
+	D3DXVECTOR2 vSize2	= pRender->GetStringSize(pFont, szValue);
+
+	pRender->DrawString({ m_vBounds.x, m_vBounds.y - 2 }				, (m_bEnabled) ? WHITE : GRAY, pFont, m_szName);
+	pRender->DrawString({ flBarStart - vSize2.x - 10, m_vBounds.y - 2 }	, (m_bEnabled) ? WHITE : GRAY, pFont, szValue);
+
+	pRender->DrawRoundedRectangle({ flBarStart, m_vBounds.y, m_flBarSize, m_vBounds.w }				, m_vBounds.w / 2, m_cBackground);
+	return pRender->DrawRoundedRectangle({ flBarStart, m_vBounds.y, m_flBarPercent, m_vBounds.w }	, m_vBounds.w / 2, m_cFillOne, pRender->LerpColor(m_cFillOne, m_cFillTwo, m_flBarPercent / m_flBarSize), false);
+
+	
 
 }

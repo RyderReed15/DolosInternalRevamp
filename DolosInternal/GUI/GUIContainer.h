@@ -18,6 +18,8 @@ public:
                         ~GUIContainer       (void);
 
     void                AddElement          (IGUIElement* pElement);
+    template <typename T, typename ...Args>
+    T*                  CreateElement       (Args&&... args);
     void                RemoveElement       (int iElement);
 
     void                ResizeScreen        (POINT ptScreenSize);
@@ -38,4 +40,12 @@ private:
     std::vector<IGUIElement*>   m_vElements;
 
 };
+
+template <typename T, typename ...Args>
+T* GUIContainer::CreateElement(Args&&... args) {
+    T* pElement = new T(args...);
+    AddElement(pElement);
+    return pElement;
+}
+
 #endif // !GUI_CONTAINER_H

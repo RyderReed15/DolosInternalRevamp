@@ -42,8 +42,8 @@ public:
 
     GUIContainer*   GetContainer        (void);
 
-    template <typename callable, typename ...Args>
-    std::function<void()> BuildFunction(callable&& caFunction, Args&&... args);
+    template <typename Callable, typename ...Args>
+    std::function<void()> BuildFunction(Callable&& caFunction, Args&&... args);
 
 private:
 
@@ -52,10 +52,10 @@ private:
     IGUIElement*            m_pItemBeingDragged;
 };
 
-template <typename callable, typename ...Args>
-std::function<void()> GUIEventHandler::BuildFunction(callable&& caFunction, Args&&... args) {
+template <typename Callable, typename ...Args>
+std::function<void()> GUIEventHandler::BuildFunction(Callable&& caFunction, Args&&... args) {
 
-    return std::bind(std::forward<callable>(caFunction), std::forward<Args>(args)...);
+    return std::bind(std::forward<Callable>(caFunction), std::forward<Args>(args)...);
 }
 
 #endif // !GUI_EVENT_HANDLER_H
