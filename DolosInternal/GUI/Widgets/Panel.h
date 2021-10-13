@@ -11,7 +11,7 @@ class GUIEventHandler;
 
 class Panel : public IGUIElement {
 public:
-            Panel       (D3DXVECTOR4 vBounds, bool bMoveable, D3DCOLOR cColor, D3DCOLOR cColor2 = EMPTY, IGUIElement * pParent = nullptr);
+            Panel       (D3DXVECTOR4 vBounds, bool bMoveable, D3DCOLOR cColor, D3DCOLOR cColorTwo = EMPTY, IGUIElement * pParent = nullptr);
 
     HRESULT Draw        (ID3DXFont* pFont, Render* pRender);
 
@@ -19,10 +19,9 @@ public:
     void    OnDrag      (GUIEventHandler* pEventHandler, POINT ptLocation);
     void    OnRelease   (GUIEventHandler* pEventHandler, POINT ptLocation);
 private:
-    D3DCOLOR    m_cColor1, m_cColor2;
+    D3DCOLOR    m_cColorOne, m_cColorTwo;
     POINT       m_ptMoveOrigin;
-    bool        m_bMoving;
-    bool        m_bCanMove;
+    bool        m_bMoving, m_bMoveable;
 };
 
 

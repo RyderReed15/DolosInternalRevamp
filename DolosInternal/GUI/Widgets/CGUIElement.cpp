@@ -2,7 +2,16 @@
 
 
 IGUIElement::IGUIElement(D3DXVECTOR4 vBounds, IGUIElement* pParent) {
-	m_vBounds = vBounds;
+
+	m_bShouldDraw		= true;
+	m_bEnabled			= true;
+	m_iChildCount		= 0;
+	m_pFirstChild		= nullptr;
+	m_pSibling			= nullptr;
+	m_pParent			= nullptr;
+	m_iAnimStartTick	= 0;
+
+	m_vBounds			= vBounds;
 
 	if (pParent) {
 		pParent->AddChild(this);
@@ -33,7 +42,7 @@ float IGUIElement::GetAnimLerp(float flAnimLength) {
 		return 1;
 	}
 	float flAnimLerp = ((GetTickCount() - m_iAnimStartTick) / 1000.f) / flAnimLength;
-	if (flAnimLength > 1) {
+	if (flAnimLerp > 1) {
 		m_iAnimStartTick = 0;
 		return 1;
 	}
@@ -53,6 +62,7 @@ void IGUIElement::SetEnabled(bool bEnabled) {
 bool IGUIElement::GetEnabled(void) {
 	return m_bEnabled;
 }
+
 
 D3DXVECTOR2 IGUIElement::GetCoords(void) {
 	return { m_vBounds.x, m_vBounds.y };
@@ -102,4 +112,12 @@ void IGUIElement::SetParent(IGUIElement* pElement) {
 }
 IGUIElement* IGUIElement::GetParent(void) {
 	return m_pParent;
+}
+
+IGUIElement* IGUIElement::GetRoot(void) {
+	IGUIElement* pCurr = this;
+	while (pCurr->GetParent()) {
+		pCurr = pCurr->GetParent();
+	}
+	return pCurr;
 }

@@ -2,7 +2,7 @@
 
 GUIEventHandler::GUIEventHandler(GUIContainer* pGUI) {
     m_pGUI = pGUI;
-    m_pItemBeingDragged = nullptr;
+    m_pFocus = nullptr;
 }
 GUIEventHandler::~GUIEventHandler() {
     while (m_qEvents.size()) { m_qEvents.pop(); };
@@ -26,29 +26,33 @@ void GUIEventHandler::HandleMouseInput(GUI_EVENT_TYPE tType, POINT ptLocation) {
     }
 }
 void GUIEventHandler::HandleClick(POINT ptLocation) {
-    IGUIElement* pWidget = m_pGUI->GetWidgetAt(ptLocation);
-    if (pWidget) {
-        pWidget->OnClick(this, ptLocation);
-        m_pItemBeingDragged = pWidget;
+
+    if (m_pFocus) {
+        m_pFocus->OnClick(this, ptLocation);
     }
+    else {
+        IGUIElement* pWidget = m_pGUI->GetWidgetAt(ptLocation);
+        if (pWidget && pWidget->GetEnabled()) pWidget->OnClick(this, ptLocation);
+    }
+
+    
 }
 void GUIEventHandler::HandleDrag(POINT ptLocation) {
     
-    if (m_pItemBeingDragged) m_pItemBeingDragged->OnDrag(this, ptLocation);
+    if (m_pFocus) m_pFocus->OnDrag(this, ptLocation);
 }
 void GUIEventHandler::HandleRelease(POINT ptLocation) {
-    if (m_pItemBeingDragged) {
-        m_pItemBeingDragged->OnRelease(this, ptLocation);
-        m_pItemBeingDragged = nullptr;
+    if (m_pFocus) {
+        m_pFocus->OnRelease(this, ptLocation);
     }else{
         IGUIElement* pWidget = m_pGUI->GetWidgetAt(ptLocation);
-        if (pWidget) pWidget->OnRelease(this, ptLocation);
+        if (pWidget && pWidget->GetEnabled()) pWidget->OnRelease(this, ptLocation);
     }
     
 }
 void GUIEventHandler::HandleHover(POINT ptLocation) {
     IGUIElement* pWidget = m_pGUI->GetWidgetAt(ptLocation);
-    if (pWidget) pWidget->OnHover(this, ptLocation);
+    if (pWidget && pWidget->GetEnabled()) pWidget->OnHover(this, ptLocation);
 }
 
 bool GUIEventHandler::CreateGUIEvent(GUI_EVENT_TYPE tEventType, std::function<void()> pFunc){
@@ -72,6 +76,14 @@ void GUIEventHandler::ProccessEvents() {
 GUIContainer* GUIEventHandler::GetContainer(void)
 {
     return m_pGUI;
+}
+void GUIEventHandler::SetFocus(IGUIElement* pFocus) {
+    m_pFocus = pFocus;
+}
+
+void GUIEventHandler::ReleaseFocus(void)
+{
+    m_pFocus = nullptr;
 }
 
 

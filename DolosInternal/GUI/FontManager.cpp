@@ -6,6 +6,9 @@ bool InitializeFonts(HMODULE hMod) {
 	g_hAvenir			= AddFontToResources(hMod, FONT_AVENIR);
 	g_hWeapons			= AddFontToResources(hMod, FONT_WEAPONS);
 	g_hWeaponsOutline	= AddFontToResources(hMod, FONT_WEAPONS_OUTLINE);
+	if (g_pD3DDevice) {
+		AddD3DFonts(g_pD3DDevice);
+	}
 	return g_hAvenir && g_hWeapons && g_hWeaponsOutline;
 }
 

@@ -57,7 +57,7 @@ void GUIContainer::GenerateMap() {
         wmemset((wchar_t*)m_aMap[x], -1, m_ptScreenSize.y);
     }
     for (short i = 0; i < m_vElements.size(); i++) {
-        if (m_vElements[i]->GetEnabled() && m_vElements[i]->GetDrawState()) {
+        if (m_vElements[i]->GetDrawState()) {
             D3DXVECTOR4 vBounds = m_vElements[i]->GetBounds();
             RECT rBounds = { vBounds.x, vBounds.y, vBounds.z, vBounds.w };
 

@@ -44,6 +44,9 @@
     <Filter Include="GUI\Widgets\Headers">
       <UniqueIdentifier>{d10f57b8-f548-4ef9-90c4-b832c7473c64}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI\Helpers">
+      <UniqueIdentifier>{ac525291-fc2b-4cc2-95ab-84a00fd865a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -67,15 +70,6 @@
     <ClCompile Include="Hooks.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="GUI\GUI.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="GUI\Render.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="GUI\FontManager.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
     <ClCompile Include="SDK\Math\Vector2D.cpp">
       <Filter>SDK\Math</Filter>
     </ClCompile>
@@ -97,11 +91,26 @@
     <ClCompile Include="GUI\Widgets\Slider.cpp">
       <Filter>GUI\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="GUI\GUIEventHandler.cpp">
-      <Filter>GUI</Filter>
+    <ClCompile Include="GUI\Widgets\CheckBox.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Widgets\DropDown.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\FontManager.cpp">
+      <Filter>GUI\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\GUI.cpp">
+      <Filter>GUI\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="GUI\GUIContainer.cpp">
-      <Filter>GUI</Filter>
+      <Filter>GUI\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\GUIEventHandler.cpp">
+      <Filter>GUI\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Render.cpp">
+      <Filter>GUI\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -159,17 +168,8 @@
     <ClInclude Include="Hooks.h">
       <Filter>Source\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="GUI\GUI.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI\Render.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI\FontManager.h">
-      <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="SDK\Math\QAngle.h">
       <Filter>SDK\Math</Filter>
@@ -282,11 +282,26 @@
     <ClInclude Include="GUI\Widgets\Slider.h">
       <Filter>GUI\Widgets\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="GUI\GUIEventHandler.h">
-      <Filter>GUI</Filter>
+    <ClInclude Include="GUI\Widgets\CheckBox.h">
+      <Filter>GUI\Widgets\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Widgets\DropDown.h">
+      <Filter>GUI\Widgets\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\FontManager.h">
+      <Filter>GUI\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUI.h">
+      <Filter>GUI\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="GUI\GUIContainer.h">
-      <Filter>GUI</Filter>
+      <Filter>GUI\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUIEventHandler.h">
+      <Filter>GUI\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Render.h">
+      <Filter>GUI\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

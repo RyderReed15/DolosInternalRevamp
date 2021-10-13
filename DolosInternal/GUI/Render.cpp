@@ -1,4 +1,5 @@
 #include "Render.h"
+#include <iostream>
 
 
 Render::Render() {
@@ -247,22 +248,22 @@ D3DCOLOR Render::LerpColor(D3DCOLOR cColorOne, D3DCOLOR cColorTwo, float flPerce
 	if (flPercent <= 0) {
 		return cColorOne;
 	}
-	if (flPercent >= 1) {
+	else if (flPercent >= 1) {
 		return cColorTwo;
 	}
 
 	byte a1 = (cColorOne >> 24);
-	byte a2 = (cColorOne >> 24);
+	byte a2 = (cColorTwo >> 24);
 	byte r1 = (cColorOne >> 16);
-	byte r2 = (cColorOne >> 16);
+	byte r2 = (cColorTwo >> 16);
 	byte g1 = (cColorOne >> 8);
-	byte g2 = (cColorOne >> 8);
+	byte g2 = (cColorTwo >> 8);
 	byte b1 = (cColorOne);
-	byte b2 = (cColorOne);
-	return (int)((a2 - a1) * flPercent + a1) << 24 |
-		(int)((r2 - r1) * flPercent + r1) << 16 |
-		(int)((g2 - g1) * flPercent + g1) << 8 |
-		(int)((b2 - b1) * flPercent + b1);
+	byte b2 = (cColorTwo);
+	return (byte)((a2 - a1) * flPercent + a1) << 24 |
+		(byte)((r2 - r1) * flPercent + r1) << 16 |
+		(byte)((g2 - g1) * flPercent + g1) << 8 |
+		(byte)((b2 - b1) * flPercent + b1);
 
 }
 D3DCOLOR Render::LerpAlpha(D3DCOLOR cColor, float flPercent, bool bToZero) {
@@ -270,9 +271,10 @@ D3DCOLOR Render::LerpAlpha(D3DCOLOR cColor, float flPercent, bool bToZero) {
 		return bToZero ? EMPTY : cColor;
 	}
 	if (bToZero) {
-		return (cColor & 0x00FFFFFF) + (1 - flPercent) * 0xFF000000;
+		return (cColor & 0x00FFFFFF) + ((byte)((1 - flPercent) * 0x000000FF) << 24);
 	}
-	return (cColor & 0x00FFFFFF) + flPercent * 0xFF000000;
+	
+	return (cColor & 0x00FFFFFF) + ((byte)(flPercent * 0x000000FF) << 24);
 }
 
 
@@ -341,13 +343,12 @@ HRESULT Render::DrawRoundedRectangle(D3DXVECTOR4 vBounds, float flCornerSize, D3
 	if (IsInitialized()) {
 
 		if (bVertical) {
-			D3DXCOLOR cLerp;
 			if (cColor2) {
-				DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, flCornerSize * 2 / vBounds.w), bVertical, .25, 180);
-				DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, flCornerSize * 2 / vBounds.w), bVertical, .25, 270);
-				DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, flCornerSize * 2 / vBounds.w), cColor2, bVertical, .25, 90);
-				DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, flCornerSize * 2 / vBounds.w), cColor2, bVertical, .25, 0);
-				DrawRectangle({ vBounds.x, vBounds.y + flCornerSize, vBounds.z, vBounds.w - flCornerSize * 2 }, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, flCornerSize / vBounds.w), *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, flCornerSize / vBounds.w), bVertical);
+				DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, LerpColor(cColor, cColor2, flCornerSize * 2 / vBounds.w), bVertical, .25, 180);
+				DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, LerpColor(cColor, cColor2, flCornerSize * 2 / vBounds.w), bVertical, .25, 270);
+				DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, LerpColor(cColor2, cColor, flCornerSize * 2 / vBounds.w), cColor2, bVertical, .25, 90);
+				DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, LerpColor(cColor2, cColor, flCornerSize * 2 / vBounds.w), cColor2, bVertical, .25, 0);
+				DrawRectangle({ vBounds.x, vBounds.y + flCornerSize, vBounds.z, vBounds.w - flCornerSize * 2 }, LerpColor(cColor, cColor2, flCornerSize / vBounds.w), LerpColor(cColor2, cColor, flCornerSize / vBounds.w), bVertical);
 
 			}
 			else {
@@ -361,13 +362,12 @@ HRESULT Render::DrawRoundedRectangle(D3DXVECTOR4 vBounds, float flCornerSize, D3
 			DrawRectangle({ vBounds.x + flCornerSize, vBounds.y, vBounds.z - flCornerSize * 2, vBounds.w }, cColor, cColor2, bVertical);
 		}
 		else {
-			D3DXCOLOR cLerp;
-			DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, flCornerSize * 2 / vBounds.z), bVertical, .25, 180);
-			DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, flCornerSize * 2 / vBounds.z), cColor2, bVertical, .25, 270);
-			DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, cColor, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, flCornerSize * 2 / vBounds.z), bVertical, .25, 90);
-			DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, flCornerSize * 2 / vBounds.z), cColor2, bVertical, .25, 0);
+			DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, LerpColor(cColor, cColor2, flCornerSize * 2 / vBounds.z), bVertical, .25, 180);
+			DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, LerpColor(cColor2, cColor, flCornerSize * 2 / vBounds.z), cColor2, bVertical, .25, 270);
+			DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, cColor, LerpColor(cColor, cColor2, flCornerSize * 2 / vBounds.z), bVertical, .25, 90);
+			DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, LerpColor(cColor2, cColor, flCornerSize * 2 / vBounds.z), cColor2, bVertical, .25, 0);
 
-			DrawRectangle({ vBounds.x + flCornerSize, vBounds.y, vBounds.z - flCornerSize * 2, vBounds.w }, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, flCornerSize / vBounds.z), *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor2, &(D3DXCOLOR)cColor, flCornerSize / vBounds.z), bVertical);
+			DrawRectangle({ vBounds.x + flCornerSize, vBounds.y, vBounds.z - flCornerSize * 2, vBounds.w }, LerpColor(cColor, cColor2, flCornerSize / vBounds.z), LerpColor(cColor2, cColor, flCornerSize / vBounds.z), bVertical);
 			DrawRectangle({ vBounds.x, vBounds.y + flCornerSize, vBounds.z, vBounds.w - flCornerSize * 2 }, cColor, cColor2, bVertical);
 		}
 
@@ -388,9 +388,8 @@ HRESULT Render::DrawFadingCircle(D3DXVECTOR2 vLocation, float flRadius, int iSid
 		float flR = flRadius * flFracCos;
 		float flD = flRadius * flFracSin;
 		float flTemp;
-		D3DXCOLOR cLerp;
-		unsigned int iCenter = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x, vLocation.y }, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, .5));
-		unsigned int iPrev = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x + flR, vLocation.y + flD }, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, (bVertical ? flD : flR) / flRadius + 1 / 2));
+		unsigned int iCenter = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x, vLocation.y }, LerpColor(cColor, cColor2, .5));
+		unsigned int iPrev = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x + flR, vLocation.y + flD }, LerpColor(cColor, cColor2, (bVertical ? flD : flR) / flRadius + 1 / 2));
 
 
 		for (int i = 0; i < iSides; i++) {
@@ -398,7 +397,7 @@ HRESULT Render::DrawFadingCircle(D3DXVECTOR2 vLocation, float flRadius, int iSid
 			flR = flCos * flR - flSin * flD;
 			flD = flSin * flTemp + flCos * flD;
 
-			unsigned int iTemp = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x + flR, vLocation.y + flD }, *D3DXColorLerp(&cLerp, &(D3DXCOLOR)cColor, &(D3DXCOLOR)cColor2, (bVertical ? flD : flR) / flRadius + 1 / 2));
+			unsigned int iTemp = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x + flR, vLocation.y + flD }, LerpColor(cColor, cColor2, (bVertical ? flD : flR) / flRadius + 1 / 2));
 			AddTriangle(iTemp, iCenter, iPrev);
 
 			iPrev = iTemp;

@@ -42,6 +42,7 @@ public:
     PNETVAR(bool, SpottedPointer, "DT_BaseEntity", "m_bSpotted");
     ONETVAR(int, GetCrosshairId, "DT_CSPlayer", "m_bHasDefuser", 92);
     NETVAR(float, GetSimulationTime, "DT_BaseEntity", "m_flSimulationTime");
+    NETVAR(bool, GetImmunity, "DT_CSPlayer", "m_bGunGameImmunity")
 
     ONETVAR(matrix3x4_t*, GetBoneMatrix, "DT_BaseAnimating", "m_nForceBone", 28);
     int GetFlags() {
@@ -82,7 +83,7 @@ public:
 
     }
     bool SanityCheck() {
-        return IsAlive() && !IsDormant();
+        return IsAlive() && !IsDormant() && !GetImmunity();
     }
 };
 #endif // !CLIENT_ENTITY_H

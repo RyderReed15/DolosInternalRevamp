@@ -11,6 +11,8 @@
 #include "Widgets/Panel.h"
 #include "Widgets/Button.h"
 #include "Widgets/Slider.h"
+#include "Widgets/CheckBox.h"
+#include "Widgets/DropDown.h"
 #include "../SDK/SDK.h"
 
 inline GUIContainer*    g_pGUIContainer;

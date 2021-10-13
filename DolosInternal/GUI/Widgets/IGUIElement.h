@@ -3,7 +3,7 @@
 #ifndef GUI_ELEMENT_H
 #define GUI_ELEMENT_H
 
-#define FADE_LENGTH	3
+#define FADE_LENGTH	.5
 
 #include "../Render.h"
 #include "../GUIEventHandler.h"
@@ -39,16 +39,18 @@ public:
 	IGUIElement*	GetSibling		(void);
 	void			SetParent		(IGUIElement* pElement);
 	IGUIElement*	GetParent		(void);
-protected:
-	bool			m_bShouldDraw		= true;
-	bool			m_bEnabled			= true;
-	D3DXVECTOR4		m_vBounds;
-	int				m_iChildCount		= 0;
-	IGUIElement*	m_pFirstChild		= nullptr;
-	IGUIElement*	m_pSibling			= nullptr;
-	IGUIElement*	m_pParent			= nullptr;
+	IGUIElement*	GetRoot			(void);
 
-	int				m_iAnimStartTick		= 0;
+protected:
+	bool			m_bShouldDraw;
+	bool			m_bEnabled;
+	D3DXVECTOR4		m_vBounds;
+	int				m_iChildCount;
+	IGUIElement*	m_pFirstChild;
+	IGUIElement*	m_pSibling;
+	IGUIElement*	m_pParent;
+
+	int				m_iAnimStartTick;
 private:
 
 

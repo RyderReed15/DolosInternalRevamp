@@ -42,6 +42,9 @@ public:
 
     GUIContainer*   GetContainer        (void);
 
+    void            SetFocus            (IGUIElement* pFocus);
+    void            ReleaseFocus        (void);
+
     template <typename Callable, typename ...Args>
     std::function<void()> BuildFunction(Callable&& caFunction, Args&&... args);
 
@@ -49,7 +52,7 @@ private:
 
     std::queue<GUIEvent>    m_qEvents;
     GUIContainer*           m_pGUI;
-    IGUIElement*            m_pItemBeingDragged;
+    IGUIElement*            m_pFocus;
 };
 
 template <typename Callable, typename ...Args>

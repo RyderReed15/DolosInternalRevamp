@@ -116,7 +116,7 @@ HRESULT APIENTRY hkPresent(IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST R
 }
 
 HRESULT APIENTRY hkEndscene(IDirect3DDevice9* pDevice) {
-
+	
 	HRESULT hReturn = oEndScene(pDevice);
 	if (g_pGUIContainer && g_pRender) {
 		g_pGUIContainer->GetEventHandler()->ProccessEvents();
