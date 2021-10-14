@@ -244,38 +244,7 @@ void Render::AddTriangle(unsigned int iVertexPosOne, unsigned int iVertexPosTwo,
 	m_iTriangleCount++;
 }
 
-D3DCOLOR Render::LerpColor(D3DCOLOR cColorOne, D3DCOLOR cColorTwo, float flPercent) {
-	if (flPercent <= 0) {
-		return cColorOne;
-	}
-	else if (flPercent >= 1) {
-		return cColorTwo;
-	}
 
-	byte a1 = (cColorOne >> 24);
-	byte a2 = (cColorTwo >> 24);
-	byte r1 = (cColorOne >> 16);
-	byte r2 = (cColorTwo >> 16);
-	byte g1 = (cColorOne >> 8);
-	byte g2 = (cColorTwo >> 8);
-	byte b1 = (cColorOne);
-	byte b2 = (cColorTwo);
-	return (byte)((a2 - a1) * flPercent + a1) << 24 |
-		(byte)((r2 - r1) * flPercent + r1) << 16 |
-		(byte)((g2 - g1) * flPercent + g1) << 8 |
-		(byte)((b2 - b1) * flPercent + b1);
-
-}
-D3DCOLOR Render::LerpAlpha(D3DCOLOR cColor, float flPercent, bool bToZero) {
-	if (flPercent >= 1) {
-		return bToZero ? EMPTY : cColor;
-	}
-	if (bToZero) {
-		return (cColor & 0x00FFFFFF) + ((byte)((1 - flPercent) * 0x000000FF) << 24);
-	}
-	
-	return (cColor & 0x00FFFFFF) + ((byte)(flPercent * 0x000000FF) << 24);
-}
 
 
 HRESULT Render::DrawSprite(D3DXVECTOR4 vRect, D3DXVECTOR2 vLocation, D3DCOLOR cColor, float flScale, float flRotation) {
@@ -516,4 +485,38 @@ D3DXVECTOR2 Render::GetStringSize(ID3DXFont* pFont, const char* szString, ...) {
 	rect.right = 0;
 	pFont->DrawTextA(NULL, szString, -1, &rect, DT_CALCRECT, 0xffffffff);
 	return { (float)rect.right, (float)rect.bottom };
+}
+
+
+D3DCOLOR LerpColor(D3DCOLOR cColorOne, D3DCOLOR cColorTwo, float flPercent) {
+	if (flPercent <= 0) {
+		return cColorOne;
+	}
+	else if (flPercent >= 1) {
+		return cColorTwo;
+	}
+
+	byte a1 = (cColorOne >> 24);
+	byte a2 = (cColorTwo >> 24);
+	byte r1 = (cColorOne >> 16);
+	byte r2 = (cColorTwo >> 16);
+	byte g1 = (cColorOne >> 8);
+	byte g2 = (cColorTwo >> 8);
+	byte b1 = (cColorOne);
+	byte b2 = (cColorTwo);
+	return (byte)((a2 - a1) * flPercent + a1) << 24 |
+		(byte)((r2 - r1) * flPercent + r1) << 16 |
+		(byte)((g2 - g1) * flPercent + g1) << 8 |
+		(byte)((b2 - b1) * flPercent + b1);
+
+}
+D3DCOLOR LerpAlpha(D3DCOLOR cColor, float flPercent, bool bToZero) {
+	if (flPercent >= 1) {
+		return bToZero ? EMPTY : cColor;
+	}
+	if (bToZero) {
+		return (cColor & 0x00FFFFFF) + ((byte)((1 - flPercent) * 0x000000FF) << 24);
+	}
+
+	return (cColor & 0x00FFFFFF) + ((byte)(flPercent * 0x000000FF) << 24);
 }

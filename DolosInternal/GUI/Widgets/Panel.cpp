@@ -12,7 +12,7 @@ Panel::Panel(D3DXVECTOR4 vBounds, bool bMoveable, D3DCOLOR cColor, D3DCOLOR cCol
 
 HRESULT Panel::Draw(ID3DXFont* pFont, Render* pRender) {
 	
-	return pRender->DrawRectangle(m_vBounds, pRender->LerpAlpha(m_cColorOne, GetAnimLerp(FADE_LENGTH)), pRender->LerpAlpha(m_cColorTwo, GetAnimLerp(FADE_LENGTH)), true);;
+	return pRender->DrawRectangle(m_vBounds, LerpAlpha(m_cColorOne, GetAnimLerp(FADE_LENGTH)), LerpAlpha(m_cColorTwo, GetAnimLerp(FADE_LENGTH)), true);;
 
 }
 

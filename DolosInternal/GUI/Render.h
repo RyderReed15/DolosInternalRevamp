@@ -78,8 +78,7 @@ public:
     void                AddIndex                (D3DPRIMITIVETYPE tPrimitiveType, unsigned int iVertexPos);
     void                AddTriangle             (unsigned int iVertexPosOne, unsigned int iVertexPosTwo, unsigned int iVertexPosThree);
 
-    D3DCOLOR            LerpColor               (D3DCOLOR cColorOne, D3DCOLOR cColorTwo, float flPercent);
-    D3DCOLOR            LerpAlpha               (D3DCOLOR cColor, float flPercent, bool bToZero = false);
+   
 
     HRESULT             DrawSprite              (D3DXVECTOR4 vRect, D3DXVECTOR2 vLocation, D3DCOLOR cColor, float flScale = 1.f, float flRotation = 0.f);
     HRESULT             DrawLine                (D3DXVECTOR2 vLocationOne, D3DXVECTOR2 vLocationTwo, D3DCOLOR cColor, D3DCOLOR cColor2 = 0);
@@ -109,7 +108,8 @@ private:
     IDirect3DTexture9*      m_pTextureAtlas;
 };
 
-
+D3DCOLOR            LerpColor(D3DCOLOR cColorOne, D3DCOLOR cColorTwo, float flPercent);
+D3DCOLOR            LerpAlpha(D3DCOLOR cColor, float flPercent, bool bToZero = false);
 
 
 #endif // !RENDER_H

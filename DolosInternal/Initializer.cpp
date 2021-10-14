@@ -11,9 +11,6 @@ bool InitializeCheat(HMODULE hMod) {
 	}
 	std::cout << "SDK Initialized" << std::endl;
 	
-	//fclose(f);
-	//FreeConsole();
-	//FreeLibraryAndExitThread(hMod, 0);
 	if (!InitializeNetvars(nullptr)) {
 		return false;
 	}

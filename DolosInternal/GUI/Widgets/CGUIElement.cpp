@@ -34,6 +34,10 @@ void IGUIElement::OnHover(GUIEventHandler* pEventHandler, POINT ptLocation) {
 	return;
 }
 
+void IGUIElement::OnType(GUIEventHandler* pEventHandler, char chKey) {
+	return;
+}
+
 void IGUIElement::SetAnimStartTick(void) {
 	m_iAnimStartTick = GetTickCount();
 }

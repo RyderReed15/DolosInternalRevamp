@@ -8,23 +8,13 @@ GUIEventHandler::~GUIEventHandler() {
     while (m_qEvents.size()) { m_qEvents.pop(); };
 }
 
-void GUIEventHandler::HandleMouseInput(GUI_EVENT_TYPE tType, POINT ptLocation) {
-    switch (tType) {
-    case GUI_EVENT_TYPE::CLICK:
-        CreateGUIEvent(tType, BuildFunction(&GUIEventHandler::HandleClick   , this, ptLocation));
-        break;
-    case GUI_EVENT_TYPE::DRAG:
-        CreateGUIEvent(tType, BuildFunction(&GUIEventHandler::HandleDrag    , this, ptLocation));
-        break;
-    case GUI_EVENT_TYPE::RELEASE:
-        CreateGUIEvent(tType, BuildFunction(&GUIEventHandler::HandleRelease , this, ptLocation));
-        break;
-    case GUI_EVENT_TYPE::HOVER:
-        CreateGUIEvent(tType, BuildFunction(&GUIEventHandler::HandleHover   , this, ptLocation));
-        break;
-
-    }
+void GUIEventHandler::HandleKeyboard(char chKey) {
+    if (m_pFocus) m_pFocus->OnType(this, chKey);
 }
+
+
+
+
 void GUIEventHandler::HandleClick(POINT ptLocation) {
 
     if (m_pFocus) {

@@ -16,6 +16,7 @@ enum class GUI_EVENT_TYPE {
     DRAG,
     RELEASE,
     HOVER,
+    KEYDOWN,
     BUTTON
 };
 
@@ -31,11 +32,13 @@ public:
                     GUIEventHandler     (GUIContainer* pGUI);
                     ~GUIEventHandler    (void);
 
-    void            HandleMouseInput    (GUI_EVENT_TYPE tType, POINT ptLocation);
+    
+
     void            HandleClick         (POINT ptLocation);
     void            HandleDrag          (POINT ptLocation);
     void            HandleRelease       (POINT ptLocation);
     void            HandleHover         (POINT ptLocation);
+    void            HandleKeyboard      (char chKey);
 
     bool            CreateGUIEvent      (GUI_EVENT_TYPE tEventType, std::function<void()> pFunc);
     void            ProccessEvents      (void);

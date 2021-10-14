@@ -21,6 +21,8 @@ public:
 	virtual void	OnRelease		(GUIEventHandler* pEventHandler, POINT ptLocation);
 	virtual void	OnHover			(GUIEventHandler* pEventHandler, POINT ptLocation);
 
+	virtual void	OnType			(GUIEventHandler* pEventHandler, char chKey);
+
 	void			SetAnimStartTick(void);
 	float			GetAnimLerp		(float flAnimLength);
 	void			SetDrawState	(bool bDrawState);

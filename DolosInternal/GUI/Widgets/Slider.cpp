@@ -13,8 +13,6 @@ Slider::Slider(const char* szName, float* pValue, float flMaxValue, float flMinV
 
 	m_szName		= szName;
 
-	m_bMoving		= false;
-
 	m_cBackground	= cBackground;
 	m_cFillOne		= cFillOne;
 	m_cFillTwo		= cFillTwo ? cFillTwo : cFillOne;
@@ -35,32 +33,32 @@ HRESULT Slider::Draw(ID3DXFont* pFont, Render* pRender) {
 	pRender->DrawString({ flBarStart - vSize2.x - 10, m_vBounds.y - 2 }	, (m_bEnabled) ? WHITE : GRAY, pFont, szValue);
 
 	pRender->DrawRoundedRectangle({ flBarStart, m_vBounds.y, m_flBarSize, m_vBounds.w }				, m_vBounds.w / 2, m_cBackground);
-	return pRender->DrawRoundedRectangle({ flBarStart, m_vBounds.y, flBarSizeAdj, m_vBounds.w }		, m_vBounds.w / 2, m_cFillOne, pRender->LerpColor(m_cFillOne, m_cFillTwo, m_flBarPercent), false);
+	return pRender->DrawRoundedRectangle({ flBarStart, m_vBounds.y, flBarSizeAdj, m_vBounds.w }		, m_vBounds.w / 2, m_cFillOne, LerpColor(m_cFillOne, m_cFillTwo, m_flBarPercent), false);
 
 	
 
 }
 
 void Slider::UpdateSlider() {
-	m_flBarPercent = max(min(pow((*m_pValue) - m_flMinValue / m_flRange, 1 + m_bExponential * .5), 1.f), 0.f);
+	m_flBarPercent = max(min(pow(((*m_pValue) - m_flMinValue) / m_flRange, 1 + m_bExponential * .5), 1.f), 0.f);
 }
 
 void Slider::OnClick(GUIEventHandler* pEventHandler, POINT ptLocation) {
 	
 	pEventHandler->SetFocus(this);
-	m_bMoving = true;
+	
 	
 }
 void Slider::OnDrag(GUIEventHandler* pEventHandler, POINT ptLocation) {
-	if (m_bMoving) {
+	
 		
-		m_flBarPercent = max(min((ptLocation.x - (m_vBounds.x + m_vBounds.z - m_flBarSize + m_vBounds.w)) / (m_flBarSize - m_vBounds.w), 1.f), 0.f);
+	m_flBarPercent = max(min((ptLocation.x - (m_vBounds.x + m_vBounds.z - m_flBarSize + m_vBounds.w)) / (m_flBarSize - m_vBounds.w), 1.f), 0.f);
 		
-		*m_pValue = m_flRange * pow(m_flBarPercent, 1 + m_bExponential * .5) + m_flMinValue;
+	*m_pValue = m_flRange * pow(m_flBarPercent, 1 + m_bExponential * .5) + m_flMinValue;
 		
-	}
+	
 }
 void Slider::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
 	pEventHandler->ReleaseFocus();
-	m_bMoving = false;
+	
 }

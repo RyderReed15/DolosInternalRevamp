@@ -11,7 +11,7 @@ HRESULT Button::Draw(ID3DXFont* pFont, Render* pRender) {
 	if (m_bShouldDraw) {
 		
 		D3DXVECTOR2 vSize = pRender->GetStringSize(pFont, m_szText);		
-		HRESULT result = pRender->DrawRectangle({ m_vBounds.x, m_vBounds.y, m_vBounds.z, m_vBounds.w}, pRender->LerpAlpha(m_cColor, GetAnimLerp(FADE_LENGTH)));
+		HRESULT result = pRender->DrawRectangle({ m_vBounds.x, m_vBounds.y, m_vBounds.z, m_vBounds.w}, LerpAlpha(m_cColor, GetAnimLerp(FADE_LENGTH)));
 		pRender->DrawString({ m_vBounds.x + (m_vBounds.z - vSize.x) / 2, m_vBounds.y + (m_vBounds.w - vSize.y) / 2 }, (m_bEnabled) ? WHITE : GRAY, pFont, m_szText);
 		return result;
 	}

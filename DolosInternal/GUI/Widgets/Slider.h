@@ -21,7 +21,6 @@ public:
 	void	UpdateSlider	(void);
 private:
 	D3DCOLOR		m_cBackground, m_cFillOne, m_cFillTwo;
-	bool			m_bMoving;
 	float			m_flBarPercent, m_flBarSize;
 	float			m_flMaxValue, m_flMinValue, m_flRange;
 	const char*		m_szName;

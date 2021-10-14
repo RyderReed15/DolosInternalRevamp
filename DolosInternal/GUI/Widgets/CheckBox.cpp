@@ -12,7 +12,7 @@ CheckBox::CheckBox(const char* szName, bool* pBool, D3DXVECTOR4 vBounds, D3DCOLO
 HRESULT CheckBox::Draw(ID3DXFont* pFont, Render* pRender) {
 	
 		pRender->DrawString({ m_vBounds.x, m_vBounds.y - 2 }, (*m_pBool && m_bEnabled) ? WHITE : GRAY, pFont, m_szName);
-		return pRender->DrawRoundedRectangle({ m_vBounds.x + m_vBounds.z - m_vBounds.w, m_vBounds.y, m_vBounds.w, m_vBounds.w }, 5, *m_pBool ? m_cActivated : m_cDisabled);;
+		return pRender->DrawRoundedRectangle({ m_vBounds.x + m_vBounds.z - m_vBounds.w, m_vBounds.y, m_vBounds.w, m_vBounds.w }, 5, *m_pBool ? m_cActivated : m_cDisabled);
 		
 }
 

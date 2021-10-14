@@ -51,29 +51,26 @@ bool UninitializeHooks() {
 
 LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	POINTS ptLoc = *(POINTS*)&lParam;
-	short iKeyCode = wParam;
+	POINT ptLocation = { ptLoc.x, ptLoc.y };
+	char chKey = wParam;
+	GUIEventHandler* pEventHandler = g_pGUIContainer->GetEventHandler();
 	switch (uMsg) {
-	case WM_KEYDOWN:
+	case WM_CHAR:
+		pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::KEYDOWN	, pEventHandler->BuildFunction(&GUIEventHandler::HandleKeyboard	, pEventHandler, chKey));
 		break;
 	case WM_LBUTTONDOWN:
-
-		g_pGUIContainer->GetEventHandler()->HandleMouseInput(GUI_EVENT_TYPE::CLICK, { ptLoc.x, ptLoc.y });
-
+		pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::CLICK		, pEventHandler->BuildFunction(&GUIEventHandler::HandleClick	, pEventHandler, ptLocation));
 		break;
 	
 	case WM_LBUTTONUP:
-
-		g_pGUIContainer->GetEventHandler()->HandleMouseInput(GUI_EVENT_TYPE::RELEASE, { ptLoc.x, ptLoc.y });
-
+		pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::RELEASE	, pEventHandler->BuildFunction(&GUIEventHandler::HandleRelease	, pEventHandler, ptLocation));
 		break;
 	case WM_MOUSEMOVE:
 		if (wParam & MK_LBUTTON) {
-
-			g_pGUIContainer->GetEventHandler()->HandleMouseInput(GUI_EVENT_TYPE::DRAG, { ptLoc.x, ptLoc.y });
+			pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::DRAG	, pEventHandler->BuildFunction(&GUIEventHandler::HandleDrag		, pEventHandler, ptLocation));
 		}
 		//Hover maybe?
 		break;
-
 	}
 
 	
@@ -119,9 +116,12 @@ HRESULT APIENTRY hkEndscene(IDirect3DDevice9* pDevice) {
 	
 	HRESULT hReturn = oEndScene(pDevice);
 	if (g_pGUIContainer && g_pRender) {
-		g_pGUIContainer->GetEventHandler()->ProccessEvents();
-		g_pGUIContainer->DrawElements(g_pRender, g_pAvenirFont);
-		FixD3D((void***)pDevice);
+		//if (g_pGUIContainer->GetEventHandler()) {
+			g_pGUIContainer->GetEventHandler()->ProccessEvents();
+			g_pGUIContainer->DrawElements(g_pRender, g_pAvenirFont);
+			FixD3D((void***)pDevice);
+		//}
+		
 	}
 	
 	return hReturn;

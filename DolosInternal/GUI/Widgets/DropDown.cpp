@@ -30,8 +30,8 @@ void DropDown::SetValue(int iValue) {
 	if (m_pValue) {
 		*m_pValue = iValue;
 	}
-
 }
+
 
 HRESULT DropDown::Draw(ID3DXFont* pFont, Render* pRender) {
 	
@@ -78,7 +78,7 @@ HRESULT DropDownContainer::Draw(ID3DXFont* pFont, Render* pRender) {
 	pRender->DrawString({ m_vBounds.x + 5, m_vBounds.y + 2 }, (m_iIndex) ? WHITE : GRAY, pFont, m_pElementArray[m_iIndex].GetName());
 
 	if (m_bOpen) {
-		pRender->DrawRoundedRectangle({ m_vBounds.x, m_vBounds.y + m_vBounds.w + 2, m_vBounds.z, m_vBounds.w * (m_iNumDisplayElements * 1.3f + .25f) }, 2, pRender->LerpAlpha(m_cColor, GetAnimLerp(FADE_LENGTH)));
+		pRender->DrawRoundedRectangle({ m_vBounds.x, m_vBounds.y + m_vBounds.w + 2, m_vBounds.z, m_vBounds.w * (m_iNumDisplayElements * 1.3f + .25f) }, 2, LerpAlpha(m_cColor, GetAnimLerp(FADE_LENGTH)));
 			
 		for (int i = m_iTopIndex; i < m_iTopIndex + m_iNumDisplayElements && i < m_iNumElements; i++) {
 
