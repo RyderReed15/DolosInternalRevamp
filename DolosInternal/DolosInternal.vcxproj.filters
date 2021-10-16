@@ -47,6 +47,9 @@
     <Filter Include="GUI\Helpers">
       <UniqueIdentifier>{ac525291-fc2b-4cc2-95ab-84a00fd865a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils\JsonParser">
+      <UniqueIdentifier>{c3c3d2b8-59c3-4b35-bd35-866d1b22832e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -111,6 +114,24 @@
     </ClCompile>
     <ClCompile Include="GUI\Render.cpp">
       <Filter>GUI\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Widgets\ColorPicker.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Widgets\TextBox.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\JsonParser\JsonArray.cpp">
+      <Filter>Utils\JsonParser</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\JsonParser\JsonObject.cpp">
+      <Filter>Utils\JsonParser</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\JsonParser\JsonParser.cpp">
+      <Filter>Utils\JsonParser</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\JsonParser\JsonValue.cpp">
+      <Filter>Utils\JsonParser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -303,6 +324,24 @@
     <ClInclude Include="GUI\Render.h">
       <Filter>GUI\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="GUI\Widgets\ColorPicker.h">
+      <Filter>GUI\Widgets\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Widgets\TextBox.h">
+      <Filter>GUI\Widgets\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\JsonParser\JsonArray.h">
+      <Filter>Utils\JsonParser</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\JsonParser\JsonObject.h">
+      <Filter>Utils\JsonParser</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\JsonParser\JsonParser.h">
+      <Filter>Utils\JsonParser</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\JsonParser\JsonValue.h">
+      <Filter>Utils\JsonParser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\TextureAtlas.png">
@@ -329,5 +368,10 @@
     <Text Include="Resources\Netvar.txt">
       <Filter>Resource Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Config.json">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

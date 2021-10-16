@@ -1,8 +1,7 @@
 #include "NetvarManager.h"
 
 
-std::unordered_map<int, std::unordered_map<int, char*>> mOffsets;
-std::hash<std::string> hash;
+
 
 bool InitializeNetvars(IClientClass* pClientClass) {
     for (IClientClass* pCurrNode = pClientClass; pCurrNode; pCurrNode = pCurrNode->m_pNext) {
