@@ -1,0 +1,33 @@
+{
+	"config_name": "default",
+	"author": "Vasagle",
+	"version": "beta-1.0",
+	"data_created": "10-14-2021",
+
+	"aimbot": [
+		{
+			"type": "\tbool",
+			"name": "Active",
+			"value": True,
+			"number": 1.678
+		},
+		{
+			"type": "bool",
+			"name": "Silent",
+			"value": true,
+			"number": -0.5
+		},
+		{
+			"type": "bool",
+			"name": "Test",
+			"value": true,
+			"number": 9
+		},
+		{
+			"type": "bool",
+			"name": "Trigger",
+			"value": true,
+			"number": 2.89045786
+		}
+	]
+}

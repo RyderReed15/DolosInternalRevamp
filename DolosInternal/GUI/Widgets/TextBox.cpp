@@ -6,6 +6,7 @@ TextBox::TextBox(const char* szName, char* aText, short iMaxCharacters, D3DXVECT
     m_flContainerSize = flContainerSize;
     m_cContainerColor = cContainerColor;
     m_iMaxSize = iMaxCharacters;
+    m_iCurrentChar = 0;
     m_iTextSize = 0;
     m_iStartChar = 0;
     if (aText != nullptr) {
@@ -19,7 +20,12 @@ TextBox::TextBox(const char* szName, char* aText, short iMaxCharacters, D3DXVECT
     
 
 HRESULT TextBox::Draw(ID3DXFont* pFont, Render* pRender) {
-    while (pRender->GetStringSize(pFont, m_aText + m_iStartChar).x > m_flContainerSize - 10) m_iStartChar++;
+    float flLength = pRender->GetStringSize(pFont, m_aText + m_iStartChar).x;
+    while (flLength > m_flContainerSize - 10) {
+        m_iStartChar++;
+        flLength = pRender->GetStringSize(pFont, m_aText + m_iStartChar).x;
+        
+    }
     pRender->DrawString({ m_vBounds.x, m_vBounds.y }, (m_bEnabled) ? WHITE : GRAY, pFont, m_szName);
     pRender->DrawRoundedRectangle({ m_vBounds.x + m_vBounds.z - m_flContainerSize, m_vBounds.y, m_flContainerSize, m_vBounds.w }, 5, BLACK);
     pRender->DrawRoundedRectangle({ m_vBounds.x + m_vBounds.z - m_flContainerSize + 1, m_vBounds.y + 1, m_flContainerSize - 2, m_vBounds.w - 2 }, 5, m_cContainerColor);

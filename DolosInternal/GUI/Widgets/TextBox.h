@@ -25,6 +25,7 @@ private:
 	short m_iTextSize;
 	short m_iMaxSize;
 	short m_iStartChar;
+	short m_iCurrentChar;
 	float m_flContainerSize;
 	D3DCOLOR m_cContainerColor;
 
