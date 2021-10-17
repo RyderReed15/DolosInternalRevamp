@@ -10,6 +10,7 @@
 #include "Hooks.h"
 #include "GUI/FontManager.h"
 #include "GUI/GUI.h"
+#include "Utils/ConfigManager.h"
 
 bool InitializeCheat    (HMODULE hMod);
 bool UninitializeCheat  (HMODULE hMod);

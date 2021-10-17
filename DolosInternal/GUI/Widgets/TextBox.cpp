@@ -27,8 +27,8 @@ HRESULT TextBox::Draw(ID3DXFont* pFont, Render* pRender) {
         
     }
     pRender->DrawString({ m_vBounds.x, m_vBounds.y }, (m_bEnabled) ? WHITE : GRAY, pFont, m_szName);
-    pRender->DrawRoundedRectangle({ m_vBounds.x + m_vBounds.z - m_flContainerSize, m_vBounds.y, m_flContainerSize, m_vBounds.w }, 5, BLACK);
-    pRender->DrawRoundedRectangle({ m_vBounds.x + m_vBounds.z - m_flContainerSize + 1, m_vBounds.y + 1, m_flContainerSize - 2, m_vBounds.w - 2 }, 5, m_cContainerColor);
+    pRender->DrawRoundedRectangle({ m_vBounds.x + m_vBounds.z - m_flContainerSize, m_vBounds.y, m_flContainerSize, m_vBounds.w }, 2, BLACK);
+    pRender->DrawRoundedRectangle({ m_vBounds.x + m_vBounds.z - m_flContainerSize + 1, m_vBounds.y + 1, m_flContainerSize - 2, m_vBounds.w - 2 }, 2, m_cContainerColor);
     return pRender->DrawString({ m_vBounds.x + m_vBounds.z - m_flContainerSize + 5, m_vBounds.y + 1 }, (m_bEnabled) ? WHITE : GRAY, pFont, m_aText + m_iStartChar);
 }
 

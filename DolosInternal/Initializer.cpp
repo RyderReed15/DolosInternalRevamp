@@ -15,6 +15,13 @@ bool InitializeCheat(HMODULE hMod) {
 		return false;
 	}
 	std::cout << "Netvars Initialized" << std::endl;
+	if (!InitializeConfig()) {
+		UninitializeGUI();
+		UninitializeFonts();
+		UninitializeHooks();
+		return false;
+	}
+	std::cout << "Config Initialized" << std::endl;
 	
 	if (!InitializeFonts(hMod)) {
 
@@ -38,6 +45,8 @@ bool InitializeCheat(HMODULE hMod) {
 	}
 
 	std::cout << "Hooks Initialized" << std::endl;
+
+	
 	for (int i = 0; i < 20; i++) {
 		Sleep(1000);
 	}
@@ -48,8 +57,14 @@ bool InitializeCheat(HMODULE hMod) {
 }
 
 bool UninitializeCheat(HMODULE hMod) {
-	
-
+	if (!UninitializeHooks()) {
+		FreeLibraryAndExitThread(hMod, 0);
+		return false;
+	}
+	if (!UninitializeConfig()) {
+		FreeLibraryAndExitThread(hMod, 0);
+		return false;
+	}
 	if (!UninitializeFonts()) {
 		FreeLibraryAndExitThread(hMod, 0);
 		return false;
@@ -60,10 +75,9 @@ bool UninitializeCheat(HMODULE hMod) {
 		return false;
 	}
 
-	if (!UninitializeHooks()) {
-		FreeLibraryAndExitThread(hMod, 0);
-		return false;
-	}
+	
+
+	
 	FreeLibraryAndExitThread(hMod, 0);
 	return true;
 }

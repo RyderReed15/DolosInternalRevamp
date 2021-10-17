@@ -22,6 +22,7 @@ public:
 	virtual void	OnHover			(GUIEventHandler* pEventHandler, POINT ptLocation);
 
 	virtual void	OnType			(GUIEventHandler* pEventHandler, char chKey);
+	virtual void	OnKey			(GUIEventHandler* pEventHandler, char chKey, long keyInfo);
 
 	void			SetAnimStartTick(void);
 	float			GetAnimLerp		(float flAnimLength);

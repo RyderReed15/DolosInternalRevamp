@@ -22,7 +22,7 @@ bool InitializeHooks() {
 	oEndScene				= (fnEndScene)				g_vD3D->HookFunction			(END_SCENE_INDEX			, hkEndscene);
 	oReset					= (fnReset)					g_vD3D->HookFunction			(RESET_INDEX				, hkReset);
 
-	oWndProc = SetWindowLongPtrW(FindWindowW(L"Valve001", NULL), GWLP_WNDPROC, LONG_PTR(&hkWndProc));
+	oWndProc = SetWindowLongPtrW(FindWindow("Valve001", NULL), GWLP_WNDPROC, LONG_PTR(&hkWndProc));
 	
 
 	return true;
@@ -45,18 +45,26 @@ bool UninitializeHooks() {
 	delete g_vClientBase;
 	delete g_vD3D;
 	delete g_vModelRender;
-	SetWindowLongPtrW(FindWindowW(L"Valve001", NULL), GWLP_WNDPROC, oWndProc);
+	SetWindowLongPtrW(FindWindow("Valve001", NULL), GWLP_WNDPROC, oWndProc);
 	return true;
 }
 
 LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+
 	POINTS ptLoc = *(POINTS*)&lParam;
 	POINT ptLocation = { ptLoc.x, ptLoc.y };
-	char chKey = wParam;
+
 	GUIEventHandler* pEventHandler = g_pGUIContainer->GetEventHandler();
 	switch (uMsg) {
+	case WM_HOTKEY:
+		CallHotKey(wParam);
 	case WM_CHAR:
-		pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::KEYDOWN	, pEventHandler->BuildFunction(&GUIEventHandler::HandleKeyboard	, pEventHandler, chKey));
+	case WM_SYSCHAR:
+		pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::KEYDOWN	, pEventHandler->BuildFunction(&GUIEventHandler::HandleType		, pEventHandler, wParam));
+		break;
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:
+		pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::KEYDOWN	, pEventHandler->BuildFunction(&GUIEventHandler::HandleKeyDown	, pEventHandler, wParam, lParam));
 		break;
 	case WM_LBUTTONDOWN:
 		pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::CLICK		, pEventHandler->BuildFunction(&GUIEventHandler::HandleClick	, pEventHandler, ptLocation));

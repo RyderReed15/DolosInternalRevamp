@@ -37,6 +37,9 @@ void IGUIElement::OnHover(GUIEventHandler* pEventHandler, POINT ptLocation) {
 void IGUIElement::OnType(GUIEventHandler* pEventHandler, char chKey) {
 	return;
 }
+void IGUIElement::OnKey(GUIEventHandler* pEventHandler, char chKey, long keyInfo) {
+	return;
+}
 
 void IGUIElement::SetAnimStartTick(void) {
 	m_iAnimStartTick = GetTickCount();

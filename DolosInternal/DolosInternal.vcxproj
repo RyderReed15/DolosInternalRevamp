@@ -30,6 +30,7 @@
     <ClCompile Include="GUI\Widgets\CheckBox.cpp" />
     <ClCompile Include="GUI\Widgets\ColorPicker.cpp" />
     <ClCompile Include="GUI\Widgets\DropDown.cpp" />
+    <ClCompile Include="GUI\Widgets\HotKey.cpp" />
     <ClCompile Include="GUI\Widgets\Panel.cpp" />
     <ClCompile Include="GUI\Widgets\Slider.cpp" />
     <ClCompile Include="GUI\Widgets\TextBox.cpp" />
@@ -39,7 +40,9 @@
     <ClCompile Include="SDK\Math\Vector4D.cpp" />
     <ClCompile Include="SDK\Math\VMatrix.cpp" />
     <ClCompile Include="SDK\SDK.cpp" />
+    <ClCompile Include="Utils\ConfigManager.cpp" />
     <ClCompile Include="Utils\HookManager.cpp" />
+    <ClCompile Include="Utils\HotKeyManager.cpp" />
     <ClCompile Include="Utils\JsonParser\JsonArray.cpp" />
     <ClCompile Include="Utils\JsonParser\JsonObject.cpp" />
     <ClCompile Include="Utils\JsonParser\JsonParser.cpp" />
@@ -68,6 +71,7 @@
     <ClInclude Include="GUI\Widgets\CheckBox.h" />
     <ClInclude Include="GUI\Widgets\ColorPicker.h" />
     <ClInclude Include="GUI\Widgets\DropDown.h" />
+    <ClInclude Include="GUI\Widgets\HotKey.h" />
     <ClInclude Include="GUI\Widgets\IGUIElement.h" />
     <ClInclude Include="GUI\Widgets\Panel.h" />
     <ClInclude Include="GUI\Widgets\Slider.h" />
@@ -109,7 +113,9 @@
     <ClInclude Include="SDK\Math\VMatrix.h" />
     <ClInclude Include="SDK\SDK.h" />
     <ClInclude Include="SDK\Studio.h" />
+    <ClInclude Include="Utils\ConfigManager.h" />
     <ClInclude Include="Utils\HookManager.h" />
+    <ClInclude Include="Utils\HotKeyManager.h" />
     <ClInclude Include="Utils\JsonParser\JsonArray.h" />
     <ClInclude Include="Utils\JsonParser\JsonObject.h" />
     <ClInclude Include="Utils\JsonParser\JsonParser.h" />
