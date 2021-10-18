@@ -8,7 +8,7 @@ Slider::Slider(const char* szName, float* pValue, float flMaxValue, float flMinV
 
 	m_bExponential	= bExponential;
 
-	m_flBarPercent	= max(min(pow((*pValue) - flMinValue / m_flRange, 1 + m_bExponential * .5), 1.f), 0.f);
+	m_flBarPercent	= max(min(pow(((*pValue) - flMinValue) / m_flRange, 1 + bExponential * .5), 1.f), 0.f);
 	m_flBarSize		= flBarSize;
 
 	m_szName		= szName;

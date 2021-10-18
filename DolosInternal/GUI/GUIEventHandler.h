@@ -38,7 +38,8 @@ public:
     void            HandleDrag          (POINT ptLocation);
     void            HandleRelease       (POINT ptLocation);
     void            HandleHover         (POINT ptLocation);
-    void            HandleKeyboard      (char chKey);
+    void            HandleType          (char chKey);
+    void            HandleKeyDown       (char chKey, long keyInfo);
 
     bool            CreateGUIEvent      (GUI_EVENT_TYPE tEventType, std::function<void()> pFunc);
     void            ProccessEvents      (void);

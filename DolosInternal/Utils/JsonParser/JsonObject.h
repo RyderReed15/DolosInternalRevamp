@@ -38,8 +38,9 @@ public:
 
     JsonObject  operator=       (JsonObject& rhs);
 
-    std::unordered_map<std::string, JsonValue*> m_mValues;
-    std::string                                 m_szName;
+    std::vector<JsonValue*>                 m_vValues;
+    std::unordered_map<std::string, int>    m_mValues;
+    std::string                             m_szName;
 
 };
 
@@ -48,9 +49,9 @@ public:
 
 template <typename T>
 T JsonObject::GetNumber(const std::string& szName) {
-    JsonValue* pValue = m_mValues[szName];
+    JsonValue* pValue = m_vValues[m_mValues[szName]];
     if (pValue) {
-        return (T)m_mValues[szName]->m_dbValue;;
+        return (T)m_vValues[m_mValues[szName]]->m_dbValue;;
     }
     return 0;
 }

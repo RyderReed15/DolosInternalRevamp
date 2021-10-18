@@ -8,8 +8,11 @@ GUIEventHandler::~GUIEventHandler() {
     while (m_qEvents.size()) { m_qEvents.pop(); };
 }
 
-void GUIEventHandler::HandleKeyboard(char chKey) {
+void GUIEventHandler::HandleType(char chKey) {
     if (m_pFocus) m_pFocus->OnType(this, chKey);
+}
+void GUIEventHandler::HandleKeyDown(char chKey, long keyInfo) {
+    if (m_pFocus) m_pFocus->OnKey(this, chKey, keyInfo);
 }
 
 

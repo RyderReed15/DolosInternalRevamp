@@ -1,8 +1,8 @@
 #include "JsonParser.h"
 
 
-void        StringToLower   (std::string& szUpper);
-char        EscapeCharacter (std::istream& fJson, char chEscape);
+void        StringToLower(std::string& szUpper);
+char        EscapeCharacter(std::istream& fJson, char chEscape);
 
 JsonObject* ParseJsonFile(const char* szPath) {
     std::ifstream fJson;
@@ -13,11 +13,11 @@ JsonObject* ParseJsonFile(const char* szPath) {
         fJson.get(chFirst);
         if (chFirst == '[') {
             JsonObject* pJsonFile = new JsonObject();
-            pJsonFile->SetJsonArray("1", ParseArray(fJson, ""));
+            pJsonFile->SetJsonArray("1", ParseJsonArray(fJson, ""));
             return pJsonFile;
         }
         else {
-            JsonObject* pJsonFile = ParseObject(fJson);
+            JsonObject* pJsonFile = ParseJsonObject(fJson);
             return pJsonFile;
         }
 
@@ -35,18 +35,18 @@ JsonObject* ParseJsonString(const std::string& szJson) {
         sJson.get(chFirst);
         if (chFirst == '[') {
             JsonObject* pJsonFile = new JsonObject();
-            pJsonFile->SetJsonArray("1", ParseArray(sJson, ""));
+            pJsonFile->SetJsonArray("1", ParseJsonArray(sJson, ""));
             return pJsonFile;
         }
         else {
-            JsonObject* pJsonFile = ParseObject(sJson);
+            JsonObject* pJsonFile = ParseJsonObject(sJson);
             return pJsonFile;
         }
     }
     return nullptr;
 }
 
-JsonValue* GetValue(std::istream& fJson, const std::string& szName) {
+JsonValue* ParseJsonValue(std::istream& fJson, const std::string& szName) {
     bool bSkip = false;
     JsonValue* pValue = new JsonValue();
     pValue->m_szName = szName;
@@ -69,12 +69,12 @@ JsonValue* GetValue(std::istream& fJson, const std::string& szName) {
             return pValue;
         case '[':
 
-            pValue->m_pArray = ParseArray(fJson, szName);
+            pValue->m_pArray = ParseJsonArray(fJson, szName);
             pValue->m_tType = VALUE_TYPE::ARRAY;
             return pValue;
         case '{':
 
-            pValue->m_pObject = ParseObject(fJson);
+            pValue->m_pObject = ParseJsonObject(fJson);
             pValue->m_pObject->m_szName = pValue->m_szName;
             pValue->m_tType = VALUE_TYPE::OBJECT;
             return pValue;
@@ -151,13 +151,13 @@ std::string ParseString(std::istream& fJson, char chDelim) {
     return szValue;
 }
 
-JsonArray* ParseArray(std::istream& fJson, const std::string& szName) {
+JsonArray* ParseJsonArray(std::istream& fJson, const std::string& szName) {
     JsonArray* pArray = new JsonArray();
     pArray->m_szName = szName;
     char chCurr = '\0';
     while (!fJson.eof() && fJson.good()) {
 
-        JsonValue* pValue = GetValue(fJson, "");
+        JsonValue* pValue = ParseJsonValue(fJson, "");
         if (!pValue) return pArray;
         pArray->m_vValues.push_back(pValue);
         if (pValue->m_tType == VALUE_TYPE::NUMBER || pValue->m_tType == VALUE_TYPE::BOOL) {
@@ -171,7 +171,7 @@ JsonArray* ParseArray(std::istream& fJson, const std::string& szName) {
     return pArray;
 }
 
-JsonObject* ParseObject(std::istream& fJson) {
+JsonObject* ParseJsonObject(std::istream& fJson) {
     std::string line;
     JsonObject* pObject = new JsonObject();
     JsonValue* pValue;
@@ -185,12 +185,15 @@ JsonObject* ParseObject(std::istream& fJson) {
             return pObject;
         case '\"':
             std::getline(fJson, line, '\"');
-            pValue = GetValue(fJson, line);
+            pValue = ParseJsonValue(fJson, line);
             if (!pValue->m_szName.compare("")) {
-                pObject->m_mValues[std::to_string((int)pValue)] = pValue;
+
+                pObject->m_mValues[std::to_string((int)pValue)] = pObject->m_vValues.size();
+                pObject->m_vValues.push_back(pValue);
             }
             else {
-                pObject->m_mValues[pValue->m_szName] = pValue;
+                pObject->m_mValues[pValue->m_szName] = pObject->m_vValues.size();
+                pObject->m_vValues.push_back(pValue);
             }
 
 
@@ -206,14 +209,16 @@ JsonObject* ParseObject(std::istream& fJson) {
         case '{':
             pValue = new JsonValue();
             pValue->m_tType = VALUE_TYPE::OBJECT;
-            pValue->m_pObject = ParseObject(fJson);
+            pValue->m_pObject = ParseJsonObject(fJson);
             if (pValue->m_pObject->m_szName.compare("")) {
                 pValue->m_szName = pValue->m_pObject->m_szName;
 
-                pObject->m_mValues[pValue->m_szName] = pValue;
+                pObject->m_mValues[pValue->m_szName] = pObject->m_vValues.size();
+                pObject->m_vValues.push_back(pValue);
             }
             else {
-                pObject->m_mValues[std::to_string((int)pValue)] = pValue;
+                pObject->m_mValues[std::to_string((int)pValue)] = pObject->m_vValues.size();
+                pObject->m_vValues.push_back(pValue);
 
             }
             break;
@@ -243,7 +248,7 @@ std::string WriteJsonString(JsonObject* pJsonObject) {
     return sJson.str();
 }
 
-bool WriteValue(std::ostream& fJson, JsonValue* pValue, const std::string& indent) {
+bool WriteJsonValue(std::ostream& fJson, JsonValue* pValue, const std::string& indent) {
     if (fJson.good() && pValue) {
 
         switch (pValue->m_tType) {
@@ -332,28 +337,27 @@ bool WriteJsonObject(std::ostream& fJson, JsonObject* pJsonObject, const std::st
             fJson << indent << "{\n";
         }
 
-        std::unordered_map<std::string, JsonValue*>::iterator iterator = pJsonObject->m_mValues.begin();
-        while (true) {
-            if (!WriteValue(fJson, iterator->second, indent + chIndent)) {
-                iterator++;
-                if (iterator == pJsonObject->m_mValues.end()) {
+        for (int i = 0; i < pJsonObject->m_vValues.size(); i++) {
+            if (!WriteJsonValue(fJson, pJsonObject->m_vValues[i], indent + chIndent)) {
+                if (i == pJsonObject->m_vValues.size() - 1) {
                     break;
                 }
                 continue;
             }
-            iterator++;
-            if (iterator == pJsonObject->m_mValues.end()) {
+            if (i == pJsonObject->m_vValues.size() - 1) {
                 break;
             }
             fJson << ",\n";
         }
+        
         fJson << "\n" << indent << "}";
         return true;
     }
     return false;
 }
 
-
+// Takes an escaped character and converts it to the unescaped version
+// fJson - InStream of characters, chEscape - escaped character to convert
 char EscapeCharacter(std::istream& fJson, char chEscape) {
     char chFixed = '\0';
     char acValue[4]{ '\0' };
@@ -381,7 +385,7 @@ char EscapeCharacter(std::istream& fJson, char chEscape) {
 
 }
 
-
+// Converts a string to lowercase
 void StringToLower(std::string& szUpper) {
     //Works for letters but anything else below A will be converted but that doesnt matter for the one use in this
     for (int i = 0; i < szUpper.size(); i++) {

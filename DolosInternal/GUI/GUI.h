@@ -5,6 +5,7 @@
 
 #include <d3d9.h>
 #include <d3dx9.h>
+#include "../Utils/ConfigManager.h"
 #include "GUIContainer.h"
 #include "GUIEventHandler.h"
 #include "Widgets/IGUIElement.h"
@@ -15,6 +16,7 @@
 #include "Widgets/DropDown.h"
 #include "Widgets/ColorPicker.h"
 #include "Widgets/TextBox.h"
+#include "Widgets/HotKey.h"
 #include "../SDK/SDK.h"
 
 inline GUIContainer*    g_pGUIContainer;

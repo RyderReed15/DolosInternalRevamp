@@ -133,6 +133,15 @@
     <ClCompile Include="Utils\JsonParser\JsonValue.cpp">
       <Filter>Utils\JsonParser</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\ConfigManager.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Widgets\HotKey.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\HotKeyManager.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Initializer.h">
@@ -341,6 +350,15 @@
     </ClInclude>
     <ClInclude Include="Utils\JsonParser\JsonValue.h">
       <Filter>Utils\JsonParser</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\ConfigManager.h">
+      <Filter>Utils\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Widgets\HotKey.h">
+      <Filter>GUI\Widgets\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\HotKeyManager.h">
+      <Filter>Utils\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

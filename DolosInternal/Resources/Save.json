@@ -3,7 +3,6 @@
 	"author": "Vasagle",
 	"version": "beta-1.0",
 	"data_created": "10-14-2021",
-
 	"aimbot": {
 		"active": true,
 		"silent": true,

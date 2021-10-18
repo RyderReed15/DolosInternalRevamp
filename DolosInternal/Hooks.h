@@ -6,6 +6,7 @@
 #include "SDK/SDK.h"
 #include "GUI/GUI.h"
 #include "GUI/FontManager.h"
+#include "Utils/HotKeyManager.h"
 #include <d3d9.h>
 
 #define CREATE_MOVE_INDEX           24
@@ -25,6 +26,7 @@ inline VMTManager* g_vD3D;
 inline VMTManager* g_vClient;
 inline VMTManager* g_vModelRender;
 inline VMTManager* g_vClientBase;
+
 
 
 typedef bool(__thiscall* fnCreateMove)              (void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd);

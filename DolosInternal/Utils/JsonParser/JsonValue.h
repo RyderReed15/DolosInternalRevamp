@@ -45,6 +45,8 @@ public:
 
 };
 
+// Takes an unescaped character and converts it to the escaped version
+// fJson - outStream of characters, chUnEscape - unescaped character to convert
 std::string UnEscapeCharacter(const char chUnEscape);
 
 
