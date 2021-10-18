@@ -12,6 +12,11 @@
 #include "GUI/GUI.h"
 #include "Utils/ConfigManager.h"
 
+
+bool UninitializeCheat  (void);
+bool StartCheat         (HMODULE hMod);
 bool InitializeCheat    (HMODULE hMod);
-bool UninitializeCheat  (HMODULE hMod);
+bool CloseCheat         (HMODULE hMod);
+
+LRESULT hkInitWndProc   (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 #endif

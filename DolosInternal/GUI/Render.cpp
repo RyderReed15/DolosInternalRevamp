@@ -205,7 +205,7 @@ void Render::ManageBatch(D3DPRIMITIVETYPE tPrimitiveType, int iNeededVerts, int 
 		break;
 	}
 }
-unsigned int Render::AddVertex(D3DPRIMITIVETYPE tPrimitiveType, D3DXVECTOR2 vLocation, D3DCOLOR cColor) {
+unsigned int Render::AddVertex(D3DPRIMITIVETYPE tPrimitiveType, Vector2D vLocation, D3DCOLOR cColor) {
 
 	switch (tPrimitiveType) {
 	case D3DPT_LINELIST:
@@ -247,7 +247,7 @@ void Render::AddTriangle(unsigned int iVertexPosOne, unsigned int iVertexPosTwo,
 
 
 
-HRESULT Render::DrawSprite(D3DXVECTOR4 vRect, D3DXVECTOR2 vLocation, D3DCOLOR cColor, float flScale, float flRotation) {
+HRESULT Render::DrawSprite(D3DXVECTOR4 vRect, Vector2D vLocation, D3DCOLOR cColor, float flScale, float flRotation) {
 	RECT rRect = { vRect.x, vRect.y, vRect.z + vRect.x, vRect.w + vRect.y };
 	D3DXMATRIX mMatrix, mOldMatrix;
 	m_pSprite->GetTransform(&mOldMatrix);
@@ -255,8 +255,9 @@ HRESULT Render::DrawSprite(D3DXVECTOR4 vRect, D3DXVECTOR2 vLocation, D3DCOLOR cC
 
 	D3DXVECTOR2 vCenter = { vRect.z * flScale / 2, vRect.w * flScale / 2 };
 	D3DXVECTOR2 vScale = { flScale, flScale };
+	D3DXVECTOR2 vLoc = { vLocation.x, vLocation.y };
 
-	D3DXMatrixTransformation2D(&mMatrix, NULL, 0.0, &vScale, &vCenter, flRotation, &vLocation);
+	D3DXMatrixTransformation2D(&mMatrix, NULL, 0.0, &vScale, &vCenter, flRotation, &vLoc);
 	m_pSprite->SetTransform(&mMatrix);
 
 	HRESULT hResult = m_pSprite->Draw(m_pTextureAtlas, &rRect, NULL, NULL, cColor);
@@ -266,7 +267,7 @@ HRESULT Render::DrawSprite(D3DXVECTOR4 vRect, D3DXVECTOR2 vLocation, D3DCOLOR cC
 
 }
 
-HRESULT Render::DrawLine(D3DXVECTOR2 vLocationOne, D3DXVECTOR2 vLocationTwo, D3DCOLOR cColor, D3DCOLOR cColor2) {
+HRESULT Render::DrawLine(Vector2D vLocationOne, Vector2D vLocationTwo, D3DCOLOR cColor, D3DCOLOR cColor2) {
 	if (IsInitialized()) {
 		ManageBatch(D3DPT_LINELIST, 2, 2);
 
@@ -347,7 +348,7 @@ HRESULT Render::DrawRoundedRectangle(D3DXVECTOR4 vBounds, float flCornerSize, D3
 
 
 }
-HRESULT Render::DrawFadingCircle(D3DXVECTOR2 vLocation, float flRadius, int iSides, D3DCOLOR cColor, D3DCOLOR cColor2, bool bVertical, float flFraction, float flRotation) {
+HRESULT Render::DrawFadingCircle(Vector2D vLocation, float flRadius, int iSides, D3DCOLOR cColor, D3DCOLOR cColor2, bool bVertical, float flFraction, float flRotation) {
 	if (IsInitialized()) {
 		ManageBatch(D3DPT_TRIANGLELIST, iSides + 2, iSides * 3);
 		float flCos = cosf(2 * PI / iSides * flFraction);
@@ -379,7 +380,7 @@ HRESULT Render::DrawFadingCircle(D3DXVECTOR2 vLocation, float flRadius, int iSid
 	return OLE_E_BLANK;
 }
 
-HRESULT Render::DrawCircleOutline(D3DXVECTOR2 vLocation, float flRadius, int iSides, D3DCOLOR cColor, float flFraction, float flRotation) {
+HRESULT Render::DrawCircleOutline(Vector2D vLocation, float flRadius, int iSides, D3DCOLOR cColor, float flFraction, float flRotation) {
 	if (IsInitialized()) {
 		ManageBatch(D3DPT_LINELIST, iSides + 1, iSides * 2);
 		float flCos = cosf(2 * PI / iSides * flFraction);
@@ -416,7 +417,7 @@ HRESULT Render::DrawCircleOutline(D3DXVECTOR2 vLocation, float flRadius, int iSi
 	return OLE_E_BLANK;
 }
 
-HRESULT Render::DrawCircle(D3DXVECTOR2 vLocation, float flRadius, int iSides, D3DCOLOR cColor, float flFraction, float flRotation) {
+HRESULT Render::DrawCircle(Vector2D vLocation, float flRadius, int iSides, D3DCOLOR cColor, float flFraction, float flRotation) {
 	if (IsInitialized()) {
 		ManageBatch(D3DPT_TRIANGLELIST, iSides + 2, iSides * 3);
 		float flCos = cosf(2 * PI / iSides * flFraction);
@@ -450,7 +451,7 @@ HRESULT Render::DrawCircle(D3DXVECTOR2 vLocation, float flRadius, int iSides, D3
 	return OLE_E_BLANK;
 }
 
-HRESULT Render::DrawString(D3DXVECTOR2 vLocation, D3DCOLOR cColor, ID3DXFont* pFont, const char* szString, ...) {
+HRESULT Render::DrawString(Vector2D vLocation, D3DCOLOR cColor, ID3DXFont* pFont, const char* szString, ...) {
 
 	RECT pRect;
 
@@ -458,7 +459,7 @@ HRESULT Render::DrawString(D3DXVECTOR2 vLocation, D3DCOLOR cColor, ID3DXFont* pF
 	pRect.top = (long)vLocation.y;
 	return pFont->DrawTextA(m_pSprite, szString, -1, &pRect, DT_NOCLIP, cColor);
 }
-HRESULT Render::DrawString(D3DXVECTOR2 vLocation, D3DCOLOR cColor, ID3DXFont* pFont, const WCHAR* szString, ...) {
+HRESULT Render::DrawString(Vector2D vLocation, D3DCOLOR cColor, ID3DXFont* pFont, const WCHAR* szString, ...) {
 
 	RECT pRect;
 
@@ -467,7 +468,7 @@ HRESULT Render::DrawString(D3DXVECTOR2 vLocation, D3DCOLOR cColor, ID3DXFont* pF
 	return pFont->DrawTextW(m_pSprite, szString, -1, &pRect, DT_NOCLIP, cColor);
 }
 
-D3DXVECTOR2 Render::GetStringSize(ID3DXFont* pFont, const WCHAR* szString, ...) {
+Vector2D Render::GetStringSize(ID3DXFont* pFont, const WCHAR* szString, ...) {
 	RECT rect;
 	rect.left = 0;
 	rect.top = 0;
@@ -476,7 +477,7 @@ D3DXVECTOR2 Render::GetStringSize(ID3DXFont* pFont, const WCHAR* szString, ...) 
 	pFont->DrawTextW(NULL, szString, -1, &rect, DT_CALCRECT, 0xffffffff);
 	return { (float)rect.right, (float)rect.bottom };
 }
-D3DXVECTOR2 Render::GetStringSize(ID3DXFont* pFont, const char* szString, ...) {
+Vector2D Render::GetStringSize(ID3DXFont* pFont, const char* szString, ...) {
 
 	RECT rect;
 	rect.left = 0;

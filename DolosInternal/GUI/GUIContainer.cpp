@@ -10,7 +10,9 @@ GUIContainer::GUIContainer(POINT ptScreenSize) {
 
 GUIContainer::~GUIContainer() {
     DeleteMap();
-   
+    for (int i = 0; i < m_vElements.size(); i++) {
+        delete m_vElements[i];
+    }
     m_vElements.clear();
   
     m_ptScreenSize   = { 0, 0 };

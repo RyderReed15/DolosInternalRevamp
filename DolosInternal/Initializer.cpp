@@ -1,17 +1,30 @@
 #include "Initializer.h"
 
 
+HotKeyStruct EndThread = { UninitializeCheat , VK_INSERT, false, false, false, false };
+HMODULE hModule;
+FILE* fConsole;
+
+bool StartCheat(HMODULE hMod) {
+	oWndProc = SetWindowLongPtrW(FindWindow("Valve001", NULL), GWLP_WNDPROC, LONG_PTR(&hkInitWndProc));
+
+	SendMessage(FindWindow("Valve001", NULL), 0x9999, 0, (LONG_PTR)hMod);
+
+	hModule = hMod;
+
+	return true;
+}
+
 bool InitializeCheat(HMODULE hMod) {
 	AllocConsole();
-	FILE* f;
-	freopen_s(&f, "CONOUT$", "w", stdout);
+	freopen_s(&fConsole, "CONOUT$", "w", stdout);
 
 	if (!InitializeSDK()) {
 		return false;
 	}
 	std::cout << "SDK Initialized" << std::endl;
 	
-	if (!InitializeNetvars(nullptr)) {
+	if (!InitializeNetvars(g_pBaseClient->GetAllClasses())) {
 		return false;
 	}
 	std::cout << "Netvars Initialized" << std::endl;
@@ -46,38 +59,35 @@ bool InitializeCheat(HMODULE hMod) {
 
 	std::cout << "Hooks Initialized" << std::endl;
 
-	
-	for (int i = 0; i < 20; i++) {
-		Sleep(1000);
-	}
-	fclose(f);
-	FreeConsole();
-	UninitializeCheat(hMod);
 	return true;
 }
 
-bool UninitializeCheat(HMODULE hMod) {
-	if (!UninitializeHooks()) {
-		FreeLibraryAndExitThread(hMod, 0);
-		return false;
-	}
-	if (!UninitializeConfig()) {
-		FreeLibraryAndExitThread(hMod, 0);
-		return false;
-	}
-	if (!UninitializeFonts()) {
-		FreeLibraryAndExitThread(hMod, 0);
-		return false;
-	}
+bool UninitializeCheat() {
+	UninitializeHooks();
 
-	if (!UninitializeGUI()) {
-		FreeLibraryAndExitThread(hMod, 0);
-		return false;
-	}
+	Sleep(100);
 
+	UninitializeConfig();
+	UninitializeFonts();
+	UninitializeGUI();
 	
+	fclose(fConsole);
+	FreeConsole();
+	return CloseHandle(CreateThread(nullptr, 0, LPTHREAD_START_ROUTINE(CloseCheat), hModule, 0, nullptr));
+}
 
-	
+bool CloseCheat(HMODULE hMod) {
+	Sleep(100);
 	FreeLibraryAndExitThread(hMod, 0);
 	return true;
+}
+
+LRESULT hkInitWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+
+	if (uMsg == 0x9999) {
+		InitializeCheat((HMODULE)lParam);
+		MakeHotKey(0x1000, &EndThread);
+		SetWindowLongPtrW(FindWindow("Valve001", NULL), GWLP_WNDPROC, (LONG_PTR)hkWndProc);
+	}
+	return CallWindowProc((WNDPROC)oWndProc, hWnd, uMsg, wParam, lParam);
 }

@@ -1,18 +1,25 @@
 #include "HotKeyManager.h"
 
-bool MakeHotKey(void* pFunc, int iHotKeyId, int bModifiers, char chKey) {
-    
-    mKeys[iHotKeyId] = pFunc;
-    return RegisterHotKey(FindWindow("Valve001", NULL), iHotKeyId, bModifiers, chKey);;
+bool MakeHotKey(int iHotKeyId, HotKeyStruct* pHotKeyInfo) {
+    if (!hValveWnd) hValveWnd = FindWindow("Valve001", NULL);
+    mKeys[iHotKeyId] = pHotKeyInfo;
+    int bModifiers = MOD_NOREPEAT | (pHotKeyInfo->Ctrl * MOD_CONTROL) | (pHotKeyInfo->Alt * MOD_ALT) | (pHotKeyInfo->Shift * MOD_SHIFT) | (pHotKeyInfo->Win * MOD_WIN);
+    return RegisterHotKey(hValveWnd, iHotKeyId, bModifiers, pHotKeyInfo->Key);
 }
 bool DestroyHotKey(int iHotKey) {
     mKeys.erase(iHotKey);
-    return UnregisterHotKey(FindWindow("Valve001", NULL), iHotKey);
+    return UnregisterHotKey(hValveWnd, iHotKey);
     
 }
 void CallHotKey(int iHotKeyId) {
-    if (mKeys[iHotKeyId]) {
-        //Send keys if not focused
-        ((fnVoid)(mKeys[iHotKeyId]))();
+    if (mKeys[iHotKeyId]->Key) {
+        if (hValveWnd == GetFocus()) {
+            ((fnVoid)(mKeys[iHotKeyId]->Function))();
+        }else{
+            SendMessage(GetForegroundWindow(), WM_CHAR, mKeys[iHotKeyId]->Key, 0);
+        }
+        
     }
+    
+   
 }

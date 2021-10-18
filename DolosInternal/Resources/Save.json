@@ -15,9 +15,19 @@
 		]
 	},
 	"visuals": {
-		"active": true,
-		"silent": true,
-		"fov": 4
+		"players": {
+			"show_team": false,
+			"show_enemy": true,
+			"draw_bones": true,
+			"draw_health": true,
+			"draw_armor": true,
+			"enemy_color": "0x33333333",
+			"team_color": "0x33333333"
+		},
+		"weapons": {
+			"enabled": true,
+			"color": "0x33333333"
+		}
 	},
 	"misc": {
 		"active": true,
