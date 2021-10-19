@@ -63,7 +63,9 @@ inline IVEngineClient*              g_pEngineClient;
 inline IVModelInfoClient*           g_pModelInfo;
 inline IVModelRender*               g_pModelRender;
 
-inline IDirect3DDevice9*                   g_pD3DDevice;
+inline IDirect3DDevice9*            g_pD3DDevice;
+
+inline VMatrix*                     g_pViewMatrix;
 
 
 typedef void* (__cdecl* fnCreateInterface)(const char* szName, int* pReturnCode);

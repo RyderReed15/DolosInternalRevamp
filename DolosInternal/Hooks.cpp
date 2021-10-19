@@ -22,8 +22,7 @@ bool InitializeHooks() {
 	oEndScene				= (fnEndScene)				g_vD3D->HookFunction			(END_SCENE_INDEX			, hkEndscene);
 	oReset					= (fnReset)					g_vD3D->HookFunction			(RESET_INDEX				, hkReset);
 
-	oWndProc = SetWindowLongPtrW(FindWindow("Valve001", NULL), GWLP_WNDPROC, LONG_PTR(&hkWndProc));
-	
+	hValveWnd = FindWindow("Valve001", NULL);	
 
 	return true;
 }
@@ -45,41 +44,47 @@ bool UninitializeHooks() {
 	delete g_vClientBase;
 	delete g_vD3D;
 	delete g_vModelRender;
-	SetWindowLongPtrW(FindWindow("Valve001", NULL), GWLP_WNDPROC, oWndProc);
+	SetWindowLongPtrW(hValveWnd, GWLP_WNDPROC, oWndProc);
 	return true;
 }
 
+
 LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-
-	POINTS ptLoc = *(POINTS*)&lParam;
-	POINT ptLocation = { ptLoc.x, ptLoc.y };
-
-	GUIEventHandler* pEventHandler = g_pGUIContainer->GetEventHandler();
-	switch (uMsg) {
-	case WM_HOTKEY:
-		CallHotKey(wParam);
-	case WM_CHAR:
-	case WM_SYSCHAR:
-		pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::KEYDOWN	, pEventHandler->BuildFunction(&GUIEventHandler::HandleType		, pEventHandler, wParam));
-		break;
-	case WM_KEYDOWN:
-	case WM_SYSKEYDOWN:
-		pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::KEYDOWN	, pEventHandler->BuildFunction(&GUIEventHandler::HandleKeyDown	, pEventHandler, wParam, lParam));
-		break;
-	case WM_LBUTTONDOWN:
-		pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::CLICK		, pEventHandler->BuildFunction(&GUIEventHandler::HandleClick	, pEventHandler, ptLocation));
-		break;
+	if (uMsg == WM_HOTKEY) {
 	
-	case WM_LBUTTONUP:
-		pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::RELEASE	, pEventHandler->BuildFunction(&GUIEventHandler::HandleRelease	, pEventHandler, ptLocation));
-		break;
-	case WM_MOUSEMOVE:
-		if (wParam & MK_LBUTTON) {
-			pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::DRAG	, pEventHandler->BuildFunction(&GUIEventHandler::HandleDrag		, pEventHandler, ptLocation));
-		}
-		//Hover maybe?
-		break;
+		CallHotKey(wParam);
+		
 	}
+	if (g_bMenuOpen) {
+		POINTS ptLoc = *(POINTS*)&lParam;
+		POINT ptLocation = { ptLoc.x, ptLoc.y };
+
+		GUIEventHandler* pEventHandler = g_pGUIContainer->GetEventHandler();
+		switch (uMsg) {
+		case WM_CHAR:
+		case WM_SYSCHAR:
+			pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::KEYDOWN, pEventHandler->BuildFunction(&GUIEventHandler::HandleType, pEventHandler, wParam));
+			break;
+		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
+			pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::KEYDOWN, pEventHandler->BuildFunction(&GUIEventHandler::HandleKeyDown, pEventHandler, wParam, lParam));
+			break;
+		case WM_LBUTTONDOWN:
+			pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::CLICK, pEventHandler->BuildFunction(&GUIEventHandler::HandleClick, pEventHandler, ptLocation));
+			break;
+
+		case WM_LBUTTONUP:
+			pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::RELEASE, pEventHandler->BuildFunction(&GUIEventHandler::HandleRelease, pEventHandler, ptLocation));
+			break;
+		case WM_MOUSEMOVE:
+			if (wParam & MK_LBUTTON) {
+				pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::DRAG, pEventHandler->BuildFunction(&GUIEventHandler::HandleDrag, pEventHandler, ptLocation));
+			}
+			//Hover maybe?
+			break;
+		}
+	}
+	
 
 	
 	return CallWindowProc((WNDPROC)oWndProc, hWnd, uMsg, wParam, lParam);
@@ -88,12 +93,12 @@ LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 void __fastcall hkFrameStageNotify(void* _this, void* edx, ClientFrameStage_t stage) {
 
-
+	return oFrameStageNotify(_this, edx, stage);
 }
 
 void __fastcall hkDrawModelExecute(void* _this, void* edx, void* pCtx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, void* pCustomBoneToWorld) {
 
-
+	return oDrawModelExecute(_this, pCtx, state, pInfo, pCustomBoneToWorld);
 }
 
 bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd) {
@@ -124,11 +129,16 @@ HRESULT APIENTRY hkEndscene(IDirect3DDevice9* pDevice) {
 	
 	HRESULT hReturn = oEndScene(pDevice);
 	if (g_pGUIContainer && g_pRender) {
-		//if (g_pGUIContainer->GetEventHandler()) {
+
+		ESP::Tick();
+
+		if (g_bMenuOpen) {
 			g_pGUIContainer->GetEventHandler()->ProccessEvents();
 			g_pGUIContainer->DrawElements(g_pRender, g_pAvenirFont);
-			FixD3D((void***)pDevice);
-		//}
+		}
+		FixD3D((void***)pDevice);
+			
+		
 		
 	}
 	

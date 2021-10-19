@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Features\ESP.cpp" />
     <ClCompile Include="GUI\FontManager.cpp" />
     <ClCompile Include="GUI\GUI.cpp" />
     <ClCompile Include="GUI\GUIContainer.cpp" />
@@ -33,6 +34,7 @@
     <ClCompile Include="GUI\Widgets\HotKey.cpp" />
     <ClCompile Include="GUI\Widgets\Panel.cpp" />
     <ClCompile Include="GUI\Widgets\Slider.cpp" />
+    <ClCompile Include="GUI\Widgets\Text.cpp" />
     <ClCompile Include="GUI\Widgets\TextBox.cpp" />
     <ClCompile Include="Hooks.cpp" />
     <ClCompile Include="Initializer.cpp" />
@@ -75,6 +77,7 @@
     <ClInclude Include="GUI\Widgets\IGUIElement.h" />
     <ClInclude Include="GUI\Widgets\Panel.h" />
     <ClInclude Include="GUI\Widgets\Slider.h" />
+    <ClInclude Include="GUI\Widgets\Text.h" />
     <ClInclude Include="GUI\Widgets\TextBox.h" />
     <ClInclude Include="Hooks.h" />
     <ClInclude Include="Initializer.h" />

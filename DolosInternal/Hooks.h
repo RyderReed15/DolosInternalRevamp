@@ -9,6 +9,8 @@
 #include "Utils/HotKeyManager.h"
 #include <d3d9.h>
 
+#include "Features/ESP.h"
+
 #define CREATE_MOVE_INDEX           24
 
 #define FRAME_STAGE_INDEX           37
@@ -22,14 +24,18 @@
 #define RESET_INDEX                 16
 
 
+
+
+
 inline VMTManager* g_vD3D;
 inline VMTManager* g_vClient;
 inline VMTManager* g_vModelRender;
 inline VMTManager* g_vClientBase;
 
+inline HWND hValveWnd;
 
 
-typedef bool(__thiscall* fnCreateMove)              (void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd);
+typedef bool(__fastcall* fnCreateMove)              (void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd);
 typedef void(__thiscall* fnDrawModelExecute)        (void* _this, void* edx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, void* pCustomBoneToWorld);
 typedef void(__fastcall* fnFrameStageNotify)        (void* _this, void* edx, ClientFrameStage_t stage);
 

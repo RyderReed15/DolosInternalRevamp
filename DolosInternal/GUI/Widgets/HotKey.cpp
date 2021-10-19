@@ -6,20 +6,22 @@ char ToUpper(char chKey) {
 
 }
 
-HotKey::HotKey(const char* szName, void* fnHotKey, int iHotKeyId, char chKey, int bModifiers, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cContainerColor, IGUIElement* pParent) : IGUIElement(vBounds, pParent){
+
+HotKey::HotKey(const char* szName, int iHotKeyId, HotKeyStruct* pHotKeyInfo, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cContainerColor, IGUIElement* pParent) : IGUIElement(vBounds, pParent){
     m_szName = szName;
     m_flContainerSize = flContainerSize;
     m_cContainerColor = cContainerColor;
-    m_bModifiers = MOD_NOREPEAT | MOD_SHIFT;
-    m_szDisplay = ConvertToString(chKey, bModifiers);
-    m_iHotKeyId = m_iHotKeyId;
-    m_fnHotKey = fnHotKey;
-    m_chKey = chKey;
-
+    m_pHotKeyInfo = pHotKeyInfo;
+    m_pHotKeyInfo->Key = ToUpper(m_pHotKeyInfo->Key);
+    m_szDisplay = CreateString();
+    m_iHotKeyId = iHotKeyId;
+    MakeHotKey(m_iHotKeyId, m_pHotKeyInfo);
 }
 
 
-
+HotKey::~HotKey() {
+    DestroyHotKey(m_iHotKeyId);
+}
 
 
 HRESULT HotKey::Draw(ID3DXFont* pFont, Render* pRender) {
@@ -31,23 +33,23 @@ HRESULT HotKey::Draw(ID3DXFont* pFont, Render* pRender) {
 }
 
 void HotKey::SetupHotKey(void) {
-    MakeHotKey(m_fnHotKey, m_iHotKeyId, m_bModifiers, m_chKey);
+    MakeHotKey(m_iHotKeyId, m_pHotKeyInfo);
 }
-std::string HotKey::ConvertToString(char chKey, int bModifiers) {
+std::string HotKey::CreateString() {
     std::string szOut = "";
-    if (bModifiers & MOD_CONTROL) {
+    if (m_pHotKeyInfo->Ctrl) {
         szOut += "CTRL + ";
     }
-    if (bModifiers & MOD_SHIFT) {
+    if (m_pHotKeyInfo->Shift) {
         szOut += "SHIFT + ";
     }
-    if (bModifiers & MOD_ALT) {
+    if (m_pHotKeyInfo->Alt) {
         szOut += "ALT + ";
     }
-    if (bModifiers & MOD_WIN) {
+    if (m_pHotKeyInfo->Win) {
         szOut += "WIN + ";
     }
-    szOut += ToUpper(chKey);
+    szOut += MakeKey(m_pHotKeyInfo->Key);
     return szOut;
 }
 
@@ -68,64 +70,73 @@ void HotKey::OnKey(GUIEventHandler* pEventHandler, char chKey, long keyInfo) {
    
     if (!m_szDisplay.compare("- Enter Key -")) {
         m_szDisplay = "";
-        m_bModifiers = MOD_NOREPEAT;
+        m_pHotKeyInfo->Win      = false;
+        m_pHotKeyInfo->Shift    = false;
+        m_pHotKeyInfo->Ctrl     = false;
+        m_pHotKeyInfo->Alt      = false;
     }
     switch (chKey) {
     case VK_LWIN:
     case VK_RWIN:
-        if (m_bModifiers & MOD_WIN) return;
+        if (m_pHotKeyInfo->Win) return;
         m_szDisplay += "WIN";
-        m_bModifiers |= MOD_WIN;
+        m_pHotKeyInfo->Win = true;
         m_szDisplay += " + ";
         return;
     case VK_SHIFT:
-        if (m_bModifiers & MOD_SHIFT) return;
+        if (m_pHotKeyInfo->Shift) return;
         m_szDisplay += "SHIFT";
-        m_bModifiers |= MOD_SHIFT;
+        m_pHotKeyInfo->Shift = true;
         m_szDisplay += " + ";
         return;
     case VK_CONTROL:
-        if (m_bModifiers & MOD_CONTROL) return;
+        if (m_pHotKeyInfo->Ctrl) return;
         m_szDisplay += "CTRL";
-        m_bModifiers |= MOD_CONTROL;
+        m_pHotKeyInfo->Ctrl = true;
         m_szDisplay += " + ";
         return;
     case VK_MENU:
-        if (m_bModifiers & MOD_ALT) return;
+        if (m_pHotKeyInfo->Alt) return;
         m_szDisplay += "ALT";
-        m_bModifiers |= MOD_ALT;
+        m_pHotKeyInfo->Alt = true;
         m_szDisplay += " + ";
         return;
     }
-    switch (chKey) {
-    case VK_TAB:        m_szDisplay += "TAB"; break;
-    case VK_CAPITAL:    m_szDisplay += "CAPS"; break;
-    case VK_PAUSE:      m_szDisplay += "PAUSE"; break;
-    case VK_ESCAPE:     m_szDisplay += "ESC"; break;
-    case VK_SPACE:      m_szDisplay += "SPACE"; break;
-    case VK_PRIOR:      m_szDisplay += "PAGEUP"; break;
-    case VK_NEXT:       m_szDisplay += "PAGEDOWN"; break;
-    case VK_HOME:       m_szDisplay += "HOME"; break;
-    case VK_END:        m_szDisplay += "END"; break;
-    case VK_LEFT:       m_szDisplay += "LEFT"; break;
-    case VK_RIGHT:      m_szDisplay += "RIGHT"; break;
-    case VK_UP:         m_szDisplay += "UP"; break;
-    case VK_DOWN:       m_szDisplay += "DOWN"; break;
-    case VK_SELECT:     m_szDisplay += "SELECT"; break;
-    case VK_PRINT:      m_szDisplay += "PRINT"; break;
-    case VK_SNAPSHOT:   m_szDisplay += "PRTSCR"; break;
-    case VK_INSERT:     m_szDisplay += "INS"; break;
-    case VK_DELETE:     m_szDisplay += "DELETE"; break;
-    case VK_BACK:       m_szDisplay += "BACK"; break;
-    case VK_RETURN:     m_szDisplay += "ENTER"; break;
-    default:            m_szDisplay += chKey; break;
+    chKey = ToUpper(chKey);
+    m_szDisplay += MakeKey(chKey);
 
-    }
-    if (!MakeHotKey(m_fnHotKey, m_iHotKeyId, m_bModifiers, chKey)) {
+    m_pHotKeyInfo->Key = chKey;
+    if (!MakeHotKey(m_iHotKeyId, m_pHotKeyInfo)) {
         m_szDisplay = "";
     }
     pEventHandler->ReleaseFocus();
 
     
        
+}
+
+std::string HotKey::MakeKey(char chKey) {
+    switch (chKey) {
+    case VK_TAB:        return "TAB"; 
+    case VK_CAPITAL:    return "CAPS"; 
+    case VK_PAUSE:      return "PAUSE"; 
+    case VK_ESCAPE:     return "ESC"; 
+    case VK_SPACE:      return "SPACE"; 
+    case VK_PRIOR:      return "PAGEUP"; 
+    case VK_NEXT:       return "PAGEDOWN"; 
+    case VK_HOME:       return "HOME"; 
+    case VK_END:        return "END"; 
+    case VK_LEFT:       return "LEFT"; 
+    case VK_RIGHT:      return "RIGHT"; 
+    case VK_UP:         return "UP"; 
+    case VK_DOWN:       return "DOWN"; 
+    case VK_SELECT:     return "SELECT"; 
+    case VK_PRINT:      return "PRINT"; 
+    case VK_SNAPSHOT:   return "PRTSCR"; 
+    case VK_INSERT:     return "INS"; 
+    case VK_DELETE:     return "DELETE";
+    case VK_BACK:       return "BACK"; 
+    case VK_RETURN:     return "ENTER"; 
+    default:            return std::string(1, chKey);
+}
 }

@@ -51,20 +51,20 @@ public:
 	friend ColorPicker;
 	friend HueBox;
 
-			ColorBox(D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent);
-	HRESULT Draw(ID3DXFont* pFont, Render* pRender);
+			ColorBox		(D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent);
+	HRESULT Draw			(ID3DXFont* pFont, Render* pRender);
 
-	void	UpdateColor();
-	void	UpdatePosition();
+	void	UpdateColor		(void);
+	void	UpdatePosition	(void);
 
-	void	OnClick(GUIEventHandler* pEventHandler, POINT ptLocation);
-	void	OnDrag(GUIEventHandler* pEventHandler, POINT ptLocation);
-	void	OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation);
+	void	OnClick			(GUIEventHandler* pEventHandler, POINT ptLocation);
+	void	OnDrag			(GUIEventHandler* pEventHandler, POINT ptLocation);
+	void	OnRelease		(GUIEventHandler* pEventHandler, POINT ptLocation);
 private:
 	
 	HueBox*			m_pHueBox;
 	ColorPicker*	m_pColorPicker;
-	D3DXVECTOR2		m_vSelectionLocation;
+	Vector2D		m_vSelectionLocation;
 
 };
 
@@ -74,40 +74,40 @@ public:
 	friend ColorBox;
 	friend ColorPicker;
 
-	HueBox(D3DXVECTOR4 vBounds, D3DCOLOR cHue, IGUIElement* pParent);
-	HRESULT Draw(ID3DXFont* pFont, Render* pRender);
+			HueBox		(D3DXVECTOR4 vBounds, D3DCOLOR cHue, IGUIElement* pParent);
+	HRESULT Draw		(ID3DXFont* pFont, Render* pRender);
 
-	void UpdateHue();
-	void UpdatePosition();
+	void UpdateHue		(void);
+	void UpdatePosition	(void);
 
-	void	OnClick(GUIEventHandler* pEventHandler, POINT ptLocation);
-	void	OnDrag(GUIEventHandler* pEventHandler, POINT ptLocation);
-	void	OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation);
+	void	OnClick		(GUIEventHandler* pEventHandler, POINT ptLocation);
+	void	OnDrag		(GUIEventHandler* pEventHandler, POINT ptLocation);
+	void	OnRelease	(GUIEventHandler* pEventHandler, POINT ptLocation);
 private:
 private:
 
 	
-	ColorBox* m_pColorBox;
-	ColorPicker* m_pColorPicker;
-	D3DCOLOR m_cHue;
-	float m_flSelection;
+	ColorBox*		m_pColorBox;
+	ColorPicker*	m_pColorPicker;
+	D3DCOLOR		m_cHue;
+	float			m_flSelection;
 };
 
 class ColorButton : public IGUIElement {
 	
 public:
-			ColorButton(const char* szName, D3DCOLOR* pColor, D3DXVECTOR4 vBounds, ColorPicker* pPicker, IGUIElement* pParent = nullptr);
+				ColorButton		(const char* szName, D3DCOLOR* pColor, D3DXVECTOR4 vBounds, ColorPicker* pPicker, IGUIElement* pParent = nullptr);
 			
-	HRESULT Draw(ID3DXFont* pFont, Render* pRender);
+	HRESULT		Draw			(ID3DXFont* pFont, Render* pRender);
 
-	const char* GetName(void);
-	D3DCOLOR* GetColorPtr(void);
+	const char* GetName			(void);
+	D3DCOLOR*	GetColorPtr		(void);
 
-	void	OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation);
+	void		OnRelease		(GUIEventHandler* pEventHandler, POINT ptLocation);
 private:
-	D3DCOLOR* m_pColor;
-	ColorPicker* m_pColorPicker;
-	const char* m_szName = nullptr;
+	D3DCOLOR*		m_pColor;
+	ColorPicker*	m_pColorPicker;
+	const char*		m_szName = nullptr;
 
 	
 };
