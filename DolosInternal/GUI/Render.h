@@ -90,7 +90,6 @@ public:
     Vector2D            GetStringSize           (ID3DXFont* font, const char* string, ...);
     HRESULT             DrawRectangle           (D3DXVECTOR4 vBounds, D3DCOLOR cColor, D3DCOLOR cColor2 = 0, bool bVertical = true);
     HRESULT             DrawOutlinedRect        (D3DXVECTOR4 vBounds, int iThickness, D3DCOLOR cOutline, D3DCOLOR cColor, D3DCOLOR cColor2 = 0, bool bVertical = true);
-    HRESULT             DrawBox                 (float flX, float flY, float flWidth, float flHeight, float flThickness, D3DCOLOR cColor);
     HRESULT             DrawCircle              (Vector2D vLocation, float flRadius, int iSides, D3DCOLOR cColor, float flFraction = 1, float flRotation = 0);
     HRESULT             DrawCircleOutline       (Vector2D vLocation, float flRadius, int iSides, D3DCOLOR cColor, float flFraction = 1, float flRotation = 0);
     HRESULT             DrawRoundedRectangle    (D3DXVECTOR4 vBounds, float flCornerSize, D3DCOLOR cColor, D3DCOLOR cColor2 = 0, bool bVertical = true);
@@ -108,6 +107,7 @@ private:
     IDirect3DIndexBuffer9*  m_pLineIndexBuffer, * m_pTriIndexBuffer;
     ID3DXSprite*            m_pSprite;
     IDirect3DTexture9*      m_pTextureAtlas;
+    IDirect3DStateBlock9*   m_pState;
 };
 
 D3DCOLOR            LerpColor(D3DCOLOR cColorOne, D3DCOLOR cColorTwo, float flPercent);

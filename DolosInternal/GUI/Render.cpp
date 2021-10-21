@@ -84,39 +84,41 @@ void Render::Release() {
 }
 
 void Render::Begin(BUFFER_TYPE tBufferType) {
+	if (IsInitialized()) {
+		m_pDevice->CreateStateBlock(D3DSBT_ALL, &m_pState);
 
-	m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX);
-	m_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	m_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	m_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX);
+		m_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		m_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		m_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 
-	m_pDevice->SetRenderState(D3DRS_CLIPPING, TRUE);
+		m_pDevice->SetRenderState(D3DRS_CLIPPING, TRUE);
 
-	m_pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+		m_pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
-	switch (tBufferType) {
-	case BUFFER_TYPE::BUFFER_ALL:
-		m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
-		m_pLineVertexBuffer->Lock(0, 0, (void**)&m_pLineVertex, D3DLOCK_DISCARD);
-		m_pLineIndexBuffer->Lock(0, 0, (void**)&m_pLineIndex, D3DLOCK_DISCARD);
-		m_pTriVertexBuffer->Lock(0, 0, (void**)&m_pTriVertex, D3DLOCK_DISCARD);
-		m_pTriIndexBuffer->Lock(0, 0, (void**)&m_pTriIndex, D3DLOCK_DISCARD);
-		break;
-	case BUFFER_TYPE::BUFFER_LINE:
-		m_pLineVertexBuffer->Lock(0, 0, (void**)&m_pLineVertex, D3DLOCK_DISCARD);
-		m_pLineIndexBuffer->Lock(0, 0, (void**)&m_pLineIndex, D3DLOCK_DISCARD);
-		break;
-	case BUFFER_TYPE::BUFFER_TRI:
-		m_pTriVertexBuffer->Lock(0, 0, (void**)&m_pTriVertex, D3DLOCK_DISCARD);
-		m_pTriIndexBuffer->Lock(0, 0, (void**)&m_pTriIndex, D3DLOCK_DISCARD);
-		break;
-	case BUFFER_TYPE::BUFFER_TEXT:
-		m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
-		break;
+		switch (tBufferType) {
+		case BUFFER_TYPE::BUFFER_ALL:
+			m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
+			m_pLineVertexBuffer->Lock(0, 0, (void**)&m_pLineVertex, D3DLOCK_DISCARD);
+			m_pLineIndexBuffer->Lock(0, 0, (void**)&m_pLineIndex, D3DLOCK_DISCARD);
+			m_pTriVertexBuffer->Lock(0, 0, (void**)&m_pTriVertex, D3DLOCK_DISCARD);
+			m_pTriIndexBuffer->Lock(0, 0, (void**)&m_pTriIndex, D3DLOCK_DISCARD);
+			break;
+		case BUFFER_TYPE::BUFFER_LINE:
+			m_pLineVertexBuffer->Lock(0, 0, (void**)&m_pLineVertex, D3DLOCK_DISCARD);
+			m_pLineIndexBuffer->Lock(0, 0, (void**)&m_pLineIndex, D3DLOCK_DISCARD);
+			break;
+		case BUFFER_TYPE::BUFFER_TRI:
+			m_pTriVertexBuffer->Lock(0, 0, (void**)&m_pTriVertex, D3DLOCK_DISCARD);
+			m_pTriIndexBuffer->Lock(0, 0, (void**)&m_pTriIndex, D3DLOCK_DISCARD);
+			break;
+		case BUFFER_TYPE::BUFFER_TEXT:
+			m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
+			break;
+		}
+
 	}
-
-
 }
 
 
@@ -180,6 +182,11 @@ void Render::End(BUFFER_TYPE tBufferType) {
 
 
 	}
+	if (m_pState) {
+		m_pState->Apply();
+		m_pState->Release();
+	}
+	
 }
 
 bool Render::IsInitialized() {
