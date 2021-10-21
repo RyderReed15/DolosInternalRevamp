@@ -85,7 +85,7 @@ void Render::Release() {
 
 void Render::Begin(BUFFER_TYPE tBufferType) {
 	if (IsInitialized()) {
-		m_pDevice->CreateStateBlock(D3DSBT_ALL, &m_pState);
+		
 
 		m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX);
 		m_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
@@ -179,13 +179,10 @@ void Render::End(BUFFER_TYPE tBufferType) {
 			break;
 		}
 
-
+		
 
 	}
-	if (m_pState) {
-		m_pState->Apply();
-		m_pState->Release();
-	}
+	
 	
 }
 

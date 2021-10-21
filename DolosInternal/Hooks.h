@@ -10,6 +10,7 @@
 #include <d3d9.h>
 
 #include "Features/ESP.h"
+#include "Features/SkinChanger.h"
 
 #define CREATE_MOVE_INDEX           24
 

@@ -19,7 +19,34 @@ public:
 };
 class C_BaseAttributableItem : public C_BaseEntity {
 public:
+    PNETVAR(int, FallbackPaintKit, "DT_BaseAttributableItem", "m_nFallbackPaintKit");
+    PNETVAR(float, FallbackWear, "DT_BaseAttributableItem", "m_flFallbackWear");
+    PNETVAR(int, FallbackStatTrak, "DT_BaseAttributableItem", "m_nFallbackStatTrak");
+    PNETVAR(int, FallbackSeed, "DT_BaseAttributableItem", "m_nFallbackSeed");
 
+    PNETVAR(__int32, OriginalOwnerLow, "DT_BaseAttributableItem", "m_OriginalOwnerXuidLow");
+    PNETVAR(__int32, OriginalOwnerHigh, "DT_BaseAttributableItem", "m_OriginalOwnerXuidHigh");
+
+
+    int* ItemIDHigh() {
+        return (int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iItemIDHigh"));
+
+    }
+    unsigned int* AccountID() {
+        return (unsigned int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iAccountID"));
+
+    }
+
+    char* CustomName() {
+        return (char*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + (int)GetNetvar("DT_ScriptCreatedItem", "m_szCustomName"));
+    }
+
+    int* EntityQuality() {
+        return (int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iEntityQuality"));
+    }
+    int GetWeaponId() {
+        return *(int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iItemDefinitionIndex"));
+    }
 
 };
 
@@ -40,19 +67,7 @@ public:
     NETVAR(EHANDLE, m_hWeaponWorldModel, "DT_BaseCombatWeapon", "m_hWeaponWorldModel");
 
 
-    PNETVAR(int, FallbackPaintKit, "DT_BaseAttributableItem", "m_nFallbackPaintKit");
-    PNETVAR(float, FallbackWear, "DT_BaseAttributableItem", "m_flFallbackWear");
-    PNETVAR(int, FallbackStatTrak, "DT_BaseAttributableItem", "m_nFallbackStatTrak");
-    PNETVAR(int, FallbackSeed, "DT_BaseAttributableItem", "m_nFallbackSeed");
-
-
-    int* ItemIDHigh() {
-        return (int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iItemIDHigh"));
-
-    }
-    int GetWeaponId() {
-        return *(int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iItemDefinitionIndex"));
-    }
+   
 
 
 };
