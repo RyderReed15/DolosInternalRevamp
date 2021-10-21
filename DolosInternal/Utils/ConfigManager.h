@@ -28,11 +28,13 @@ struct Config {
             bool DrawBones;
             bool DrawHealth;
             bool DrawArmor;
+            bool DrawName;
             D3DCOLOR TeamColor;
             D3DCOLOR EnemyColor;
         } Players;
         struct WeaponViz {
             bool Enabled;
+            bool DrawName;
             D3DCOLOR Color;
         } Weapons;
        

@@ -12,7 +12,7 @@ void ESP::Tick() {
             if (Settings.Visuals.Weapons.Enabled) {
                 if (((CBaseCombatWeapon*)pEntity)->GetOwner() == -1) {
                     if (pEntity->GetClientClass()->m_pNetworkName[1] != 'B') {
-                        DrawBoundingBox(pEntity, Settings.Visuals.Weapons.Color);
+                        DrawBoundingBox(pEntity, Settings.Visuals.Weapons.Color, i);
                     }
                 }
             }
@@ -23,12 +23,12 @@ void ESP::Tick() {
 
             if (!bSameTeam && Settings.Visuals.Players.ShowEnemy) {
 
-                DrawBoundingBox(pEntity, Settings.Visuals.Players.EnemyColor);
+                DrawBoundingBox(pEntity, Settings.Visuals.Players.EnemyColor, i);
                 if (Settings.Visuals.Players.DrawBones)     DrawBones(pEntity);
             }
             else if (bSameTeam && Settings.Visuals.Players.ShowTeam) {
 
-                DrawBoundingBox(pEntity, Settings.Visuals.Players.TeamColor);
+                DrawBoundingBox(pEntity, Settings.Visuals.Players.TeamColor, i);
                 if (Settings.Visuals.Players.DrawBones)     DrawBones(pEntity);
             }
         }
@@ -36,7 +36,7 @@ void ESP::Tick() {
     g_pRender->End();
 }
 
-void ESP::DrawBoundingBox(IClientEntity* pEntity, D3DCOLOR cColor) {
+void ESP::DrawBoundingBox(IClientEntity* pEntity, D3DCOLOR cColor, int iIndex) {
     Vector vMax, vMin;
     if (!pEntity) return;
 
@@ -98,13 +98,36 @@ void ESP::DrawBoundingBox(IClientEntity* pEntity, D3DCOLOR cColor) {
     if (vSize.z - vSize.x < 5 || vSize.w - vSize.y < 5 || vSize.z - vSize.x > 800 || vSize.w - vSize.y > 800) return;
 
     g_pRender->DrawRectangle({ vSize.x, vSize.y, vSize.z - vSize.x, vSize.w - vSize.y }, cColor);
+    DrawOutline((Vector4D)vSize, GREEN);
+    DrawDistance((Vector4D)vSize, pEntity);
     if (pEntity->IsPlayer()) {
-        if (Settings.Visuals.Players.DrawHealth)    DrawHealth  (pEntity->GetHealth()   , (Vector4D)vSize);
-        if (Settings.Visuals.Players.DrawArmor)     DrawArmor   (pEntity->GetArmor()    , (Vector4D)vSize);
+        if (Settings.Visuals.Players.DrawHealth)    DrawHealth      (pEntity->GetHealth()   , (Vector4D)vSize);
+        if (Settings.Visuals.Players.DrawArmor)     DrawArmor       (pEntity->GetArmor()    , (Vector4D)vSize);
+        if (Settings.Visuals.Players.DrawName)      DrawPlayerName  ((Vector4D)vSize        , pEntity, iIndex);
+    }
+    if (pEntity->IsWeapon()) {
+        if (Settings.Visuals.Weapons.Enabled)       DrawWeaponName  ((Vector4D)vSize        , pEntity);
     }
     
 
     
+}
+
+void ESP::DrawOutline(Vector4D vBounds, D3DCOLOR cColor){
+    float flQuarterTop = (vBounds.z - vBounds.x) * .25;
+    float flQuarterSide = (vBounds.w - vBounds.y) * .25;
+    g_pRender->DrawLine({ vBounds.x, vBounds.y }, { vBounds.x + flQuarterTop, vBounds.y }, GREEN);
+    g_pRender->DrawLine({ vBounds.z, vBounds.y }, { vBounds.z - flQuarterTop, vBounds.y }, 0xff00ff00);
+
+
+    g_pRender->DrawLine({ vBounds.z, vBounds.y }, { vBounds.z, vBounds.y + flQuarterSide }, 0xff00ff00);
+    g_pRender->DrawLine({ vBounds.z, vBounds.w }, { vBounds.z, vBounds.w - flQuarterSide }, 0xff00ff00);
+
+    g_pRender->DrawLine({ vBounds.x, vBounds.w }, { vBounds.x + flQuarterTop, vBounds.w }, 0xff00ff00);
+    g_pRender->DrawLine({ vBounds.z, vBounds.w }, { vBounds.z - flQuarterTop, vBounds.w }, 0xff00ff00);
+
+    g_pRender->DrawLine({ vBounds.x, vBounds.y }, { vBounds.x, vBounds.y + flQuarterSide }, 0xff00ff00);
+    g_pRender->DrawLine({ vBounds.x, vBounds.w }, { vBounds.x, vBounds.w - flQuarterSide }, 0xff00ff00);
 }
 
 void ESP::DrawBones(IClientEntity* pEntity) {
@@ -142,6 +165,29 @@ void ESP::DrawBones(IClientEntity* pEntity) {
             
         }
     }
+}
+
+void ESP::DrawPlayerName(Vector4D vBounds, IClientEntity* pEntity, int iIndex){
+    player_info_t playerInfo;
+    g_pEngineClient->GetPlayerInfo(iIndex, &playerInfo);
+    Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, playerInfo.szName);
+    g_pRender->DrawString({ (vBounds.x + vBounds.z - vSize.x) / 2 , vBounds.y - vSize.y }, WHITE, g_pWeaponFont, playerInfo.szName);
+}
+
+void ESP::DrawWeaponName(Vector4D vBounds, IClientEntity* pEntity){
+    if (pEntity->GetWeaponData()) {
+        Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, pEntity->GetWeaponData()->szHudName + 13);
+        g_pRender->DrawString({ (vBounds.x + vBounds.z - vSize.x) / 2 , vBounds.y - vSize.y }, WHITE, g_pWeaponFont, pEntity->GetWeaponData()->szHudName + 13);
+
+    }
+}
+
+void ESP::DrawDistance(Vector4D vBounds, IClientEntity* pEntity){
+    int iDistance = (pEntity->GetVecOrigin() - g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer())->GetVecOrigin()).Magnitude() * 0.0254f;
+
+    char szDistance[33];  _itoa_s(iDistance, szDistance, 10);
+    Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, szDistance);
+    g_pRender->DrawString({ (vBounds.x + vBounds.z - vSize.x) / 2 , vBounds.w  }, WHITE, g_pWeaponFont, szDistance);
 }
 
 
