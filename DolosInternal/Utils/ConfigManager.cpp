@@ -57,6 +57,7 @@ void StoreValues() {
     Settings.Visuals.Players.DrawBones  = pPlayers->GetBoolean("draw_bones");
     Settings.Visuals.Players.DrawHealth = pPlayers->GetBoolean("draw_health");
     Settings.Visuals.Players.DrawArmor  = pPlayers->GetBoolean("draw_armor");
+    Settings.Visuals.Players.DrawName   = pPlayers->GetBoolean("draw_name");
 
     Settings.Visuals.Players.EnemyColor = ParseColor(pPlayers->GetString("enemy_color"));
     Settings.Visuals.Players.TeamColor  = ParseColor(pPlayers->GetString("team_color"));
@@ -64,6 +65,7 @@ void StoreValues() {
     JsonObject* pWeapons = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("weapons");
 
     Settings.Visuals.Weapons.Enabled    = pWeapons->GetBoolean("enabled");
+    Settings.Visuals.Weapons.DrawName   = pWeapons->GetBoolean("draw_name");
 
     Settings.Visuals.Weapons.Color      = ParseColor(pWeapons->GetString("color"));
 }

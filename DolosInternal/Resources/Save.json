@@ -21,11 +21,13 @@
 			"draw_bones": true,
 			"draw_health": true,
 			"draw_armor": true,
+			"draw_name": true,
 			"enemy_color": "0x33333333",
 			"team_color": "0x33333333"
 		},
 		"weapons": {
 			"enabled": true,
+			"draw_name": true,
 			"color": "0x33333333"
 		}
 	},
