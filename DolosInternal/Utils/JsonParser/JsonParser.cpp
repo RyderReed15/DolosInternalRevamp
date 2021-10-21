@@ -395,4 +395,3 @@ void StringToLower(std::string& szUpper) {
 }
 
 
-
