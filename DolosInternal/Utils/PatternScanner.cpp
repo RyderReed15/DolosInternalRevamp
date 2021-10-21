@@ -1,4 +1,5 @@
 #include "PatternScanner.h"
+#include <iostream>
 
 
 
@@ -18,7 +19,7 @@ char* FindPattern(void* pDLLBase, const char* szPattern, bool bRelative, int aOf
 		while (szMask[iPatternSize] != '\0') {
 			iPatternSize++;
 		}
-
+		std::cout << "Scanning Module: " << pDLLBase << std::endl;
 		for (char* pRegionBase = (char*)pDLLBase; pRegionBase < (char*)pDLLBase + iModuleSize; pRegionBase = (char*)(memInfo.RegionSize + memInfo.BaseAddress)) {
 
 			if (!VirtualQuery(reinterpret_cast<LPCVOID>(pRegionBase), reinterpret_cast<PMEMORY_BASIC_INFORMATION>(&memInfo), sizeof(MEMORY_BASIC_INFORMATION))) //Iterate memory by using VirtualQuery
@@ -26,7 +27,7 @@ char* FindPattern(void* pDLLBase, const char* szPattern, bool bRelative, int aOf
 
 			if (memInfo.State != MEM_COMMIT || memInfo.Protect == PAGE_NOACCESS || memInfo.Protect & PAGE_GUARD) //Filter Regions
 				continue;
-
+			std::cout << " - Scanning Region: " << (void*)memInfo.BaseAddress << " | " << (void*)(memInfo.BaseAddress + memInfo.RegionSize) << std::endl;
 			int iLength = memInfo.BaseAddress + memInfo.RegionSize - iPatternSize;
 			for (char* j = (char*)memInfo.BaseAddress; j < (char*)iLength; j++) {
 

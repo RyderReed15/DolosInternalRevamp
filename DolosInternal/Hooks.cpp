@@ -92,8 +92,9 @@ LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 
 void __fastcall hkFrameStageNotify(void* _this, void* edx, ClientFrameStage_t stage) {
-
-	return oFrameStageNotify(_this, edx, stage);
+	
+	oFrameStageNotify(_this, edx, stage);
+	if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START) SkinChanger::Tick();
 }
 
 void __fastcall hkDrawModelExecute(void* _this, void* edx, void* pCtx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, void* pCustomBoneToWorld) {
@@ -120,14 +121,9 @@ HRESULT APIENTRY hkDrawIndexedPrimitive(IDirect3DDevice9* pDevice, D3DPRIMITIVET
 }
 
 HRESULT APIENTRY hkPresent(IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST RECT* pDestRect, HWND hDestWindowOverride, CONST RGNDATA* pDirtyRegion) {
+	IDirect3DStateBlock9* pState;
+	pDevice->CreateStateBlock(D3DSBT_PIXELSTATE, &pState);
 
-	HRESULT hReturn = oPresent(pDevice, pSourceRect, pDestRect, hDestWindowOverride, pDirtyRegion);
-	return hReturn;
-}
-
-HRESULT APIENTRY hkEndscene(IDirect3DDevice9* pDevice) {
-	
-	HRESULT hReturn = oEndScene(pDevice);
 	if (g_pGUIContainer && g_pRender) {
 
 		ESP::Tick();
@@ -137,10 +133,17 @@ HRESULT APIENTRY hkEndscene(IDirect3DDevice9* pDevice) {
 			g_pGUIContainer->DrawElements(g_pRender, g_pAvenirFont);
 		}
 		FixD3D((void***)pDevice);
-			
-		
-		
 	}
+	pState->Apply();
+	pState->Release();
+	HRESULT hReturn = oPresent(pDevice, pSourceRect, pDestRect, hDestWindowOverride, pDirtyRegion);
+	return hReturn;
+}
+
+HRESULT APIENTRY hkEndscene(IDirect3DDevice9* pDevice) {
+	
+	HRESULT hReturn = oEndScene(pDevice);
+	
 	
 	return hReturn;
 }

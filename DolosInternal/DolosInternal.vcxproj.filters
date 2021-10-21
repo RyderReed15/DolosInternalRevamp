@@ -148,6 +148,9 @@
     <ClCompile Include="Features\ESP.cpp">
       <Filter>Features</Filter>
     </ClCompile>
+    <ClCompile Include="Features\SkinChanger.cpp">
+      <Filter>Features</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Initializer.h">

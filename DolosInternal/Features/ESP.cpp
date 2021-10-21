@@ -3,9 +3,9 @@
 
 void ESP::Tick() {
     g_pRender->Begin();
-    if (g_pLocalPlayer == 0) g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer());
+    if (g_pLocalPlayer == 0) g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer()); // Move this to SDK if possible
     for (int i = 0; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
-
+        
         IClientEntity* pEntity = g_pClientEntityList->GetClientEntity(i);
         if (!pEntity || !(pEntity->IsWeapon() || pEntity->IsPlayer())) continue;
         if (pEntity->IsWeapon()) {
@@ -18,7 +18,7 @@ void ESP::Tick() {
             }
             
         }
-        else if (pEntity->SanityCheck() && pEntity != g_pLocalPlayer) {
+       else if (pEntity->SanityCheck() && pEntity != g_pLocalPlayer) {
             bool bSameTeam = pEntity->GetTeam() == g_pLocalPlayer->GetTeam();
 
             if (!bSameTeam && Settings.Visuals.Players.ShowEnemy) {
