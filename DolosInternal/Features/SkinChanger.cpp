@@ -15,27 +15,19 @@ void SkinChanger::Tick() {
 		}
 
 		if (pWeapon->IsWeapon()) {
+			SkinStruct* pSkin = Settings.SkinChanger.Skins[pWeapon->GetWeaponId()];
+			if (pSkin != nullptr) {
+				OverrideSkin(pWeapon, pSkin);
+			}
 
-
-			if (pWeapon->GetWeaponId() == WEAPON_AK47) {
-				char name[] = "Impress";
-				OverrideSkin(pWeapon, { 675, .6, 100, 1, name });
-			}
-			if (pWeapon->GetWeaponId() == WEAPON_M4A4) {
-				char name[] = "Rawr XD";
-				OverrideSkin(pWeapon, { 309, .9, 100, 1, name });
-			}
-			if (pWeapon->GetWeaponId() == WEAPON_AWP) {
-				char name[] = "Hyper Based";
-				OverrideSkin(pWeapon, { 475, .5, 500, 1, name });
-			}
+			
 
 		}
 
 	}
 }
 
-void SkinChanger::OverrideSkin(CBaseCombatWeapon* pWeapon, SkinStruct skinInfo) {
+void SkinChanger::OverrideSkin(CBaseCombatWeapon* pWeapon, SkinStruct* pSkinInfo) {
 	int* pItemIdHigh = pWeapon->ItemIDHigh();
 	if (!pItemIdHigh) {
 		return;
@@ -43,16 +35,16 @@ void SkinChanger::OverrideSkin(CBaseCombatWeapon* pWeapon, SkinStruct skinInfo) 
 	*pItemIdHigh = -1;
 	
 
-	*pWeapon->FallbackPaintKit()	= skinInfo.iPaintKit;
-	*pWeapon->FallbackWear()		= skinInfo.flWear;
-	*pWeapon->FallbackStatTrak()	= skinInfo.iStatTrak;
-	*pWeapon->FallbackSeed()		= skinInfo.iSeed;
-	*pWeapon->EntityQuality() = 3;
+	*pWeapon->FallbackPaintKit()	= pSkinInfo->iPaintKit;
+	*pWeapon->FallbackWear()		= pSkinInfo->flWear;
+	*pWeapon->FallbackStatTrak()	= pSkinInfo->iStatTrak;
+	*pWeapon->FallbackSeed()		= pSkinInfo->iSeed;
+	*pWeapon->EntityQuality()		= pSkinInfo->iQuality;
 	
-	if (skinInfo.szCustomName) {
-		sprintf_s(pWeapon->CustomName(), 32, "%s", skinInfo.szCustomName);
+	if (pSkinInfo->szCustomName) {
+		sprintf_s(pWeapon->CustomName(), 32, "%s", pSkinInfo->szCustomName);
 	}
-	if (skinInfo.iStatTrak) {
+	if (pSkinInfo->iStatTrak) {
 		player_info_s playerInfo;
 		g_pEngineClient->GetPlayerInfo(g_pEngineClient->GetLocalPlayer(), &playerInfo);
 		*(pWeapon->AccountID()) = playerInfo.xuid_low;

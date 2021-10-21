@@ -67,10 +67,10 @@ bool UninitializeCheat() {
 
 	Sleep(100);
 
-	UninitializeConfig();
 	UninitializeFonts();
 	UninitializeGUI();
-	
+
+	UninitializeConfig();
 	fclose(fConsole);
 	FreeConsole();
 	return CloseHandle(CreateThread(nullptr, 0, LPTHREAD_START_ROUTINE(CloseCheat), hModule, 0, nullptr));

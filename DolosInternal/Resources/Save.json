@@ -4,7 +4,7 @@
 	"version": "beta-1.0",
 	"data_created": "10-14-2021",
 	"aimbot": {
-		"active": true,
+		"active": "858993459",
 		"silent": true,
 		"fov": 4,
 		"targets": [
@@ -37,9 +37,36 @@
 		"fov": 4
 	},
 	"skins": {
-		"active": true,
-		"silent": true,
-		"fov": 4
+		"track_kills": true,
+		"skins": [
+			{
+				"skin_id": 675,
+				"wear": 0.90000,
+				"stattrak_kills": -1,
+				"seed": 1,
+				"quality": 3,
+				"custom_name": "",
+				"weapon_id": 7
+			},
+			{
+				"skin_id": 475,
+				"wear": 0.99000,
+				"stattrak_kills": -1,
+				"seed": 1,
+				"quality": 12,
+				"custom_name": "",
+				"weapon_id": 9
+			},
+			{
+				"skin_id": 309,
+				"wear": 0.01000,
+				"stattrak_kills": -1,
+				"seed": 1,
+				"quality": 7,
+				"custom_name": "",
+				"weapon_id": 16
+			}
+		]
 	},
 	"trigger": {
 		"active": true,
