@@ -39,9 +39,36 @@
 		"fov": 4
 	},
 	"skins": {
-		"active": true,
-		"silent": true,
-		"fov": 4
+		"track_kills": true,
+		"skins": [
+			{
+				"weapon_id": 7, //AK
+				"skin_id": 675,
+				"wear": 0.9,
+				"stattrak_kills": -1,
+				"seed": 1,
+				"quality": 3, // Knife
+				"custom_name": ""
+			},
+			{
+				"weapon_id": 16, //M4
+				"skin_id": 309,
+				"wear": 0.01,
+				"stattrak_kills": -1,
+				"seed": 1,
+				"quality": 7,
+				"custom_name": ""
+			},
+			{
+				"weapon_id": 9, //AWP
+				"skin_id": 475,
+				"wear": 0.99,
+				"stattrak_kills": -1,
+				"seed": 1,
+				"quality": 12,
+				"custom_name": ""
+			}
+		]
 	},
 	"trigger": {
 		"active": true,

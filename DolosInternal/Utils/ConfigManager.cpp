@@ -7,7 +7,11 @@ bool InitializeConfig() {
 }
 
 bool UninitializeConfig() {
-    return SaveConfig("F:\\Coding Projects\\VS\\DolosInternal\\DolosInternal\\Resources\\Save.json");
+    
+    bool bReturn =  SaveConfig("F:\\Coding Projects\\VS\\DolosInternal\\DolosInternal\\Resources\\Save.json");
+    UnloadSkins();
+    delete g_pParsedConfig;
+    return bReturn;
     
 
 }
@@ -68,6 +72,17 @@ void StoreValues() {
     Settings.Visuals.Weapons.DrawName   = pWeapons->GetBoolean("draw_name");
 
     Settings.Visuals.Weapons.Color      = ParseColor(pWeapons->GetString("color"));
+
+    JsonObject* pSkinChanger = g_pParsedConfig->GetJsonObject("skins");
+
+    Settings.SkinChanger.TrackKills = pSkinChanger->GetBoolean("track_kills");
+
+    JsonArray* pSkins = pSkinChanger->GetJsonArray("skins");
+
+    for (int i = 0; i < pSkins->GetSize(); i++) {
+        SkinChanger::SkinStruct* pSkin = ParseSkin(pSkins->GetJsonObject(i));
+        Settings.SkinChanger.Skins[pSkins->GetJsonObject(i)->GetNumber<int>("weapon_id")] = pSkin;
+    }
 }
 
 void UpdateValues() {
@@ -93,9 +108,68 @@ void UpdateValues() {
     pAimbot->SetBoolean("enabled"   , Settings.Visuals.Weapons.Enabled);
 
     pAimbot->SetString("color"      , std::to_string(Settings.Visuals.Weapons.Color));
+
+    JsonObject* pSkinChanger = g_pParsedConfig->GetJsonObject("skins");
+
+    pSkinChanger->SetBoolean("track_kills", Settings.SkinChanger.TrackKills);
+
+    JsonArray* pSkins = pSkinChanger->GetJsonArray("skins");
+
+    while (pSkins->GetSize())
+    {
+        pSkins->RemoveValue(0);
+    }
+
+    std::map<int, SkinChanger::SkinStruct*>::iterator it = Settings.SkinChanger.Skins.begin();
+    while (it != Settings.SkinChanger.Skins.end()) {
+        JsonObject* pSkin = WriteSkin(it->second);
+        pSkin->AddNumber("weapon_id", it->first);
+        pSkins->AddJsonObject(pSkin);
+        it++;
+    }
+
+
+}
+
+void UnloadSkins() {
+    std::map<int, SkinChanger::SkinStruct*>::iterator it = Settings.SkinChanger.Skins.begin();
+    while (it != Settings.SkinChanger.Skins.end()) {
+        delete it->second;
+        it++;
+    }
 }
 
 D3DCOLOR ParseColor(const std::string& szColor) {
     return strtoul(szColor.c_str(), 0, 16);
 }
 
+
+SkinChanger::SkinStruct* ParseSkin(JsonObject* pSkinObject) {
+    if (!pSkinObject) return nullptr;
+    SkinChanger::SkinStruct* pSkinInfo = new SkinChanger::SkinStruct;
+
+    pSkinInfo->iPaintKit    = pSkinObject->GetNumber<int>("skin_id");
+    pSkinInfo->flWear       = pSkinObject->GetNumber<float>("wear");
+    pSkinInfo->iStatTrak    = pSkinObject->GetNumber<int>("stattrak_kills");
+    pSkinInfo->iSeed        = pSkinObject->GetNumber<int>("seed");
+    pSkinInfo->iQuality     = pSkinObject->GetNumber<int>("quality");
+
+    sprintf_s(pSkinInfo->szCustomName, 32, "%s", pSkinObject->GetString("custom_name").c_str());
+    return pSkinInfo;
+}
+
+
+JsonObject* WriteSkin(SkinChanger::SkinStruct* pSkin) {
+    if (!pSkin) return nullptr;
+
+    JsonObject* pObject = new JsonObject();
+
+    pObject->AddNumber("skin_id"        , pSkin->iPaintKit);
+    pObject->AddNumber("wear"           , pSkin->flWear);
+    pObject->AddNumber("stattrak_kills" , pSkin->iStatTrak);
+    pObject->AddNumber("seed"           , pSkin->iSeed);
+    pObject->AddNumber("quality"        , pSkin->iQuality);
+
+    pObject->AddString("custom_name"    , pSkin->szCustomName);
+    return pObject;
+}

@@ -4,15 +4,19 @@
 #define CONFIG_MANAGER_H
 
 #include "JsonParser/JsonParser.h"
+#include "../Features/SkinChanger.h"
 #include <d3d9.h>
 #include <vector>
 #include <string>
+#include <map>
 
 inline const char* version = "beta-1.0";
 
 
 
 inline JsonObject*  g_pParsedConfig;   
+
+
 
 
 struct Config {
@@ -43,8 +47,9 @@ struct Config {
         bool b;
     } Misc;
     struct SkinConfig {
-        bool b;
-    } Skins;
+        bool TrackKills;
+        std::map<int, SkinChanger::SkinStruct*> Skins;
+    } SkinChanger;
     struct TriggerConfig {
         bool b;
     } Trigger;
@@ -64,8 +69,11 @@ bool LoadConfig         (const char* szPath);
 bool SaveConfig         (const char* szPath);
 void StoreValues        (void);
 void UpdateValues       (void);
+void UnloadSkins        (void);
 
-D3DCOLOR ParseColor(const std::string& szColor);
+D3DCOLOR                    ParseColor  (const std::string& szColor);
+SkinChanger::SkinStruct*    ParseSkin   (JsonObject* pSkinObject);
+JsonObject*                 WriteSkin   (SkinChanger::SkinStruct* pSkin);
 
 
 #endif // !CONFIG_MANAGER_H

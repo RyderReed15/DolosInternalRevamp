@@ -8,20 +8,22 @@
 namespace SkinChanger {
 
     struct SkinStruct {
-        int iPaintKit;
-        float flWear;
-        int iStatTrak;
-        int iSeed;
-        char* szCustomName;
+        int     iPaintKit;
+        float   flWear;
+        int     iStatTrak;
+        int     iSeed;
+        int     iQuality;
+        char    szCustomName[32];
     };
 
     void Tick();
 
 
-    void OverrideSkin(CBaseCombatWeapon* pWeapon, SkinStruct skinInfo);
+    void OverrideSkin(CBaseCombatWeapon* pWeapon, SkinStruct* pSkinInfo);
 }
 
 
+#include "../Utils/ConfigManager.h"
 
 #endif // !SKIN_CHANGER_H
 
