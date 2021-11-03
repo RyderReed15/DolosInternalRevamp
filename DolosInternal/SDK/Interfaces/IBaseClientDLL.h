@@ -18,38 +18,38 @@ class RecvProp;
 class IClientClass
 {
 public:
-    CreateClientClassFn      m_pCreateFn;
-    CreateEventFn            m_pCreateEventFn;
-    char* m_pNetworkName;
-    RecvTable* m_pRecvTable;
-    IClientClass* m_pNext;
-    int                  m_ClassID;
+    CreateClientClassFn         m_pCreateFn;
+    CreateEventFn               m_pCreateEventFn;
+    char*                       m_pNetworkName;
+    RecvTable*                  m_pRecvTable;
+    IClientClass*               m_pNext;
+    int                         m_ClassID;
 };
 class RecvProp {
 public:
-    char* m_pVarName;
-    int        m_RecvType;
-    int        m_Flags;
-    int        m_StringBufferSize;
-    int        m_bInsideArray;
-    const int  m_pExtraData;
-    RecvProp* m_pArrayProp;
-    int        m_ArrayLengthProxy;
-    int        m_ProxyFn;
-    int        m_DataTableProxyFn;
-    RecvTable* m_pDataTable;
-    int        m_Offset;
-    int        m_ElementStride;
-    int        m_nElements;
-    const int  m_pParentArrayPropName;
+    char*       m_pVarName;
+    int         m_RecvType;
+    int         m_Flags;
+    int         m_StringBufferSize;
+    int         m_bInsideArray;
+    const int   m_pExtraData;
+    RecvProp*   m_pArrayProp;
+    int         m_ArrayLengthProxy;
+    int         m_ProxyFn;
+    int         m_DataTableProxyFn;
+    RecvTable*  m_pDataTable;
+    int         m_Offset;
+    int         m_ElementStride;
+    int         m_nElements;
+    const int   m_pParentArrayPropName;
 };
 
 class RecvTable {
 public:
-    RecvProp* m_pProps;
-    int       m_nProps;
-    int       m_pDecoder;
-    char* m_pNetTableName;
+    RecvProp*   m_pProps;
+    int         m_nProps;
+    int         m_pDecoder;
+    char*       m_pNetTableName;
     bool        m_bInitialized;
     bool        m_bInMainList;
 };
@@ -60,32 +60,32 @@ class CGlobalVarsBase;
 
 
 
-#define IN_ATTACK  (1 << 0)
-#define IN_JUMP   (1 << 1)
-#define IN_DUCK   (1 << 2)
-#define IN_FORWARD  (1 << 3)
-#define IN_BACK   (1 << 4)
-#define IN_USE   (1 << 5)
-#define IN_CANCEL  (1 << 6)
-#define IN_LEFT   (1 << 7)
-#define IN_RIGHT  (1 << 8)
-#define IN_MOVELEFT  (1 << 9)
-#define IN_MOVERIGHT (1 << 10)
-#define IN_ATTACK2  (1 << 11)
-#define IN_RUN   (1 << 12)
-#define IN_RELOAD  (1 << 13)
-#define IN_ALT1   (1 << 14)
-#define IN_ALT2   (1 << 15)
-#define IN_SCORE  (1 << 16)   // Used by client.dll for when scoreboard is held down
-#define IN_SPEED  (1 << 17) // Player is holding the speed key
-#define IN_WALK   (1 << 18) // Player holding walk key
-#define IN_ZOOM   (1 << 19) // Zoom key for HUD zoom
-#define IN_WEAPON1  (1 << 20) // weapon defines these bits
-#define IN_WEAPON2  (1 << 21) // weapon defines these bits
-#define IN_BULLRUSH  (1 << 22)
-#define IN_GRENADE1  (1 << 23) // grenade 1
-#define IN_GRENADE2  (1 << 24) // grenade 2
-#define IN_LOOKSPIN  (1 << 25)
+#define IN_ATTACK       (1 << 0)
+#define IN_JUMP         (1 << 1)
+#define IN_DUCK         (1 << 2)
+#define IN_FORWARD      (1 << 3)
+#define IN_BACK         (1 << 4)
+#define IN_USE          (1 << 5)
+#define IN_CANCEL       (1 << 6)
+#define IN_LEFT         (1 << 7)
+#define IN_RIGHT        (1 << 8)
+#define IN_MOVELEFT     (1 << 9)
+#define IN_MOVERIGHT    (1 << 10)
+#define IN_ATTACK2      (1 << 11)
+#define IN_RUN          (1 << 12)
+#define IN_RELOAD       (1 << 13)
+#define IN_ALT1         (1 << 14)
+#define IN_ALT2         (1 << 15)
+#define IN_SCORE        (1 << 16)   // Used by client.dll for when scoreboard is held down
+#define IN_SPEED        (1 << 17) // Player is holding the speed key
+#define IN_WALK         (1 << 18) // Player holding walk key
+#define IN_ZOOM         (1 << 19) // Zoom key for HUD zoom
+#define IN_WEAPON1      (1 << 20) // weapon defines these bits
+#define IN_WEAPON2      (1 << 21) // weapon defines these bits
+#define IN_BULLRUSH     (1 << 22)
+#define IN_GRENADE1     (1 << 23) // grenade 1
+#define IN_GRENADE2     (1 << 24) // grenade 2
+#define IN_LOOKSPIN     (1 << 25)
 
 class CUserCmd
 {
@@ -145,7 +145,7 @@ public:
     virtual void             LevelInitPreEntity(char const* pMapName) = 0;
     virtual void             LevelInitPostEntity() = 0;
     virtual void             LevelShutdown(void) = 0;
-    virtual IClientClass* GetAllClasses(void) = 0;
+    virtual IClientClass*    GetAllClasses(void) = 0;
 
 
 };

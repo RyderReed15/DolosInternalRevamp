@@ -10,7 +10,7 @@ class IAppSystem
 public:
     virtual bool                            Connect(CreateInterfaceFn factory) = 0;                                     // 0
     virtual void                            Disconnect() = 0;                                                           // 1
-    virtual void* QueryInterface(const char* pInterfaceName) = 0;                             // 2
+    virtual void*                           QueryInterface(const char* pInterfaceName) = 0;                             // 2
     virtual int /*InitReturnVal_t*/         Init() = 0;                                                                 // 3
     virtual void                            Shutdown() = 0;                                                             // 4
     virtual const void* /*AppSystemInfo_t*/ GetDependencies() = 0;                                                      // 5

@@ -41,9 +41,9 @@ public:
 class IPrediction {
 public:
     VFUNC(bool, InPrediction, 14, (), (this));
-    VFUNC(void, RunCommand, 19, (IClientEntity* pPlayer, CUserCmd* pCmd, IMoveHelper* pMoveHelper), (this, pPlayer, pCmd, pMoveHelper));
-    VFUNC(void, SetupMove, 20, (IClientEntity* pPlayer, CUserCmd* pCmd, IMoveHelper* pMoveHelper, CMoveData* pMoveData), (this, pPlayer, pCmd, pMoveHelper, pMoveData));
-    VFUNC(void, FinishMove, 21, (IClientEntity* pPlayer, CUserCmd* pCmd, CMoveData* pMoveData), (this, pPlayer, pCmd, pMoveData));
+    VFUNC(void, RunCommand  , 19, (IClientEntity* pPlayer, CUserCmd* pCmd, IMoveHelper* pMoveHelper)                        , (this, pPlayer, pCmd, pMoveHelper));
+    VFUNC(void, SetupMove   , 20, (IClientEntity* pPlayer, CUserCmd* pCmd, IMoveHelper* pMoveHelper, CMoveData* pMoveData)  , (this, pPlayer, pCmd, pMoveHelper, pMoveData));
+    VFUNC(void, FinishMove  , 21, (IClientEntity* pPlayer, CUserCmd* pCmd, CMoveData* pMoveData)                            , (this, pPlayer, pCmd, pMoveData));
 };
 
 

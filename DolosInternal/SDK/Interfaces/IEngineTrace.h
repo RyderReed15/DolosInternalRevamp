@@ -15,13 +15,13 @@ class CPhysCollide;
 
 struct vcollide_t
 {
-    unsigned short solidCount : 15;
-    unsigned short isPacked : 1;
-    unsigned short descSize;
+    unsigned short  solidCount : 15;
+    unsigned short  isPacked : 1;
+    unsigned short  descSize;
     // VPhysicsSolids
-    CPhysCollide** solids;
-    char* pKeyValues;
-    void* pUserData;
+    CPhysCollide**  solids;
+    char*           pKeyValues;
+    void*           pUserData;
 };
 
 struct cmodel_t
@@ -34,20 +34,20 @@ struct cmodel_t
 
 struct surface_t
 {
-    char* name; //0x0000
-    int16_t surface_prop; //0x0004
-    uint16_t flags; //0x0006
+    char*       name; //0x0000
+    int16_t     surface_prop; //0x0004
+    uint16_t    flags; //0x0006
 };
 
 struct Ray_t
 {
-    VectorAligned  m_Start;  // starting point, centered within the extents
-    VectorAligned  m_Delta;  // direction + length of the ray
-    VectorAligned  m_StartOffset; // Add this to m_Start to Get the actual ray start
-    VectorAligned  m_Extents;     // Describes an axis aligned box extruded along a ray
-    const void* m_pWorldAxisTransform;
-    bool m_IsRay;  // are the extents zero?
-    bool m_IsSwept;     // is delta != 0?
+    VectorAligned   m_Start;  // starting point, centered within the extents
+    VectorAligned   m_Delta;  // direction + length of the ray
+    VectorAligned   m_StartOffset; // Add this to m_Start to Get the actual ray start
+    VectorAligned   m_Extents;     // Describes an axis aligned box extruded along a ray
+    const void*     m_pWorldAxisTransform;
+    bool            m_IsRay;  // are the extents zero?
+    bool            m_IsSwept;     // is delta != 0?
 
     Ray_t() : m_pWorldAxisTransform(NULL) {}
 
@@ -116,8 +116,8 @@ enum class TraceType
 class ITraceFilter
 {
 public:
-    virtual bool ShouldHitEntity(IClientEntity* pEntity, int contentsMask) = 0;
-    virtual TraceType GetTraceType() const = 0;
+    virtual bool        ShouldHitEntity(IClientEntity* pEntity, int contentsMask) = 0;
+    virtual TraceType   GetTraceType() const = 0;
 };
 
 
@@ -145,16 +145,16 @@ public:
 #define	CONTENTS_DEBRIS			0x4000000
 #define CONTENTS_HITBOX			0x40000000
 
-#define   MASK_ALL                      (0xFFFFFFFF)
+#define MASK_ALL                0xFFFFFFFF 
 #define MASK_NPCWORLDSTATIC	    ( CONTENTS_SOLID | CONTENTS_WINDOW | CONTENTS_MONSTERCLIP | CONTENTS_GRATE )
 #define STANDARD_TRACE_MASK     ( MASK_NPCWORLDSTATIC | CONTENTS_MOVEABLE | CONTENTS_MONSTER | CONTENTS_DEBRIS | CONTENTS_HITBOX )
-#define   MASK_SHOT                     (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_MONSTER|CONTENTS_WINDOW|CONTENTS_DEBRIS|CONTENTS_HITBOX)
+#define MASK_SHOT               ( CONTENTS_SOLID | CONTENTS_MOVEABLE | CONTENTS_MONSTER | CONTENTS_WINDOW | CONTENTS_DEBRIS | CONTENTS_HITBOX )
 
-#define   DISPSURF_FLAG_SURFACE           (1<<0)
-#define   DISPSURF_FLAG_WALKABLE          (1<<1)
-#define   DISPSURF_FLAG_BUILDABLE         (1<<2)
-#define   DISPSURF_FLAG_SURFPROP1         (1<<3)
-#define   DISPSURF_FLAG_SURFPROP2         (1<<4)
+#define DISPSURF_FLAG_SURFACE           (1<<0)
+#define DISPSURF_FLAG_WALKABLE          (1<<1)
+#define DISPSURF_FLAG_BUILDABLE         (1<<2)
+#define DISPSURF_FLAG_SURFPROP1         (1<<3)
+#define DISPSURF_FLAG_SURFPROP2         (1<<4)
 
 class CBaseTrace
 {
@@ -187,21 +187,21 @@ public:
 class CGameTrace : public CBaseTrace
 {
 public:
-    bool DidHitWorld() const;
-    bool DidHitNonWorldEntity() const;
-    int GetEntityIndex() const;
-    bool DidHit() const;
-    bool IsVisible() const;
+    bool    DidHitWorld() const;
+    bool    DidHitNonWorldEntity() const;
+    int     GetEntityIndex() const;
+    bool    DidHit() const;
+    bool    IsVisible() const;
 
 public:
 
     float               fractionleftsolid;  // time we left a solid, only valid if we started in solid
-    surface_t          surface;            // surface hit (impact surface)
+    surface_t           surface;            // surface hit (impact surface)
     int                 hitgroup;           // 0 == generic, non-zero is specific body part
     short               physicsbone;        // physics bone hit by trace in studio
     unsigned short      worldSurfaceIndex;  // Index of the msurface2_t, if applicable
     //IClientEntity* hit_entity;
-    IClientEntity* hit_entity;
+    CBaseEntity*        hit_entity;
     int                 hitbox;                       // box hit by trace in studio
 
     CGameTrace() {}

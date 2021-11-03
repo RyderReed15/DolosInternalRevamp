@@ -40,7 +40,7 @@ class IClientRenderable;
 #define BONE_USED_BY_VERTEX_AT_LOD(lod) ( BONE_USED_BY_VERTEX_LOD0 << (lod) )
 #define BONE_USED_BY_ANYTHING_AT_LOD(lod) ( ( BONE_USED_BY_ANYTHING & ~BONE_USED_BY_VERTEX_MASK ) | BONE_USED_BY_VERTEX_AT_LOD(lod) )
 
-#define MAX_NUM_LODS 8
+#define MAX_NUM_LODS		8
 #define MAXSTUDIOBONES		128		// total bones actually used
 
 #define BONE_TYPE_MASK                  0x00F00000
@@ -51,15 +51,15 @@ class IClientRenderable;
 #define BONE_HAS_SAVEFRAME_ROT32        0x00800000    // Quaternion32
 
 
-#define HITGROUP_GENERIC 0
-#define HITGROUP_HEAD 1
-#define HITGROUP_CHEST 2
-#define HITGROUP_STOMACH 3
-#define HITGROUP_LEFTARM 4    
-#define HITGROUP_RIGHTARM 5
-#define HITGROUP_LEFTLEG 6
-#define HITGROUP_RIGHTLEG 7
-#define HITGROUP_GEAR 10
+#define HITGROUP_GENERIC	0
+#define HITGROUP_HEAD		1
+#define HITGROUP_CHEST		2
+#define HITGROUP_STOMACH	3
+#define HITGROUP_LEFTARM	4    
+#define HITGROUP_RIGHTARM	5
+#define HITGROUP_LEFTLEG	6
+#define HITGROUP_RIGHTLEG	7
+#define HITGROUP_GEAR		10
 
 class IVModelInfo
 {
@@ -67,21 +67,21 @@ public:
 	virtual							~IVModelInfo(void) { }
 
 	// Returns model_t* pointer for a model given a precached or dynamic model index.
-	virtual const model_t* GetModel(int modelindex) = 0;
+	virtual const model_t*			GetModel(int modelindex) = 0;
 
 	// Returns index of model by name for precached or known dynamic models.
 	// Does not adjust reference count for dynamic models.
 	virtual int						GetModelIndex(const char* name) const = 0;
 
 	// Returns name of model
-	virtual const char* GetModelName(const model_t* model) const = 0;
-	virtual vcollide_t* GetVCollide(const model_t* model) = 0;
-	virtual vcollide_t* GetVCollide(int modelindex) = 0;
+	virtual const char*				GetModelName(const model_t* model) const = 0;
+	virtual vcollide_t*				GetVCollide(const model_t* model) = 0;
+	virtual vcollide_t*				GetVCollide(int modelindex) = 0;
 	virtual void					GetModelBounds(const model_t* model, Vector& mins, Vector& maxs) const = 0;
 	virtual	void					GetModelRenderBounds(const model_t* model, Vector& mins, Vector& maxs) const = 0;
 	virtual int						GetModelFrameCount(const model_t* model) const = 0;
 	virtual int						GetModelType(const model_t* model) const = 0;
-	virtual void* GetModelExtraData(const model_t* model) = 0;
+	virtual void*					GetModelExtraData(const model_t* model) = 0;
 	virtual bool					ModelHasMaterialProxy(const model_t* model) const = 0;
 	virtual bool					IsTranslucent(model_t const* model) const = 0;
 	virtual bool					IsTranslucentTwoPass(const model_t* model) const = 0;
@@ -92,16 +92,16 @@ public:
 	virtual int						GetModelMaterialCount(const model_t* model) const = 0;
 	virtual void					GetModelMaterials(const model_t* model, int count, IMaterial** ppMaterial) = 0;
 	virtual bool					IsModelVertexLit(const model_t* model) const = 0;
-	virtual const char* GetModelKeyValueText(const model_t* model) = 0;
+	virtual const char*				GetModelKeyValueText(const model_t* model) = 0;
 	virtual bool					GetModelKeyValue(const model_t* model, CUtlBuffer& buf) = 0; // supports keyvalue blocks in submodels
 	virtual float					GetModelRadius(const model_t* model) = 0;
 
-	virtual studiohdr_t* GetStudioHdr(MDLHandle_t handle) = 0;
+	virtual studiohdr_t*			GetStudioHdr(MDLHandle_t handle) = 0;
 
-	virtual const studiohdr_t* FindModel(const studiohdr_t* pStudioHdr, void** cache, const char* modelname) const = 0;
-	virtual const studiohdr_t* FindModel(void* cache) const = 0;
-	virtual	virtualmodel_t* GetVirtualModel(const studiohdr_t* pStudioHdr) const = 0;
-	virtual byte* GetAnimBlock(const studiohdr_t* pStudioHdr, int iBlock) const = 0;
+	virtual const studiohdr_t*		FindModel(const studiohdr_t* pStudioHdr, void** cache, const char* modelname) const = 0;
+	virtual const studiohdr_t*		FindModel(void* cache) const = 0;
+	virtual	virtualmodel_t*			GetVirtualModel(const studiohdr_t* pStudioHdr) const = 0;
+	virtual byte*					GetAnimBlock(const studiohdr_t* pStudioHdr, int iBlock) const = 0;
 
 	// Available on client only!!!
 	virtual void					GetModelMaterialColorAndLighting(const model_t* model, Vector const& origin,
@@ -111,7 +111,7 @@ public:
 		QAngle const& angles, Vector* pLightingCenter) = 0;
 
 	virtual int						GetModelContents(int modelIndex) = 0;
-	virtual studiohdr_t* GetStudiomodel(const model_t* mod) = 0;
+	virtual studiohdr_t*			GetStudiomodel(const model_t* mod) = 0;
 	virtual int						GetModelSpriteWidth(const model_t* model) const = 0;
 	virtual int						GetModelSpriteHeight(const model_t* model) const = 0;
 
@@ -131,12 +131,12 @@ public:
 
 	// Gets a virtual terrain collision model (creates if necessary)
 	// NOTE: This may return NULL if the terrain model cannot be virtualized
-	virtual CPhysCollide* GetCollideForVirtualTerrain(int index) = 0;
+	virtual CPhysCollide*			GetCollideForVirtualTerrain(int index) = 0;
 
 	virtual bool					IsUsingFBTexture(const model_t* model, int nSkin, int nBody, void /*IClientRenderable*/* pClientRenderable) const = 0;
 
 	// Obsolete methods. These are left in to maintain binary compatibility with clients using the IVModelInfo old version.
-	virtual const model_t* FindOrLoadModel(const char* name) = 0;
+	virtual const model_t*			FindOrLoadModel(const char* name) = 0;
 
 	virtual MDLHandle_t				GetCacheHandle(const model_t* model) const = 0;
 

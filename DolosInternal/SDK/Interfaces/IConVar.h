@@ -6,11 +6,11 @@
 class IConVar {
 public:
 
-	VFUNC(float, GetFloat, 12, (), (this));
-	VFUNC(int, GetInt, 13, (), (this));
-	VFUNC(void, SetValue, 14, (const char* szValue), (this, szValue));
-	VFUNC(void, SetValue, 15, (float flValue), (this, flValue));
-	VFUNC(void, SetValue, 16, (int iValue), (this, iValue));
+	VFUNC(float	, GetFloat	, 12, (), (this));
+	VFUNC(int	, GetInt	, 13, (), (this));
+	VFUNC(void	, SetValue	, 14, (const char* szValue)	, (this, szValue));
+	VFUNC(void	, SetValue	, 15, (float flValue)		, (this, flValue));
+	VFUNC(void	, SetValue	, 16, (int iValue)			, (this, iValue));
 };
 
 class ICVar {

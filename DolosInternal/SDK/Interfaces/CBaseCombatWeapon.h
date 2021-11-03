@@ -8,16 +8,8 @@
 #include "IClientEntity.h"
 
 
-class IClientEntity;
 
-class C_BaseEntity : public IClientEntity
-{
-public:
-    NETVAR(EHANDLE, GetOwner, "DT_BaseEntity", "m_hOwnerEntity");
-    NETVAR(EHANDLE, GetMoveOwner, "DT_BaseEntity", "moveparent");
-
-};
-class C_BaseAttributableItem : public C_BaseEntity {
+class CBaseAttributableItem : public CBaseEntity {
 public:
     PNETVAR(int, FallbackPaintKit, "DT_BaseAttributableItem", "m_nFallbackPaintKit");
     PNETVAR(float, FallbackWear, "DT_BaseAttributableItem", "m_flFallbackWear");
@@ -30,6 +22,10 @@ public:
 
     int* ItemIDHigh() {
         return (int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iItemIDHigh"));
+
+    }
+    int* ItemDefinitionIndex() {
+        return (int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iItemDefinitionIndex"));
 
     }
     unsigned int* AccountID() {
@@ -50,7 +46,7 @@ public:
 
 };
 
-class CBaseCombatWeapon : public C_BaseAttributableItem
+class CBaseCombatWeapon : public CBaseAttributableItem
 {
 public:
     NETVAR(float, m_flNextPrimaryAttack, "DT_BaseCombatWeapon", "m_flNextPrimaryAttack");
@@ -65,10 +61,6 @@ public:
     NETVAR(float, m_fThrowTime, "DT_BaseCSGrenade", "m_fThrowTime");
     NETVAR(float, m_flPostponeFireReadyTime, "DT_BaseCombatWeapon", "m_flPostponeFireReadyTime");
     NETVAR(EHANDLE, m_hWeaponWorldModel, "DT_BaseCombatWeapon", "m_hWeaponWorldModel");
-
-
-   
-
 
 };
 

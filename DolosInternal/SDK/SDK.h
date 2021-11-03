@@ -18,6 +18,7 @@
 #include "Studio.h"
 
 #include "Interfaces/CBaseCombatWeapon.h"
+#include "Interfaces/CBaseViewModel.h"
 #include "Interfaces/CGlobalVars.h"
 #include "Interfaces/IAppSystem.h"
 #include "Interfaces/IBaseClientDLL.h"
