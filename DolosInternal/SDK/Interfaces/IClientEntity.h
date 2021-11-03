@@ -16,35 +16,44 @@
 #include "IClientEntityList.h"
 
 class CBaseCombatWeapon;
+class CBaseEntity;
 class CCSWeaponInfo;
 class IClientEntityList;
 extern IClientEntityList* g_pClientEntityList;
 
+
+
 class IClientEntity : public IClientUnknown, public IClientRenderable, public IClientNetworkable, public IClientThinkable
 {
 public:
-    virtual void Release(void) = 0;
-    virtual void GetMouth(void) = 0;
-    virtual Vector& GetAbsOrigin(void) const = 0;//in broken place use GetOrigin Below
-    virtual const Vector& GetAbsAngles(void) const = 0;
+    virtual void            Release     (void) = 0;
+    virtual void            GetMouth    (void) = 0;
+    virtual Vector&         GetAbsOrigin(void) const = 0;//in broken place use GetOrigin Below
+    virtual const Vector&   GetAbsAngles(void) const = 0;
 
 
 
-    NETVAR(int, GetTeam, "DT_BaseEntity", "m_iTeamNum");
-    PNETVAR(int, GetFlagsPointer, "DT_BasePlayer", "m_fFlags");
-    NETVAR(Vector, GetVecOrigin, "DT_BaseEntity", "m_vecOrigin");
-    NETVAR(Vector, GetVecViewOffset, "DT_LocalPlayerExclusive", "m_vecViewOffset[0]");
-    ONETVAR(int, GetGlowIndex, "DT_CSPlayer", "m_flFlashDuration", 24);
-    ONETVAR(matrix3x4_t, GetCoordinateFrame, "DT_BaseEntity", "m_CollisionGroup", -48);
-    NETVAR(EHANDLE, GetActiveWeapon, "DT_BaseCombatCharacter", "m_hActiveWeapon");
-    NETVAR(int, GetTickBase, "DT_LocalPlayerExclusive", "m_nTickBase");
-    NETVAR(int, GetArmor, "DT_CSPlayer", "m_ArmorValue");
-    PNETVAR(bool, SpottedPointer, "DT_BaseEntity", "m_bSpotted");
-    ONETVAR(int, GetCrosshairId, "DT_CSPlayer", "m_bHasDefuser", 92);
-    NETVAR(float, GetSimulationTime, "DT_BaseEntity", "m_flSimulationTime");
-    NETVAR(bool, GetImmunity, "DT_CSPlayer", "m_bGunGameImmunity")
+    NETVAR  (int            , GetTeam           , "DT_BaseEntity", "m_iTeamNum");
+    ONETVAR (matrix3x4_t    , GetCoordinateFrame, "DT_BaseEntity", "m_CollisionGroup", -48);
+    PNETVAR (bool           , SpottedPointer    , "DT_BaseEntity", "m_bSpotted");
+    NETVAR  (float          , GetSimulationTime , "DT_BaseEntity", "m_flSimulationTime");
+    NETVAR  (Vector         , GetVecOrigin      , "DT_BaseEntity", "m_vecOrigin");
 
-    ONETVAR(matrix3x4_t*, GetBoneMatrix, "DT_BaseAnimating", "m_nForceBone", 28);
+    PNETVAR (int            , GetFlagsPointer   , "DT_BasePlayer", "m_fFlags");
+    NETVAR  (int            , GetViewModelHandle, "DT_BasePlayer", "m_hViewModel[0]");
+
+    ONETVAR (matrix3x4_t*   , GetBoneMatrix     , "DT_BaseAnimating", "m_nForceBone", 28);
+
+    NETVAR  (int            , GetTickBase       , "DT_LocalPlayerExclusive", "m_nTickBase");
+    NETVAR  (Vector         , GetVecViewOffset  , "DT_LocalPlayerExclusive", "m_vecViewOffset[0]");
+
+    NETVAR  (EHANDLE        , GetActiveWeapon   , "DT_BaseCombatCharacter" , "m_hActiveWeapon");
+
+    ONETVAR (int            , GetGlowIndex      , "DT_CSPlayer"             , "m_flFlashDuration", 24);
+    NETVAR  (int            , GetArmor          , "DT_CSPlayer"             , "m_ArmorValue");
+    ONETVAR (int            , GetCrosshairId    , "DT_CSPlayer"             , "m_bHasDefuser", 92);
+    NETVAR  (bool           , GetImmunity       , "DT_CSPlayer"             , "m_bGunGameImmunity");
+
     int GetFlags() {
         return *GetFlagsPointer();
     }
@@ -64,13 +73,13 @@ public:
         }
         return (GetBoneMatrix())[iBoneId].GetOrigin();
     }
-    VFUNC(const Vector&, GetOrigin, 10, (), (this));
-    VFUNC(int, GetHealth, 122, (), (this));
-    VFUNC(bool, IsAlive, 156, (), (this));
-    VFUNC(bool, IsPlayer, 158, (), (this));
-    VFUNC(bool, IsWeapon, 166, (), (this));
-    VFUNC(float, GetInaccuracy, 483, (), (this));
-    VFUNC(CCSWeaponInfo*, GetWeaponData, 461, (), (this));
+    VFUNC(const Vector& , GetOrigin     , 10 , (), (this));
+    VFUNC(int           , GetHealth     , 122, (), (this));
+    VFUNC(bool          , IsAlive       , 156, (), (this));
+    VFUNC(bool          , IsPlayer      , 158, (), (this));
+    VFUNC(bool          , IsWeapon      , 166, (), (this));
+    VFUNC(float         , GetInaccuracy , 483, (), (this));
+    VFUNC(CCSWeaponInfo*, GetWeaponData , 461, (), (this));
 
     CBaseCombatWeapon* GetWeapon(void)
     {
@@ -85,5 +94,13 @@ public:
     bool SanityCheck() {
         return IsAlive() && !IsDormant() && !GetImmunity();
     }
+};
+
+class CBaseEntity : public IClientEntity
+{
+public:
+    NETVAR(EHANDLE  , GetOwner  , "DT_BaseEntity", "m_hOwnerEntity");
+    PNETVAR(int     , ModelIndex, "DT_BaseEntity", "m_nModelIndex");
+
 };
 #endif // !CLIENT_ENTITY_H

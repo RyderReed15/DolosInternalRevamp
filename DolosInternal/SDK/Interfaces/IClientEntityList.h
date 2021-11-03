@@ -8,6 +8,7 @@
 class IClientNetworkable;
 class IClientEntity;
 class IClientUnknown;
+class CBaseEntity;
 
 
 
@@ -17,12 +18,12 @@ public:
     // Get IClientNetworkable interface for specified entity
     virtual IClientNetworkable* GetClientNetworkable(int entnum) = 0;
     virtual IClientNetworkable* GetClientNetworkableFromHandle(EHANDLE hEnt) = 0;
-    virtual IClientUnknown* GetClientUnknownFromHandle(EHANDLE hEnt) = 0;
+    virtual IClientUnknown*     GetClientUnknownFromHandle(EHANDLE hEnt) = 0;
 
     // NOTE: This function is only a convenience wrapper.
     // It returns GetClientNetworkable( entnum )->GetIClientEntity().
-    virtual IClientEntity* GetClientEntity(int entnum) = 0;
-    virtual IClientEntity* GetClientEntityFromHandle(EHANDLE hEnt) = 0;
+    virtual CBaseEntity* GetClientEntity(int entnum) = 0;
+    virtual CBaseEntity* GetClientEntityFromHandle(EHANDLE hEnt) = 0;
 
     // Returns number of entities currently in use
     virtual int					NumberOfEntities(bool bIncludeNonNetworkable) = 0;

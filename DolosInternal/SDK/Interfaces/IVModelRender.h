@@ -18,11 +18,11 @@ class IMaterial;
 
 struct DrawModelState_t
 {
-	studiohdr_t* m_pStudioHdr;
-	studiohwdata_t* m_pStudioHWData;
-	IClientRenderable* m_pRenderable;
-	const matrix3x4_t* m_pModelToWorld;
-	int		m_decals;
+	studiohdr_t*			m_pStudioHdr;
+	studiohwdata_t*			m_pStudioHWData;
+	IClientRenderable*		m_pRenderable;
+	const matrix3x4_t*		m_pModelToWorld;
+	int						m_decals;
 	int						m_drawFlags;
 	int						m_lod;
 };
@@ -30,20 +30,20 @@ struct DrawModelState_t
 
 struct ModelRenderInfo_t
 {
-	Vector origin;
-	QAngle angles;
-	char   pad[0x4];
-	IClientRenderable* pRenderable;
-	const model_t* pModel;
-	const void* pModelToWorld;
-	const void* pLightingOffset;
-	const void* pLightingOrigin;
-	int flags;
-	int entity_index;
-	int skin;
-	int body;
-	int hitboxset;
-	uintptr_t instance;
+	Vector				origin;
+	QAngle				angles;
+	char				pad[0x4];
+	IClientRenderable*	pRenderable;
+	const model_t*		pModel;
+	const void*			pModelToWorld;
+	const void*			pLightingOffset;
+	const void*			pLightingOrigin;
+	int					flags;
+	int					entity_index;
+	int					skin;
+	int					body;
+	int					hitboxset;
+	uintptr_t			instance;
 	ModelRenderInfo_t()
 	{
 		pModelToWorld = NULL;

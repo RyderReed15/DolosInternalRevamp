@@ -38,24 +38,24 @@ struct studiohwdata_t
 {
     int					m_RootLOD;	// calced and clamped, nonzero for lod culling
     int					m_NumLODs;
-    int* m_pLODs;
+    int*				m_pLODs;
     int					m_NumStudioMeshes;
 
-    inline float LODMetric(float unitSphereSize) const { return (unitSphereSize != 0.0f) ? (100.0f / unitSphereSize) : 0.0f; }
-    inline int GetLODForMetric(float lodMetric) const
+    inline float	LODMetric(float unitSphereSize) const { return (unitSphereSize != 0.0f) ? (100.0f / unitSphereSize) : 0.0f; }
+    inline int		GetLODForMetric(float lodMetric) const
     {
         return 0;
     }
 
 
     // Each model counts how many rendered faces it accounts for each frame:
-    inline void UpdateFacesRenderedCount(studiohdr_t* pStudioHdr, int& hwDataHash, int nLOD, int nInstances, int nFacesOverride = -1)
+    inline void		UpdateFacesRenderedCount(studiohdr_t* pStudioHdr, int& hwDataHash, int nLOD, int nInstances, int nFacesOverride = -1)
     {
 
     }
-    int m_NumFacesRenderedThisFrame;
-    int m_NumTimesRenderedThisFrame;
-    studiohdr_t* m_pStudioHdr; // There is no way to map between these inside CStudioRender, so we have to store it.
+    int					m_NumFacesRenderedThisFrame;
+    int					m_NumTimesRenderedThisFrame;
+    studiohdr_t*		m_pStudioHdr; // There is no way to map between these inside CStudioRender, so we have to store it.
  // !_CERT
 };
 struct mstudioflex_t
@@ -74,12 +74,12 @@ struct mstudioflex_t
 struct mstudio_meshvertexdata_t
 {
 
-	Vector* Position(int i) const;
-	Vector* Normal(int i) const;
-	int* TangentS(int i) const;
-	int* Texcoord(int i) const;
-	int* BoneWeights(int i) const;
-	int* Vertex(int i) const;
+	Vector*				Position(int i) const;
+	Vector*				Normal(int i) const;
+	int*				TangentS(int i) const;
+	int*				Texcoord(int i) const;
+	int*				BoneWeights(int i) const;
+	int*				Vertex(int i) const;
 	bool				HasTangentData(void) const;
 	int					GetModelVertexIndex(int i) const;
 	int					GetGlobalVertexIndex(int i) const;
@@ -270,7 +270,7 @@ public:
 	int					id;
 	int					version;
 
-	long					checksum;		// this has to be the same in the phy and vtx files to load!
+	long				checksum;		// this has to be the same in the phy and vtx files to load!
 
 	char				name[64];
 	int					length;
@@ -300,15 +300,15 @@ public:
 	int					hitboxsetindex;
 
 
-	int numlocalanim;
-	int localanimindex;
+	int					numlocalanim;
+	int					localanimindex;
 
-	int numlocalseq;
-	int localseqindex;
-	int activitylistversion;
-	int eventsindexed;
-	int numtextures;
-	int textureindex;
+	int					numlocalseq;
+	int					localseqindex;
+	int					activitylistversion;
+	int					eventsindexed;
+	int					numtextures;
+	int					textureindex;
 	int					numcdtextures;
 	int					cdtextureindex;
 
