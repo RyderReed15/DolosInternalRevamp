@@ -73,7 +73,7 @@ void StoreValues() {
 
     Settings.Visuals.Weapons.Color      = ParseColor(pWeapons->GetString("color"));
 
-    JsonObject* pSkinChanger = g_pParsedConfig->GetJsonObject("skins");
+    JsonObject* pSkinChanger = g_pParsedConfig->GetJsonObject("skin_changer");
 
     Settings.SkinChanger.TrackKills = pSkinChanger->GetBoolean("track_kills");
 
@@ -82,6 +82,7 @@ void StoreValues() {
     for (int i = 0; i < pSkins->GetSize(); i++) {
         SkinChanger::SkinStruct* pSkin = ParseSkin(pSkins->GetJsonObject(i));
         Settings.SkinChanger.Skins[pSkins->GetJsonObject(i)->GetNumber<int>("weapon_id")] = pSkin;
+        if (pSkins->GetJsonObject(i)->GetNumber<int>("new_index")) Settings.SkinChanger.Skins[pSkins->GetJsonObject(i)->GetNumber<int>("new_index")] = pSkin;
     }
 }
 
@@ -113,7 +114,7 @@ void UpdateValues() {
 
     pSkinChanger->SetBoolean("track_kills", Settings.SkinChanger.TrackKills);
 
-    JsonArray* pSkins = pSkinChanger->GetJsonArray("skins");
+    JsonArray* pSkins = pSkinChanger->GetJsonArray("skin_changer");
 
     while (pSkins->GetSize())
     {
@@ -123,6 +124,9 @@ void UpdateValues() {
     std::map<int, SkinChanger::SkinStruct*>::iterator it = Settings.SkinChanger.Skins.begin();
     while (it != Settings.SkinChanger.Skins.end()) {
         JsonObject* pSkin = WriteSkin(it->second);
+        if (pSkin->GetNumber<int>("new_index")) {
+            Settings.SkinChanger.Skins.erase(pSkin->GetNumber<int>("new_index"));
+        }
         pSkin->AddNumber("weapon_id", it->first);
         pSkins->AddJsonObject(pSkin);
         it++;
@@ -148,15 +152,17 @@ SkinChanger::SkinStruct* ParseSkin(JsonObject* pSkinObject) {
     if (!pSkinObject) return nullptr;
     SkinChanger::SkinStruct* pSkinInfo = new SkinChanger::SkinStruct;
 
-    pSkinInfo->iPaintKit    = pSkinObject->GetNumber<int>("skin_id");
-    pSkinInfo->flWear       = pSkinObject->GetNumber<float>("wear");
-    pSkinInfo->iStatTrak    = pSkinObject->GetNumber<int>("stattrak_kills");
-    pSkinInfo->iSeed        = pSkinObject->GetNumber<int>("seed");
-    pSkinInfo->iQuality     = pSkinObject->GetNumber<int>("quality");
+    pSkinInfo->nItemDefIndex        = pSkinObject->GetNumber<int>   ("new_index");
+    pSkinInfo->iPaintKit            = pSkinObject->GetNumber<int>   ("skin_id");
+    pSkinInfo->flWear               = pSkinObject->GetNumber<float> ("wear");
+    pSkinInfo->iStatTrak            = pSkinObject->GetNumber<int>   ("stattrak_kills");
+    pSkinInfo->iSeed                = pSkinObject->GetNumber<int>   ("seed");
+    pSkinInfo->iQuality             = pSkinObject->GetNumber<int>   ("quality");
 
     sprintf_s(pSkinInfo->szCustomName, 32, "%s", pSkinObject->GetString("custom_name").c_str());
     return pSkinInfo;
 }
+
 
 
 JsonObject* WriteSkin(SkinChanger::SkinStruct* pSkin) {
@@ -164,6 +170,7 @@ JsonObject* WriteSkin(SkinChanger::SkinStruct* pSkin) {
 
     JsonObject* pObject = new JsonObject();
 
+    pObject->AddNumber("new_index"      , pSkin->nItemDefIndex);
     pObject->AddNumber("skin_id"        , pSkin->iPaintKit);
     pObject->AddNumber("wear"           , pSkin->flWear);
     pObject->AddNumber("stattrak_kills" , pSkin->iStatTrak);
@@ -173,3 +180,5 @@ JsonObject* WriteSkin(SkinChanger::SkinStruct* pSkin) {
     pObject->AddString("custom_name"    , pSkin->szCustomName);
     return pObject;
 }
+
+

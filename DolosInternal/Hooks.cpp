@@ -92,9 +92,9 @@ LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 
 void __fastcall hkFrameStageNotify(void* _this, void* edx, ClientFrameStage_t stage) {
-	
+	if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START) SkinChanger::PreTick();
 	oFrameStageNotify(_this, edx, stage);
-	if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START) SkinChanger::Tick();
+	if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START) SkinChanger::PostTick();
 }
 
 void __fastcall hkDrawModelExecute(void* _this, void* edx, void* pCtx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, void* pCustomBoneToWorld) {

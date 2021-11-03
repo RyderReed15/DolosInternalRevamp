@@ -372,6 +372,9 @@
     <ClInclude Include="GUI\Widgets\Text.h">
       <Filter>GUI\Widgets\Headers</Filter>
     </ClInclude>
+    <ClInclude Include="SDK\Interfaces\CBaseViewModel.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\TextureAtlas.png">

@@ -38,7 +38,7 @@
 		"silent": true,
 		"fov": 4
 	},
-	"skins": {
+	"skin_changer": {
 		"track_kills": true,
 		"skins": [
 			{
@@ -67,8 +67,20 @@
 				"seed": 1,
 				"quality": 12,
 				"custom_name": ""
+			},
+			{
+				"weapon_id": 59, //KARAMBIT
+				"new_index": 507,
+				"skin_id": 38,
+				"wear": 0.01,
+				"stattrak_kills": 20,
+				"seed": 1,
+				"quality": 3,
+				"custom_name": ""
 			}
+
 		]
+		
 	},
 	"trigger": {
 		"active": true,

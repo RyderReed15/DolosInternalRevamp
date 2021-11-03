@@ -8,6 +8,7 @@
 namespace SkinChanger {
 
     struct SkinStruct {
+        int     nItemDefIndex;
         int     iPaintKit;
         float   flWear;
         int     iStatTrak;
@@ -16,10 +17,15 @@ namespace SkinChanger {
         char    szCustomName[32];
     };
 
-    void Tick();
+    
 
+    //void Tick();
+    void PreTick();
+    void PostTick();
 
-    void OverrideSkin(CBaseCombatWeapon* pWeapon, SkinStruct* pSkinInfo);
+    void ChangeItemIndex(CBaseCombatWeapon* pWeapon, int nItemDefIndex);
+    void OverrideSkin   (CBaseCombatWeapon* pWeapon, SkinStruct* pSkinInfo);
+    void OverrideModel  (CBaseCombatWeapon* pWeapon, int nItemDefinitionIndex);
 }
 
 

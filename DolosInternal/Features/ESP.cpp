@@ -6,11 +6,11 @@ void ESP::Tick() {
     if (g_pLocalPlayer == 0) g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer()); // Move this to SDK if possible
     for (int i = 0; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
         
-        IClientEntity* pEntity = g_pClientEntityList->GetClientEntity(i);
+        CBaseEntity* pEntity = g_pClientEntityList->GetClientEntity(i);
         if (!pEntity || !(pEntity->IsWeapon() || pEntity->IsPlayer())) continue;
         if (pEntity->IsWeapon()) {
             if (Settings.Visuals.Weapons.Enabled) {
-                if (((CBaseCombatWeapon*)pEntity)->GetOwner() == -1) {
+                if (pEntity->GetOwner() == -1) {
                     if (pEntity->GetClientClass()->m_pNetworkName[1] != 'B') {
                         DrawBoundingBox(pEntity, Settings.Visuals.Weapons.Color, i);
                     }
@@ -36,7 +36,7 @@ void ESP::Tick() {
     g_pRender->End();
 }
 
-void ESP::DrawBoundingBox(IClientEntity* pEntity, D3DCOLOR cColor, int iIndex) {
+void ESP::DrawBoundingBox(CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex) {
     Vector vMax, vMin;
     if (!pEntity) return;
 
@@ -81,11 +81,11 @@ void ESP::DrawBoundingBox(IClientEntity* pEntity, D3DCOLOR cColor, int iIndex) {
     }
 
     Vector2D vScreen;
-    WorldToScreen(&vScreen, vTransformed[0]);
+    WorldToScreen(vScreen, vTransformed[0]);
     D3DXVECTOR4 vSize = { vScreen.x, vScreen.y, vScreen.x, vScreen.y };
     for (int i = 1; i < 8; i++) {
        
-        if (WorldToScreen(&vScreen, vTransformed[i])) {
+        if (WorldToScreen(vScreen, vTransformed[i])) {
             if (vSize.x > vScreen.x) vSize.x = vScreen.x;
             if (vSize.y > vScreen.y) vSize.y = vScreen.y;
             if (vSize.z < vScreen.x) vSize.z = vScreen.x;
@@ -159,22 +159,22 @@ void ESP::DrawBones(IClientEntity* pEntity) {
             }
             
             Vector2D vScreenChild, vScreenParent;
-            WorldToScreen(&vScreenChild, vChild);
-            WorldToScreen(&vScreenParent, vParent);
+            WorldToScreen(vScreenChild, vChild);
+            WorldToScreen(vScreenParent, vParent);
             g_pRender->DrawLine(vScreenChild, vScreenParent, WHITE);
             
         }
     }
 }
 
-void ESP::DrawPlayerName(Vector4D vBounds, IClientEntity* pEntity, int iIndex){
+void ESP::DrawPlayerName(Vector4D vBounds, CBaseEntity* pEntity, int iIndex){
     player_info_t playerInfo;
     g_pEngineClient->GetPlayerInfo(iIndex, &playerInfo);
     Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, playerInfo.szName);
     g_pRender->DrawString({ (vBounds.x + vBounds.z - vSize.x) / 2 , vBounds.y - vSize.y }, WHITE, g_pWeaponFont, playerInfo.szName);
 }
 
-void ESP::DrawWeaponName(Vector4D vBounds, IClientEntity* pEntity){
+void ESP::DrawWeaponName(Vector4D vBounds, CBaseEntity* pEntity){
     if (pEntity->GetWeaponData()) {
         Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, pEntity->GetWeaponData()->szHudName + 13);
         g_pRender->DrawString({ (vBounds.x + vBounds.z - vSize.x) / 2 , vBounds.y - vSize.y }, WHITE, g_pWeaponFont, pEntity->GetWeaponData()->szHudName + 13);
@@ -182,7 +182,7 @@ void ESP::DrawWeaponName(Vector4D vBounds, IClientEntity* pEntity){
     }
 }
 
-void ESP::DrawDistance(Vector4D vBounds, IClientEntity* pEntity){
+void ESP::DrawDistance(Vector4D vBounds, CBaseEntity* pEntity){
     int iDistance = (pEntity->GetVecOrigin() - g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer())->GetVecOrigin()).Magnitude() * 0.0254f;
 
     char szDistance[33];  _itoa_s(iDistance, szDistance, 10);
@@ -207,11 +207,11 @@ void ESP::DrawArmor(int iArmor, Vector4D vBounds) {
 
 }
 
-bool ESP::WorldToScreen(Vector2D* vScreen, Vector vPos) {
+bool ESP::WorldToScreen(Vector2D& vScreen, Vector vPos) {
     return WorldToScreen(vScreen, vPos, *g_pViewMatrix);
 }
 
-bool ESP::WorldToScreen(Vector2D* vScreen, Vector vPos, VMatrix vMatrix){
+bool ESP::WorldToScreen(Vector2D& vScreen, Vector vPos, VMatrix vMatrix){
 
     int iScreenWidth, iScreenHeight;
     g_pEngineClient->GetScreenSize(iScreenWidth, iScreenHeight);
@@ -221,14 +221,14 @@ bool ESP::WorldToScreen(Vector2D* vScreen, Vector vPos, VMatrix vMatrix){
     vClipCoords.y = vPos.x * vMatrix[1][0] + vPos.y * vMatrix[1][1] + vPos.z * vMatrix[1][2] + vMatrix[1][3];
     vClipCoords.w = vPos.x * vMatrix[3][0] + vPos.y * vMatrix[3][1] + vPos.z * vMatrix[3][2] + vMatrix[3][3];
 
-    if (vClipCoords.w < 0.1f) { *vScreen = { 99999,99999 };  return false; }
+    if (vClipCoords.w < 0.1f) { vScreen = { 99999,99999 };  return false; }
 
     //perspective division, dividing by clip.W = Normalized Device Coordinates
     Vector NDC;
     NDC.x = vClipCoords.x / vClipCoords.w;
     NDC.y = vClipCoords.y / vClipCoords.w;
-    vScreen->x = (iScreenWidth / 2.f ) + (NDC.x * iScreenWidth / 2.f);
-    vScreen->y = (iScreenHeight / 2.f) - (NDC.y * iScreenHeight / 2.f);
+    vScreen.x = (iScreenWidth / 2.f ) + (NDC.x * iScreenWidth / 2.f);
+    vScreen.y = (iScreenHeight / 2.f) - (NDC.y * iScreenHeight / 2.f);
 
     return true;
 

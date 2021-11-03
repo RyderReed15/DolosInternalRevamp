@@ -28,7 +28,7 @@ char* FindPattern(void* pDLLBase, const char* szPattern, bool bRelative, int aOf
 			if (memInfo.State != MEM_COMMIT || memInfo.Protect == PAGE_NOACCESS || memInfo.Protect & PAGE_GUARD) //Filter Regions
 				continue;
 			std::cout << " - Scanning Region: " << (void*)memInfo.BaseAddress << " | " << (void*)(memInfo.BaseAddress + memInfo.RegionSize) << std::endl;
-			int iLength = memInfo.BaseAddress + memInfo.RegionSize - iPatternSize;
+			int iLength = memInfo.BaseAddress + memInfo.RegionSize - iPatternSize + 1;
 			for (char* j = (char*)memInfo.BaseAddress; j < (char*)iLength; j++) {
 
 				bool bFound = true;

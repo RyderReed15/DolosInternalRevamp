@@ -13,7 +13,7 @@ JsonObject* ParseJsonFile(const char* szPath) {
         fJson.get(chFirst);
         if (chFirst == '[') {
             JsonObject* pJsonFile = new JsonObject();
-            pJsonFile->SetJsonArray("1", ParseJsonArray(fJson, ""));
+            pJsonFile->AddJsonArray("1", ParseJsonArray(fJson, ""));
             return pJsonFile;
         }
         else {
@@ -35,7 +35,7 @@ JsonObject* ParseJsonString(const std::string& szJson) {
         sJson.get(chFirst);
         if (chFirst == '[') {
             JsonObject* pJsonFile = new JsonObject();
-            pJsonFile->SetJsonArray("1", ParseJsonArray(sJson, ""));
+            pJsonFile->AddJsonArray("1", ParseJsonArray(sJson, ""));
             return pJsonFile;
         }
         else {
