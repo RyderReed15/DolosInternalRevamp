@@ -22,17 +22,17 @@ namespace ESP {
 
     void Tick();
 
-    void DrawBoundingBox(IClientEntity* pEntity, D3DCOLOR cColor, int iIndex);
-    void DrawOutline(Vector4D vBounds, D3DCOLOR cColor);
-    void DrawHealth(int iHealth, Vector4D vBounds);
-    void DrawArmor(int iArmor, Vector4D vBounds);
-    void DrawBones(IClientEntity* pEntity);
-    void DrawPlayerName(Vector4D vBounds, IClientEntity* pEntity, int iIndex);
-    void DrawWeaponName(Vector4D vBounds, IClientEntity* pEntity);
-    void DrawDistance(Vector4D vBounds, IClientEntity* pEntity);
+    void DrawBoundingBox    (CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex);
+    void DrawOutline        (Vector4D vBounds, D3DCOLOR cColor);
+    void DrawHealth         (int iHealth, Vector4D vBounds);
+    void DrawArmor          (int iArmor, Vector4D vBounds);
+    void DrawBones          (IClientEntity* pEntity);
+    void DrawPlayerName     (Vector4D vBounds, CBaseEntity* pEntity, int iIndex);
+    void DrawWeaponName     (Vector4D vBounds, CBaseEntity* pEntity);
+    void DrawDistance       (Vector4D vBounds, CBaseEntity* pEntity);
 
-    bool WorldToScreen(Vector2D* vScreen, Vector vPos);
-    bool WorldToScreen(Vector2D* vScreen, Vector vPos, VMatrix vMatrix);
+    bool WorldToScreen      (Vector2D& vScreen, Vector vPos);
+    bool WorldToScreen      (Vector2D& vScreen, Vector vPos, VMatrix vMatrix);
    
 }
 

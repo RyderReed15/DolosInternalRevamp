@@ -55,6 +55,7 @@ public:
 template <typename T>
 T JsonObject::GetNumber(const std::string& szName) {
     if (!this) return (T)0;
+    if (!m_mValues.count(szName)) return (T)0;
     JsonValue* pValue = m_vValues[m_mValues[szName]];
     if (pValue && pValue->m_tType == VALUE_TYPE::NUMBER) {
         return (T)m_vValues[m_mValues[szName]]->m_dbValue;;

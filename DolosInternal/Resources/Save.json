@@ -36,35 +36,45 @@
 		"silent": true,
 		"fov": 4
 	},
-	"skins": {
+	"skin_changer": {
 		"track_kills": true,
 		"skins": [
 			{
+				"weapon_id": 7,
 				"skin_id": 675,
 				"wear": 0.90000,
 				"stattrak_kills": -1,
 				"seed": 1,
 				"quality": 3,
-				"custom_name": "",
-				"weapon_id": 7
+				"custom_name": ""
 			},
 			{
-				"skin_id": 475,
-				"wear": 0.99000,
-				"stattrak_kills": -1,
-				"seed": 1,
-				"quality": 12,
-				"custom_name": "",
-				"weapon_id": 9
-			},
-			{
+				"weapon_id": 16,
 				"skin_id": 309,
 				"wear": 0.01000,
 				"stattrak_kills": -1,
 				"seed": 1,
 				"quality": 7,
-				"custom_name": "",
-				"weapon_id": 16
+				"custom_name": ""
+			},
+			{
+				"weapon_id": 9,
+				"skin_id": 475,
+				"wear": 0.99000,
+				"stattrak_kills": -1,
+				"seed": 1,
+				"quality": 12,
+				"custom_name": ""
+			},
+			{
+				"weapon_id": 59,
+				"new_index": 507,
+				"skin_id": 38,
+				"wear": 0.01000,
+				"stattrak_kills": 20,
+				"seed": 1,
+				"quality": 3,
+				"custom_name": ""
 			}
 		]
 	},
