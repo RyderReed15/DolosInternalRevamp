@@ -43,6 +43,8 @@ void Render::Initialize(IDirect3DDevice9* pDevice, HMODULE hMod) {
 	m_iLineCount	= m_iTriangleCount		= 0;
 	m_iLineVertices = m_iTriangleVertices	= 0;
 
+	//Create buffers to hold lines and triangle meshes
+
 	m_pDevice->CreateVertexBuffer	(m_iMaxVertices * sizeof(CustomVertex), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &m_pLineVertexBuffer, NULL);
 	m_pDevice->CreateIndexBuffer	(m_iMaxVertices * 2 * sizeof(int), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX32, D3DPOOL_DEFAULT, &m_pLineIndexBuffer, NULL);
 	m_pDevice->CreateVertexBuffer	(m_iMaxVertices * sizeof(CustomVertex), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &m_pTriVertexBuffer, NULL);
@@ -131,6 +133,7 @@ void Render::End(BUFFER_TYPE tBufferType) {
 		
 		switch (tBufferType) {
 		case BUFFER_TYPE::BUFFER_ALL:
+			//Draw both line and triangle batch
 			m_pLineVertexBuffer->Unlock();
 			m_pLineIndexBuffer->Unlock();
 			m_pTriVertexBuffer->Unlock();
@@ -153,6 +156,7 @@ void Render::End(BUFFER_TYPE tBufferType) {
 
 			break;
 		case BUFFER_TYPE::BUFFER_LINE:
+			//Draw line batch
 			m_pLineVertexBuffer->Unlock();
 			m_pLineIndexBuffer->Unlock();
 
@@ -164,6 +168,7 @@ void Render::End(BUFFER_TYPE tBufferType) {
 
 			break;
 		case BUFFER_TYPE::BUFFER_TRI:
+			//Draw traingle batch
 			m_pTriVertexBuffer->Unlock();
 			m_pTriIndexBuffer->Unlock();
 
@@ -191,7 +196,7 @@ bool Render::IsInitialized() {
 }
 
 void Render::ManageBatch(D3DPRIMITIVETYPE tPrimitiveType, int iNeededVerts, int iNeededIndices) {
-
+	//Ensure there is enough room in the buffer for the next primitive, empty if needed
 	switch (tPrimitiveType) {
 	case D3DPT_LINELIST:
 		if (m_iLineIndices + iNeededIndices > m_iMaxVertices * 2 || m_iLineVertices + iNeededVerts > m_iMaxVertices) {
@@ -252,6 +257,8 @@ void Render::AddTriangle(unsigned int iVertexPosOne, unsigned int iVertexPosTwo,
 
 
 HRESULT Render::DrawSprite(D3DXVECTOR4 vRect, Vector2D vLocation, D3DCOLOR cColor, float flScale, float flRotation) {
+	//Transform sprite onto the scene
+
 	RECT rRect = { vRect.x, vRect.y, vRect.z + vRect.x, vRect.w + vRect.y };
 	D3DXMATRIX mMatrix, mOldMatrix;
 	m_pSprite->GetTransform(&mOldMatrix);

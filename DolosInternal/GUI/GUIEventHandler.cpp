@@ -14,10 +14,6 @@ void GUIEventHandler::HandleType(char chKey) {
 void GUIEventHandler::HandleKeyDown(char chKey, long keyInfo) {
     if (m_pFocus) m_pFocus->OnKey(this, chKey, keyInfo);
 }
-
-
-
-
 void GUIEventHandler::HandleClick(POINT ptLocation) {
 
     if (m_pFocus) {
@@ -47,7 +43,7 @@ void GUIEventHandler::HandleHover(POINT ptLocation) {
     IGUIElement* pWidget = m_pGUI->GetWidgetAt(ptLocation);
     if (pWidget && pWidget->GetEnabled()) pWidget->OnHover(this, ptLocation);
 }
-
+//Pushes an event to the queue
 bool GUIEventHandler::CreateGUIEvent(GUI_EVENT_TYPE tEventType, std::function<void()> pFunc){
     if (pFunc) {
         GUIEvent eEvent = GUIEvent(tEventType, pFunc);

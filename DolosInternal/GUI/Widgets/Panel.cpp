@@ -18,9 +18,11 @@ HRESULT Panel::Draw(ID3DXFont* pFont, Render* pRender) {
 
 void Panel::OnClick(GUIEventHandler* pEventHandler, POINT ptLocation) {
 	
-	pEventHandler->SetFocus(this);
-	m_ptMoveOrigin = ptLocation;
-	m_bMoving = m_bMoveable;
+	if (m_bMoveable) {
+		pEventHandler->SetFocus(this); 
+		m_ptMoveOrigin = ptLocation;
+		m_bMoving = m_bMoveable;
+	}
 		
 }
 

@@ -61,7 +61,7 @@ private:
 
 template <typename Callable, typename ...Args>
 std::function<void()> GUIEventHandler::BuildFunction(Callable&& caFunction, Args&&... args) {
-
+    //Binds a function and its arguments into a single parameter
     return std::bind(std::forward<Callable>(caFunction), std::forward<Args>(args)...);
 }
 

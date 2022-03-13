@@ -19,8 +19,10 @@ enum BONES {
 };
 
 namespace ESP {
+    inline std::map<void*, char*> g_mWeaponNames;
 
     void Tick();
+    void GetWeaponNames();
 
     void DrawBoundingBox    (CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex);
     void DrawOutline        (Vector4D vBounds, D3DCOLOR cColor);
@@ -28,7 +30,7 @@ namespace ESP {
     void DrawArmor          (int iArmor, Vector4D vBounds);
     void DrawBones          (IClientEntity* pEntity);
     void DrawPlayerName     (Vector4D vBounds, CBaseEntity* pEntity, int iIndex);
-    void DrawWeaponName     (Vector4D vBounds, CBaseEntity* pEntity);
+    void DrawWeaponName     (Vector4D vBounds, char* szWeaponName);
     void DrawDistance       (Vector4D vBounds, CBaseEntity* pEntity);
 
     bool WorldToScreen      (Vector2D& vScreen, Vector vPos);

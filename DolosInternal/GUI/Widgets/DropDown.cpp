@@ -78,10 +78,11 @@ HRESULT DropDownContainer::Draw(ID3DXFont* pFont, Render* pRender) {
 	pRender->DrawString({ m_vBounds.x + 5, m_vBounds.y + 2 }, (m_iIndex) ? WHITE : GRAY, pFont, m_pElementArray[m_iIndex].GetName());
 
 	if (m_bOpen) {
+		// Draw current selection
 		pRender->DrawRoundedRectangle({ m_vBounds.x, m_vBounds.y + m_vBounds.w + 2, m_vBounds.z, m_vBounds.w * (m_iNumDisplayElements * 1.3f + .25f) }, 2, LerpAlpha(m_cColor, GetAnimLerp(FADE_LENGTH)));
 			
 		for (int i = m_iTopIndex; i < m_iTopIndex + m_iNumDisplayElements && i < m_iNumElements; i++) {
-
+			// Draw drop down menu
 			m_pElementArray[i].SetBounds({ m_vBounds.x, m_vBounds.w * .25f + m_vBounds.y + (i + 1) * m_vBounds.w * 1.3f - 3, m_vBounds.z, m_vBounds.w * 1.3f });
 			m_pElementArray[i].Draw(pFont, pRender);
 		}

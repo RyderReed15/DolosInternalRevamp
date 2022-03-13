@@ -50,6 +50,8 @@ bool UninitializeHooks() {
 
 
 LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	//Hook WndProc to get keyboard and mouse inputs which are then passes to the gui event handler
+
 	if (uMsg == WM_HOTKEY) {
 	
 		CallHotKey(wParam);
@@ -92,6 +94,7 @@ LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 
 void __fastcall hkFrameStageNotify(void* _this, void* edx, ClientFrameStage_t stage) {
+
 	if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START) SkinChanger::PreTick();
 	oFrameStageNotify(_this, edx, stage);
 	if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START) SkinChanger::PostTick();
@@ -103,8 +106,11 @@ void __fastcall hkDrawModelExecute(void* _this, void* edx, void* pCtx, const Dra
 }
 
 bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd) {
-
-	return oCreateMove(_this, edx, flInputSampleTime, pCmd);
+	g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer());
+	bool bReturn = oCreateMove(_this, edx, flInputSampleTime, pCmd);
+	
+	ESP::GetWeaponNames();
+	return bReturn;
 }
 
 
@@ -121,6 +127,8 @@ HRESULT APIENTRY hkDrawIndexedPrimitive(IDirect3DDevice9* pDevice, D3DPRIMITIVET
 }
 
 HRESULT APIENTRY hkPresent(IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST RECT* pDestRect, HWND hDestWindowOverride, CONST RGNDATA* pDirtyRegion) {
+	//Main render thread
+
 	IDirect3DStateBlock9* pState;
 	pDevice->CreateStateBlock(D3DSBT_PIXELSTATE, &pState);
 

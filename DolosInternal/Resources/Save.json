@@ -16,7 +16,7 @@
 	},
 	"visuals": {
 		"players": {
-			"show_team": false,
+			"show_team": true,
 			"show_enemy": true,
 			"draw_bones": true,
 			"draw_health": true,

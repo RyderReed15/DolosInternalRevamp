@@ -62,6 +62,7 @@ HRESULT ColorPicker::Draw(ID3DXFont* pFont, Render* pRender) {
 }
 
 void ColorPicker::UpdateTarget(ColorButton* pColorButton) {
+	//Updates color picker to match selected option
 	m_pTarget = pColorButton;
 	m_szName = pColorButton->GetName();
 	m_pColor = pColorButton->GetColorPtr();
@@ -149,6 +150,7 @@ void ColorBox::UpdateColor() {
 }
 
 void ColorBox::UpdatePosition() {
+	// Calculates current postion of color on the box given the hex
 	if ((byte)(m_pHueBox->m_cHue >> 16) == 255) {
 
 		float flPercent = m_pColorPicker->m_flRed / 255.f;
@@ -286,6 +288,7 @@ void HueBox::UpdateHue() {
 }
 
 void HueBox::UpdatePosition() {
+	//Calculates hue change based on color change
 	float red = m_pColorPicker->m_flRed;
 	float green = m_pColorPicker->m_flGreen;
 	float blue = m_pColorPicker->m_flBlue;

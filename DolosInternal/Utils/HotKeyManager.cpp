@@ -17,9 +17,6 @@ void CallHotKey(int iHotKeyId) {
             ((fnVoid)(mKeys[iHotKeyId]->Function))();
         }else{
             SendMessage(GetForegroundWindow(), WM_CHAR, mKeys[iHotKeyId]->Key, 0);
-        }
-        
+        } 
     }
-    
-   
 }

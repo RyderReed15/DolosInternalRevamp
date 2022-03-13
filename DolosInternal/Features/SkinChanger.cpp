@@ -3,15 +3,17 @@
 std::map<CBaseCombatWeapon*, int> g_mOwnedWeapons;
 
 //Rework to set g_mOwnedWeapons in PreTick to prevent bugs and game errors
+//Changes models and item index before frame stage notify call
 void SkinChanger::PreTick() {
 	for (int i = 1; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
 		CBaseCombatWeapon* pWeapon = (CBaseCombatWeapon*)g_pClientEntityList->GetClientEntity(i);
 		if (!pWeapon) {
 			continue;
 		}
+		//Set weapon model before skin or else skin wont properly apply
+
 		if (g_mOwnedWeapons[pWeapon]) {
-			SkinStruct* pSkin = Settings.SkinChanger.Skins[g_mOwnedWeapons[pWeapon]];
-			if (pSkin != nullptr) {
+			if (Settings.SkinChanger.Skins[g_mOwnedWeapons[pWeapon]]) {
 
 				if (g_mOwnedWeapons[pWeapon] == 507) {
 
@@ -30,13 +32,16 @@ void SkinChanger::PreTick() {
 		if (pWeapon->IsWeapon()) {
 
 			SkinStruct* pSkin;
+			int nItemIndex = pWeapon->GetWeaponId();
 
-			if (g_mOwnedWeapons[pWeapon]) {
+			if (g_mOwnedWeapons[pWeapon] && !Settings.SkinChanger.Skins[nItemIndex]) {
+				//Skin is for a changed model in this case
+
+
 				pSkin = Settings.SkinChanger.Skins[g_mOwnedWeapons[pWeapon]];
 			}
 			else {
 
-				int nItemIndex = pWeapon->GetWeaponId();
 				pSkin = Settings.SkinChanger.Skins[nItemIndex];
 			}
 
@@ -56,6 +61,7 @@ void SkinChanger::PreTick() {
 		}
 	}
 }
+//Changes model and skin after frame stage notifyu
 void SkinChanger::PostTick() {
 	for (int i = 1; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
 		CBaseCombatWeapon* pWeapon = (CBaseCombatWeapon*)g_pClientEntityList->GetClientEntity(i);

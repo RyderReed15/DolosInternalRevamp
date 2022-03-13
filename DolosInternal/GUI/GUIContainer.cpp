@@ -52,6 +52,7 @@ void GUIContainer::InitializeMap() {
         m_aMap[i] = new short[m_ptScreenSize.y]{ -1 };
     }
 }
+// Generates an map of the screen with the id of the element stored as a short
 void GUIContainer::GenerateMap() {
     
     for (short x = 0; x < m_ptScreenSize.x; x++)

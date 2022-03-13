@@ -19,6 +19,8 @@ char* FindPattern(void* pDLLBase, const char* szPattern, bool bRelative, int aOf
 		while (szMask[iPatternSize] != '\0') {
 			iPatternSize++;
 		}
+		//Iterate through each region, checking to make sure its readeable and not protected
+
 		std::cout << "Scanning Module: " << pDLLBase << std::endl;
 		for (char* pRegionBase = (char*)pDLLBase; pRegionBase < (char*)pDLLBase + iModuleSize; pRegionBase = (char*)(memInfo.RegionSize + memInfo.BaseAddress)) {
 
@@ -30,6 +32,8 @@ char* FindPattern(void* pDLLBase, const char* szPattern, bool bRelative, int aOf
 			std::cout << " - Scanning Region: " << (void*)memInfo.BaseAddress << " | " << (void*)(memInfo.BaseAddress + memInfo.RegionSize) << std::endl;
 			int iLength = memInfo.BaseAddress + memInfo.RegionSize - iPatternSize + 1;
 			for (char* j = (char*)memInfo.BaseAddress; j < (char*)iLength; j++) {
+
+				//Check each byte within the region for the start and then following bytes of the pattern
 
 				bool bFound = true;
 				for (int x = 0; x < iPatternSize; x++) {
@@ -49,6 +53,8 @@ char* FindPattern(void* pDLLBase, const char* szPattern, bool bRelative, int aOf
 }
 
 bool ParsePattern(const char* szInPattern,  char szOutPattern[64], char szOutMask[64]) {
+	//Replace string with actual byte array
+
 	int i = 0;
 	int iSize = 0;
 	while (szInPattern[i + 1] != '\0') {

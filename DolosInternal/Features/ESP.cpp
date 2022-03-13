@@ -2,8 +2,8 @@
 
 
 void ESP::Tick() {
+    if (g_pLocalPlayer == 0) return;
     g_pRender->Begin();
-    if (g_pLocalPlayer == 0) g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer()); // Move this to SDK if possible
     for (int i = 0; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
         
         CBaseEntity* pEntity = g_pClientEntityList->GetClientEntity(i);
@@ -12,6 +12,7 @@ void ESP::Tick() {
             if (Settings.Visuals.Weapons.Enabled) {
                 if (pEntity->GetOwner() == -1) {
                     if (pEntity->GetClientClass()->m_pNetworkName[1] != 'B') {
+                        //Ensure there is an owner and its class is not a base class
                         DrawBoundingBox(pEntity, Settings.Visuals.Weapons.Color, i);
                     }
                 }
@@ -36,14 +37,39 @@ void ESP::Tick() {
     g_pRender->End();
 }
 
+void ESP::GetWeaponNames() {
+    //Names need to be gotten in CreateMove due to a race condition that will cause an access violation
+    //Entity class could change during call and cause an error
+    //Player names should also be gotten here but their pointers change too often to store and race condition is very unlikely
+
+    for (int i = 0; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
+
+        CBaseEntity* pEntity = g_pClientEntityList->GetClientEntity(i);
+        if (!pEntity || !pEntity->IsWeapon()) continue;
+        
+        if (Settings.Visuals.Weapons.Enabled && Settings.Visuals.Weapons.DrawName) {
+            if (pEntity->GetOwner() == -1) {
+                if (pEntity->GetClientClass()->m_pNetworkName[1] != 'B') {
+                    //Ensure there is an owner and its class is not a base class
+                    g_mWeaponNames[pEntity] = pEntity->GetWeaponData()->szHudName + 13;
+                }
+            }
+        }
+
+    }
+}
+
 void ESP::DrawBoundingBox(CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex) {
     Vector vMax, vMin;
     if (!pEntity) return;
 
     if (pEntity->GetClientClass()->m_pNetworkName[1] == 'B') {
+        // Prevents race condition but will likely never actually return
+        // Class could change between this and last call and cause an error
         return;
     }
 
+    //Find bounding boxes for weapons and model dimensions for players
     if (pEntity->IsWeapon()) {
         ICollideable* pCollide = pEntity->GetCollideable();
         if (!pCollide) return;
@@ -94,7 +120,7 @@ void ESP::DrawBoundingBox(CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex) {
         
 
     }
-    //SCREEN SIZE HERE
+    //SCREEN SIZE HERE - dont render boxes if too big
     if (vSize.z - vSize.x < 5 || vSize.w - vSize.y < 5 || vSize.z - vSize.x > 800 || vSize.w - vSize.y > 800) return;
 
     g_pRender->DrawRectangle({ vSize.x, vSize.y, vSize.z - vSize.x, vSize.w - vSize.y }, cColor);
@@ -106,7 +132,7 @@ void ESP::DrawBoundingBox(CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex) {
         if (Settings.Visuals.Players.DrawName)      DrawPlayerName  ((Vector4D)vSize        , pEntity, iIndex);
     }
     if (pEntity->IsWeapon()) {
-        if (Settings.Visuals.Weapons.Enabled)       DrawWeaponName  ((Vector4D)vSize        , pEntity);
+        if (Settings.Visuals.Weapons.Enabled)       DrawWeaponName  ((Vector4D)vSize        , g_mWeaponNames[pEntity]);
     }
     
 
@@ -140,7 +166,7 @@ void ESP::DrawBones(IClientEntity* pEntity) {
     Vector vChest   = pEntity->GetBonePos(BONES::CHEST);
     Vector vNeck    = pEntity->GetBonePos(BONES::NECK);
 
-
+    //Loop through bones finding only those with a hitbox and eliminating uneeded ones.
     Vector vAttach  = (vChest + vNeck) / 2;
     for (int i = 0; i < pStudioHdr->numbones; i++) {
         mstudiobone_t* pBone = pStudioHdr->GetBone(i);
@@ -168,18 +194,22 @@ void ESP::DrawBones(IClientEntity* pEntity) {
 }
 
 void ESP::DrawPlayerName(Vector4D vBounds, CBaseEntity* pEntity, int iIndex){
+ 
     player_info_t playerInfo;
     g_pEngineClient->GetPlayerInfo(iIndex, &playerInfo);
     Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, playerInfo.szName);
     g_pRender->DrawString({ (vBounds.x + vBounds.z - vSize.x) / 2 , vBounds.y - vSize.y }, WHITE, g_pWeaponFont, playerInfo.szName);
+    
 }
 
-void ESP::DrawWeaponName(Vector4D vBounds, CBaseEntity* pEntity){
-    if (pEntity->GetWeaponData()) {
-        Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, pEntity->GetWeaponData()->szHudName + 13);
-        g_pRender->DrawString({ (vBounds.x + vBounds.z - vSize.x) / 2 , vBounds.y - vSize.y }, WHITE, g_pWeaponFont, pEntity->GetWeaponData()->szHudName + 13);
+void ESP::DrawWeaponName(Vector4D vBounds, char* szWeaponName){
+   
+    if (szWeaponName) {
+        Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, szWeaponName);
+        g_pRender->DrawString({ (vBounds.x + vBounds.z - vSize.x) / 2 , vBounds.y - vSize.y }, WHITE, g_pWeaponFont, szWeaponName);
 
-    }
+    } 
+    
 }
 
 void ESP::DrawDistance(Vector4D vBounds, CBaseEntity* pEntity){
@@ -217,13 +247,14 @@ bool ESP::WorldToScreen(Vector2D& vScreen, Vector vPos, VMatrix vMatrix){
     g_pEngineClient->GetScreenSize(iScreenWidth, iScreenHeight);
 
     Vector4D vClipCoords;
+    //Matrix multiplication
     vClipCoords.x = vPos.x * vMatrix[0][0] + vPos.y * vMatrix[0][1] + vPos.z * vMatrix[0][2] + vMatrix[0][3];
     vClipCoords.y = vPos.x * vMatrix[1][0] + vPos.y * vMatrix[1][1] + vPos.z * vMatrix[1][2] + vMatrix[1][3];
     vClipCoords.w = vPos.x * vMatrix[3][0] + vPos.y * vMatrix[3][1] + vPos.z * vMatrix[3][2] + vMatrix[3][3];
 
     if (vClipCoords.w < 0.1f) { vScreen = { 99999,99999 };  return false; }
 
-    //perspective division, dividing by clip.W = Normalized Device Coordinates
+    //perspective division, dividing by vClipCoords.w = Normalized Device Coordinates
     Vector NDC;
     NDC.x = vClipCoords.x / vClipCoords.w;
     NDC.y = vClipCoords.y / vClipCoords.w;
