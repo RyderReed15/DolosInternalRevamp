@@ -140,8 +140,8 @@ void ESP::DrawBoundingBox(CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex) {
 }
 
 void ESP::DrawOutline(Vector4D vBounds, D3DCOLOR cColor){
-    float flQuarterTop = (vBounds.z - vBounds.x) * .25;
-    float flQuarterSide = (vBounds.w - vBounds.y) * .25;
+    float flQuarterTop = (vBounds.z - vBounds.x) * .25f;
+    float flQuarterSide = (vBounds.w - vBounds.y) * .25f;
     g_pRender->DrawLine({ vBounds.x, vBounds.y }, { vBounds.x + flQuarterTop, vBounds.y }, GREEN);
     g_pRender->DrawLine({ vBounds.z, vBounds.y }, { vBounds.z - flQuarterTop, vBounds.y }, 0xff00ff00);
 

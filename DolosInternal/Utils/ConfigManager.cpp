@@ -10,6 +10,7 @@ bool UninitializeConfig() {
     
     bool bReturn =  SaveConfig("F:\\Coding Projects\\VS\\DolosInternal\\DolosInternal\\Resources\\Save.json");
     UnloadSkins();
+    if (Settings.Aimbot.Targets) delete Settings.Aimbot.Targets;
     delete g_pParsedConfig;
     return bReturn;
     
@@ -50,9 +51,26 @@ bool SaveConfig(const char* szPath) {
 void StoreValues() {
     JsonObject* pAimbot = g_pParsedConfig->GetJsonObject("aimbot");
 
-    Settings.Aimbot.Active  = pAimbot->GetBoolean       ("active");
-    Settings.Aimbot.Silent  = pAimbot->GetBoolean       ("silent");
-    Settings.Aimbot.FOV     = pAimbot->GetNumber<float> ("fov");
+    Settings.Aimbot.Active      = pAimbot->GetBoolean       ("active");
+    Settings.Aimbot.Silent      = pAimbot->GetBoolean       ("silent");
+    Settings.Aimbot.TargetAll   = pAimbot->GetBoolean       ("target_all");
+    Settings.Aimbot.Overaim     = pAimbot->GetBoolean       ("overaim");
+    Settings.Aimbot.Curve       = pAimbot->GetBoolean       ("curve");
+
+    Settings.Aimbot.RangeFactor = pAimbot->GetNumber<float> ("range_dec_multiplier");
+    Settings.Aimbot.AimTime     = pAimbot->GetNumber<float> ("time_to_aim");
+    Settings.Aimbot.WaitTime    = pAimbot->GetNumber<float> ("wait_time");
+
+    JsonArray* pTargets = pAimbot->GetJsonArray("targets");
+
+    Settings.Aimbot.TargetCount = pTargets->GetSize();
+    if (Settings.Aimbot.Targets) delete Settings.Aimbot.Targets;
+    Settings.Aimbot.Targets = new AimTarget[Settings.Aimbot.TargetCount];
+
+    for (int i = 0; i < Settings.Aimbot.TargetCount; i++) {
+        Settings.Aimbot.Targets[i].FOV      = pTargets->GetJsonObject(i)->GetNumber<float>  ("fov");
+        Settings.Aimbot.Targets[i].Bone     = pTargets->GetJsonObject(i)->GetNumber<int>    ("bone");
+    }
 
     JsonObject* pPlayers = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("players");
 
@@ -89,9 +107,28 @@ void StoreValues() {
 void UpdateValues() {
     JsonObject* pAimbot = g_pParsedConfig->GetJsonObject("aimbot");
 
-    pAimbot->SetBoolean ("active"   , Settings.Aimbot.Active);
-    pAimbot->SetBoolean ("silent"   , Settings.Aimbot.Silent);
-    pAimbot->SetNumber  ("fov"      , Settings.Aimbot.FOV);
+    pAimbot->SetBoolean ("active"       , Settings.Aimbot.Active);
+    pAimbot->SetBoolean ("silent"       , Settings.Aimbot.Silent);
+    pAimbot->SetBoolean ("target_all"   , Settings.Aimbot.TargetAll);
+    pAimbot->SetBoolean ("overaim"      , Settings.Aimbot.Overaim);
+    pAimbot->SetBoolean ("curve"        , Settings.Aimbot.Curve);
+
+    pAimbot->SetNumber("range_dec_multiplier"   , Settings.Aimbot.RangeFactor);
+    pAimbot->SetNumber("time_to_aim"            , Settings.Aimbot.AimTime);
+    pAimbot->SetNumber("wait_time"              , Settings.Aimbot.WaitTime);
+
+    JsonArray* pTargets = pAimbot->GetJsonArray("targets");
+
+    while (pTargets->GetSize()) {
+        pTargets->RemoveValue(0);
+    }
+
+    for (int i = 0; i < Settings.Aimbot.TargetCount; i++) {
+        JsonObject* pTarget = new JsonObject();
+        pTarget->AddNumber("fov", Settings.Aimbot.Targets[i].FOV);
+        pTarget->AddNumber("bone", Settings.Aimbot.Targets[i].Bone);
+        pTargets->AddJsonObject(pTarget);
+    }
 
     JsonObject* pPlayers = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("players");
 

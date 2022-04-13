@@ -175,6 +175,7 @@ public:
     {
         return sqrt(x * x + y * y);
     }
+    
     /*
  Moves a certain percent between to points
  @param destination to move to
@@ -191,6 +192,16 @@ public:
         }
         Dist = Dist * percent;
         return Dist;
+    }
+    Vector ToAngles() {
+        while (abs(y) > 180) {
+            y += 360 * (y > 0 ? -1 : 1);
+        }
+
+        if (abs(x) > 89) {
+            x = 89.f * (x > 0 ? 1 : -1);
+        }
+        return *this;
     }
 
     Vector& operator=(const Vector& vOther)

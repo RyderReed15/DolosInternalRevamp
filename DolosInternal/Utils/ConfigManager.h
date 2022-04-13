@@ -16,14 +16,24 @@ inline const char* version = "beta-1.0";
 
 inline JsonObject*  g_pParsedConfig;   
 
-
+struct AimTarget {
+    float FOV;
+    int Bone;
+};
 
 
 struct Config {
     struct AimConfig {
         bool Active;
         bool Silent;
-        float FOV;
+        bool TargetAll;
+        bool Overaim;
+        bool Curve;
+        float RangeFactor;
+        float AimTime;
+        float WaitTime;
+        AimTarget* Targets;
+        int TargetCount;
     } Aimbot;
     struct VisualsConfig {
         struct PlayerViz {
@@ -54,7 +64,7 @@ struct Config {
         bool b;
     } Trigger;
     struct RecoilConfig {
-        bool b;
+        float ControlFactor;
     } Recoil;
     struct AntiAimConfig {
         bool b;

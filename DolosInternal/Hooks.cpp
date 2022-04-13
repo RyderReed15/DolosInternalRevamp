@@ -110,6 +110,7 @@ bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CU
 	bool bReturn = oCreateMove(_this, edx, flInputSampleTime, pCmd);
 	
 	ESP::GetWeaponNames();
+	Aimbot::Tick(pCmd);
 	return bReturn;
 }
 

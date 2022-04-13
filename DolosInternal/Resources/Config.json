@@ -7,11 +7,17 @@
 	"aimbot": {
 		"active": true,
 		"silent": true,
-		"fov": 4,
+		"target_all": true,
+		"overaim": true,
+		"curve": true,
+		"range_dec_multiplier": 1,
+		"time_to_aim": 0.5,
+		"wait_time": 1,
+
 		"targets": [
 			{
-				"fov": 4,
-				"bone": 6
+				"fov": 15,
+				"bone": 8
 			}
 		]
 	},
