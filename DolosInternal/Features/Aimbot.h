@@ -22,8 +22,8 @@ namespace Aimbot {
     float FOVFormula(float flFOV, float flDistance);
     Vector CalculateAngle(Vector vStart, Vector vDest);
 
-    inline int iTarget;
-    inline int iStartTick;
+    inline IClientEntity* pTarget = nullptr;
+    inline int iStartTick = 0;
 
     
 }

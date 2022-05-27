@@ -21,9 +21,37 @@ void Aimbot::Tick(CUserCmd* pCmd) {
 
 Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimPunch, int iTickCount) {
 
+    
+    IClientEntity* pNewTarget = nullptr;
+
+    if (pTarget) {
+        if (pTarget->SanityCheck() && pTarget->GetCollideable()){
+            
+
+            for (int j = 0; j < Settings.Aimbot.TargetCount; j++) {
+                Vector vEnemyPos = pTarget->GetBonePos(Settings.Aimbot.Targets[j].Bone);
+                bool bVisible = Trace(g_pEngineTrace, g_pLocalPlayer, pTarget, vPlayerPos, vEnemyPos);
+
+                if (bVisible) {
+                    float flDist = vPlayerPos.Distance(vEnemyPos);
+
+                    Vector vRotateAngle = CalculateAngle(vPlayerPos, vEnemyPos);
+
+                    vRotateAngle = RecoilControl::RecoilControl(vRotateAngle, vAimPunch, true);
+
+                    float flRotateDistance = vRotateAngle.Lerp(vAngles, 1).Magnitude();
+
+                    if (flRotateDistance <= FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist)) {
+
+                        return vEnemyPos;
+                    }
+                }
+            }
+        }
+    }
+
     Vector vClosest; vClosest.Invalidate();
     float flClosest = INFINITY;
-    int iNewTarget = -1;
 
     for (int i = 1; i < g_pEngineClient->GetMaxClients(); i++) {
 
@@ -55,7 +83,7 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimP
                                 if (flWeight < flClosest) {
                                     flClosest = flWeight;
                                     vClosest = vEnemyPos;
-                                    iNewTarget = i;
+                                    pNewTarget = pEntity;
                                 }
                             }  
                         }
@@ -64,11 +92,11 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimP
             }
         }
     }
-    if (iNewTarget != iTarget) {
+    if (pNewTarget != pTarget) {
         // New target found when there was a prevoius target, ignore case if already a wait time
-        if (iTarget != -1 && iStartTick <= iTickCount) iStartTick = iTickCount + (.5f + Settings.Aimbot.WaitTime / g_pGlobalVars->interval_per_tick); 
+        if (pTarget != nullptr && iStartTick <= iTickCount) iStartTick = iTickCount + (.5f + Settings.Aimbot.WaitTime / g_pGlobalVars->interval_per_tick);
         else if (iStartTick <= iTickCount) iStartTick = iTickCount; // No wait time needed.
-        iTarget = iNewTarget;
+        pTarget = pNewTarget;
 
     }
     return vClosest;
