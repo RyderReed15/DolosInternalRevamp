@@ -32,6 +32,7 @@ struct Config {
         float RangeFactor;
         float AimTime;
         float WaitTime;
+        float AntilockFactor;
         AimTarget* Targets;
         int TargetCount;
     } Aimbot;
@@ -64,6 +65,7 @@ struct Config {
         bool b;
     } Trigger;
     struct RecoilConfig {
+        bool Enabled;
         float ControlFactor;
     } Recoil;
     struct AntiAimConfig {

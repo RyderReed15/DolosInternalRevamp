@@ -57,9 +57,10 @@ void StoreValues() {
     Settings.Aimbot.Overaim     = pAimbot->GetBoolean       ("overaim");
     Settings.Aimbot.Curve       = pAimbot->GetBoolean       ("curve");
 
-    Settings.Aimbot.RangeFactor = pAimbot->GetNumber<float> ("range_dec_multiplier");
-    Settings.Aimbot.AimTime     = pAimbot->GetNumber<float> ("time_to_aim");
-    Settings.Aimbot.WaitTime    = pAimbot->GetNumber<float> ("wait_time");
+    Settings.Aimbot.RangeFactor     = pAimbot->GetNumber<float> ("range_dec_multiplier");
+    Settings.Aimbot.AimTime         = pAimbot->GetNumber<float> ("time_to_aim");
+    Settings.Aimbot.WaitTime        = pAimbot->GetNumber<float> ("wait_time");
+    Settings.Aimbot.AntilockFactor  = pAimbot->GetNumber<float> ("antilock_factor");
 
     JsonArray* pTargets = pAimbot->GetJsonArray("targets");
 
@@ -89,7 +90,12 @@ void StoreValues() {
     Settings.Visuals.Weapons.Enabled    = pWeapons->GetBoolean("enabled");
     Settings.Visuals.Weapons.DrawName   = pWeapons->GetBoolean("draw_name");
 
-    Settings.Visuals.Weapons.Color      = ParseColor(pWeapons->GetString("color"));
+    JsonObject* pRecoil = g_pParsedConfig->GetJsonObject("recoil");
+
+    Settings.Recoil.Enabled         = pRecoil->GetBoolean       ("enabled");
+    Settings.Recoil.ControlFactor   = pRecoil->GetNumber<float> ("factor");
+
+    Settings.Visuals.Weapons.Color  = ParseColor(pWeapons->GetString("color"));
 
     JsonObject* pSkinChanger = g_pParsedConfig->GetJsonObject("skin_changer");
 
@@ -116,6 +122,7 @@ void UpdateValues() {
     pAimbot->SetNumber("range_dec_multiplier"   , Settings.Aimbot.RangeFactor);
     pAimbot->SetNumber("time_to_aim"            , Settings.Aimbot.AimTime);
     pAimbot->SetNumber("wait_time"              , Settings.Aimbot.WaitTime);
+    pAimbot->SetNumber("antilock_factor"        , Settings.Aimbot.AntilockFactor);
 
     JsonArray* pTargets = pAimbot->GetJsonArray("targets");
 
@@ -146,6 +153,11 @@ void UpdateValues() {
     pAimbot->SetBoolean("enabled"   , Settings.Visuals.Weapons.Enabled);
 
     pAimbot->SetString("color"      , std::to_string(Settings.Visuals.Weapons.Color));
+
+    JsonObject* pRecoil = g_pParsedConfig->GetJsonObject("recoil");
+
+    pRecoil->SetBoolean("enabled"   , Settings.Recoil.Enabled);
+    pRecoil->SetNumber("factor"     , Settings.Recoil.ControlFactor);
 
     JsonObject* pSkinChanger = g_pParsedConfig->GetJsonObject("skins");
 

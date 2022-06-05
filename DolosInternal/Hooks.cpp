@@ -108,9 +108,11 @@ void __fastcall hkDrawModelExecute(void* _this, void* edx, void* pCtx, const Dra
 bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd) {
 	g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer());
 	bool bReturn = oCreateMove(_this, edx, flInputSampleTime, pCmd);
+	if (pCmd->iTickCount != 0) {
+		ESP::GetWeaponNames();
+		Aimbot::Tick(pCmd);
+	}
 	
-	ESP::GetWeaponNames();
-	Aimbot::Tick(pCmd);
 	return bReturn;
 }
 

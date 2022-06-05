@@ -3,25 +3,39 @@
 
 void Aimbot::Tick(CUserCmd* pCmd) {
 
-    if (Settings.Aimbot.Active && g_pLocalPlayer && g_pLocalPlayer->IsAlive()) {
+    if (g_pLocalPlayer && g_pLocalPlayer->IsAlive()) {
 
-        Vector vAimPunch    = g_pLocalPlayer->GetAimPunch();
-        Vector vViewAngles  = { pCmd->qViewAngles.pitch, pCmd->qViewAngles.yaw, 0 };
-        Vector vPlayerPos   = g_pLocalPlayer->GetEyePos();
+        Vector vAimPunch = g_pLocalPlayer->GetAimPunch();
+        Vector vViewAngles = { pCmd->qViewAngles.pitch, pCmd->qViewAngles.yaw, 0 };
 
-        Vector vTarget = FindClosestTarget(vPlayerPos, vViewAngles, vAimPunch, pCmd->iTickCount);
+        if (Settings.Aimbot.Active) {
+            
+            Vector vPlayerPos = g_pLocalPlayer->GetEyePos();
+
+            Vector vTarget = FindClosestTarget(vPlayerPos, vViewAngles, vAimPunch, pCmd->iTickCount);
+
+            if (vTarget.IsValid()) {
+
+                QAngle qNewAngles = GetNewAngles(vViewAngles, vTarget, pCmd->iTickCount);
+                if (!Settings.Aimbot.Silent) g_pEngineClient->SetViewAngles(qNewAngles);
+                pCmd->qViewAngles = qNewAngles;
+                return;
+            }
+            
+        }
         
-        if (vTarget.IsValid()) {
-            QAngle qNewAngles = GetNewAngles(vViewAngles, CalculateAngle(vPlayerPos, vTarget), pCmd->iTickCount);
-            if (!Settings.Aimbot.Silent) g_pEngineClient->SetViewAngles(qNewAngles);
-            pCmd->qViewAngles = qNewAngles;
-        }  
+        QAngle qNewAngles = RecoilControl::RecoilControl(vViewAngles, vAimPunch, false);
+        if (!Settings.Aimbot.Silent) g_pEngineClient->SetViewAngles(qNewAngles);
+        pCmd->qViewAngles = qNewAngles;
+       
+        
     }
 }
 
 Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimPunch, int iTickCount) {
 
-    
+    Vector vClosest; vClosest.Invalidate();
+    float flClosest = INFINITY;
     IClientEntity* pNewTarget = nullptr;
 
     if (pTarget) {
@@ -43,15 +57,21 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimP
 
                     if (flRotateDistance <= FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist)) {
 
-                        return vEnemyPos;
+                        float flWeight = WeightFormula(Settings.Aimbot.Targets[j].FOV, flDist, flRotateDistance);
+
+                        if (flWeight < flClosest) {
+                            flClosest = flWeight;
+                            vClosest = vRotateAngle;
+                        }
                     }
                 }
             }
         }
     }
+    if (vClosest.IsValid()) {
+        return vClosest;
+    }
 
-    Vector vClosest; vClosest.Invalidate();
-    float flClosest = INFINITY;
 
     for (int i = 1; i < g_pEngineClient->GetMaxClients(); i++) {
 
@@ -82,7 +102,7 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimP
 
                                 if (flWeight < flClosest) {
                                     flClosest = flWeight;
-                                    vClosest = vEnemyPos;
+                                    vClosest = vRotateAngle;
                                     pNewTarget = pEntity;
                                 }
                             }  
@@ -94,7 +114,7 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimP
     }
     if (pNewTarget != pTarget) {
         // New target found when there was a prevoius target, ignore case if already a wait time
-        if (pTarget != nullptr && iStartTick <= iTickCount) iStartTick = iTickCount + (.5f + Settings.Aimbot.WaitTime / g_pGlobalVars->interval_per_tick);
+        if (pTarget != nullptr && pNewTarget != nullptr && iStartTick <= iTickCount) iStartTick = iTickCount + (.5f + Settings.Aimbot.WaitTime / g_pGlobalVars->interval_per_tick);
         else if (iStartTick <= iTickCount) iStartTick = iTickCount; // No wait time needed.
         pTarget = pNewTarget;
 
@@ -119,7 +139,12 @@ Vector Aimbot::GetNewAngles(Vector vViewAngles, Vector vDest, int iTick){
     }
 
     float flPercent = (g_pGlobalVars->interval_per_tick * (iTick - iStartTick)) / Settings.Aimbot.AimTime;
-    flPercent = flPercent > 1 ? 1 : flPercent;
+    if (iTick - iStartTick < 2) flPercent = flPercent > 1 ? 1 : flPercent;
+    else flPercent = flPercent > 1 ? Settings.Aimbot.AntilockFactor : flPercent; 
+
+
+    
+
     //Clamp flPercent
 
     if (flPercent < 0) return vViewAngles;

@@ -2,7 +2,7 @@
 
 Vector RecoilControl::RecoilControl(Vector vAngles, Vector vAimPunch, bool bAimbot){
     
-    if (Settings.Recoil.ControlFactor == 0) {
+    if (Settings.Recoil.ControlFactor == 0 || !Settings.Recoil.Enabled) {
         return vAngles;
     }
 
@@ -11,6 +11,7 @@ Vector RecoilControl::RecoilControl(Vector vAngles, Vector vAimPunch, bool bAimb
         return (vAngles - vOldAimPunch).ToAngles();
     }
     else {
+        
         Vector vNewAngles = ((vAngles + vOldAimPunch) - (vAimPunch * Settings.Recoil.ControlFactor)).ToAngles();
 
         vOldAimPunch = vAimPunch * Settings.Recoil.ControlFactor;

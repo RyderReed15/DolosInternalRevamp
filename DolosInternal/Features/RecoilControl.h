@@ -10,7 +10,7 @@
 namespace RecoilControl {
     Vector RecoilControl(Vector vAngles, Vector vAimPunch, bool bAimbot);
 
-    inline Vector vOldAimPunch;
+    inline Vector vOldAimPunch = { 0,0,0 };
 }
 
 

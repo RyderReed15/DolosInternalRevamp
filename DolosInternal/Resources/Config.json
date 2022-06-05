@@ -11,12 +11,13 @@
 		"overaim": true,
 		"curve": true,
 		"range_dec_multiplier": 1,
-		"time_to_aim": 15,
+		"time_to_aim": 1,
 		"wait_time": 1,
+		"antilock_factor" : 0.5,
 
 		"targets": [
 			{
-				"fov": 5,
+				"fov": 15,
 				"bone": 8
 			},
 			{
@@ -98,9 +99,8 @@
 		"fov": 4
 	},
 	"recoil": {
-		"active": true,
-		"silent": true,
-		"fov": 4
+		"enabled": true,
+		"factor": 2
 	},
 	"anti_aim": {
 		"active": true,
