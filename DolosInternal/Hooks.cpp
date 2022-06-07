@@ -111,6 +111,7 @@ bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CU
 	if (pCmd->iTickCount != 0) {
 		ESP::GetWeaponNames();
 		Aimbot::Tick(pCmd);
+		Bhop::Tick(pCmd, g_pLocalPlayer->GetFlags());
 	}
 	
 	return bReturn;

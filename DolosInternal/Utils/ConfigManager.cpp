@@ -28,7 +28,7 @@ bool LoadConfig(const char* szPath) {
     try {
         StoreValues();
     }
-    catch (char* e) {
+    catch (char*) {
         //Malformed Config
     }
     return g_pParsedConfig;
@@ -39,7 +39,7 @@ bool SaveConfig(const char* szPath) {
         try {
             UpdateValues();
         }
-        catch (char* e) {
+        catch (char*) {
             //Unable to write values
         }
         
@@ -94,6 +94,10 @@ void StoreValues() {
 
     Settings.Recoil.Enabled         = pRecoil->GetBoolean       ("enabled");
     Settings.Recoil.ControlFactor   = pRecoil->GetNumber<float> ("factor");
+
+    JsonObject* pMisc = g_pParsedConfig->GetJsonObject("misc");
+
+    Settings.Misc.Bhop = pMisc->GetBoolean("bhop");
 
     Settings.Visuals.Weapons.Color  = ParseColor(pWeapons->GetString("color"));
 
@@ -158,6 +162,10 @@ void UpdateValues() {
 
     pRecoil->SetBoolean("enabled"   , Settings.Recoil.Enabled);
     pRecoil->SetNumber("factor"     , Settings.Recoil.ControlFactor);
+
+    JsonObject* pMisc = g_pParsedConfig->GetJsonObject("misc");
+
+    pMisc->SetBoolean("bhop", Settings.Misc.Bhop);
 
     JsonObject* pSkinChanger = g_pParsedConfig->GetJsonObject("skins");
 

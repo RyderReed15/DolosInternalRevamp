@@ -55,7 +55,7 @@ struct Config {
        
     } Visuals;
     struct MiscConfig {
-        bool b;
+        bool Bhop;
     } Misc;
     struct SkinConfig {
         bool TrackKills;

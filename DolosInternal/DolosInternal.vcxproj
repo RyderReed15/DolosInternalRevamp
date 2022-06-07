@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Features\Aimbot.cpp" />
+    <ClCompile Include="Features\Bhop.cpp" />
     <ClCompile Include="Features\ESP.cpp" />
     <ClCompile Include="Features\RecoilControl.cpp" />
     <ClCompile Include="Features\SkinChanger.cpp" />

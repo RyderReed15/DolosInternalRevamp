@@ -123,8 +123,8 @@ void ESP::DrawBoundingBox(CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex) {
     //SCREEN SIZE HERE - dont render boxes if too big
     if (vSize.z - vSize.x < 5 || vSize.w - vSize.y < 5 || vSize.z - vSize.x > 800 || vSize.w - vSize.y > 800) return;
 
-    g_pRender->DrawRectangle({ vSize.x, vSize.y, vSize.z - vSize.x, vSize.w - vSize.y }, cColor);
-    DrawOutline((Vector4D)vSize, GREEN);
+    g_pRender->DrawRectangle({ vSize.x, vSize.y, vSize.z - vSize.x, vSize.w - vSize.y }, 0x33333333);
+    DrawOutline((Vector4D)vSize, cColor);
     DrawDistance((Vector4D)vSize, pEntity);
     if (pEntity->IsPlayer()) {
         if (Settings.Visuals.Players.DrawHealth)    DrawHealth      (pEntity->GetHealth()   , (Vector4D)vSize);
@@ -213,7 +213,7 @@ void ESP::DrawWeaponName(Vector4D vBounds, char* szWeaponName){
 }
 
 void ESP::DrawDistance(Vector4D vBounds, CBaseEntity* pEntity){
-    int iDistance = (pEntity->GetVecOrigin() - g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer())->GetVecOrigin()).Magnitude() * 0.0254f;
+    int iDistance = (int)((pEntity->GetVecOrigin() - g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer())->GetVecOrigin()).Magnitude() * 0.0254f);
 
     char szDistance[33];  _itoa_s(iDistance, szDistance, 10);
     Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, szDistance);

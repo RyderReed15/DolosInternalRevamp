@@ -157,6 +157,9 @@
     <ClCompile Include="Features\RecoilControl.cpp">
       <Filter>Features</Filter>
     </ClCompile>
+    <ClCompile Include="Features\Bhop.cpp">
+      <Filter>Features</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Initializer.h">

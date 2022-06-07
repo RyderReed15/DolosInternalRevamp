@@ -114,7 +114,7 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimP
     }
     if (pNewTarget != pTarget) {
         // New target found when there was a prevoius target, ignore case if already a wait time
-        if (pTarget != nullptr && pNewTarget != nullptr && iStartTick <= iTickCount) iStartTick = iTickCount + (.5f + Settings.Aimbot.WaitTime / g_pGlobalVars->interval_per_tick);
+        if (pTarget != nullptr && pNewTarget != nullptr && iStartTick <= iTickCount) iStartTick = iTickCount + (int)(.5f + Settings.Aimbot.WaitTime / g_pGlobalVars->interval_per_tick);
         else if (iStartTick <= iTickCount) iStartTick = iTickCount; // No wait time needed.
         pTarget = pNewTarget;
 
