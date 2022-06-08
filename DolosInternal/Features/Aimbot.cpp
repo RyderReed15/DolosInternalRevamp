@@ -114,20 +114,27 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimP
     }
     if (pNewTarget != pTarget) {
         // New target found when there was a prevoius target, ignore case if already a wait time
-        if (pTarget != nullptr && pNewTarget != nullptr && iStartTick <= iTickCount) iStartTick = iTickCount + (int)(.5f + Settings.Aimbot.WaitTime / g_pGlobalVars->interval_per_tick);
+        if (pTarget != nullptr && pNewTarget != nullptr && iStartTick <= iTickCount) iStartTick = iTickCount + static_cast<int>(.5f + Settings.Aimbot.WaitTime / g_pGlobalVars->interval_per_tick);
         else if (iStartTick <= iTickCount) iStartTick = iTickCount; // No wait time needed.
         pTarget = pNewTarget;
+        vOveraim.Invalidate();
 
     }
     return vClosest;
 }
 
-Vector Aimbot::CalculateOveraim(Vector vViewAngles, Vector vDest){
-    float flDistance = vDest.Lerp(vViewAngles, 1).Magnitude() / 15;
+Vector Aimbot::CalculateOveraim(Vector vViewAngles, Vector vDest, int iTick){
+    if (iTick == iStartTick && !vOveraim.IsValid()) {
+        float flDistance = vDest.Lerp(vViewAngles, 1).Magnitude() / 15;
 
-    int iAngle = rand() % 360;
+        float flAngle = static_cast<float>(rand() % 360);
 
-    return { (float)sin(iAngle) * flDistance, (float)cos(iAngle) * flDistance, 0 };
+        vOveraim = { sinf(flAngle) * flDistance, cosf(flAngle) * flDistance, 0 };
+    }
+    else if (!vOveraim.IsValid()) {
+        return { 0,0,0 };
+    }
+    return vOveraim;
 }
 
 Vector Aimbot::GetNewAngles(Vector vViewAngles, Vector vDest, int iTick){
@@ -135,15 +142,12 @@ Vector Aimbot::GetNewAngles(Vector vViewAngles, Vector vDest, int iTick){
     vViewAngles = vViewAngles.ToAngles();
 
     if (Settings.Aimbot.Overaim) {
-        CalculateOveraim(vViewAngles, vDest);
+        vViewAngles = CalculateOveraim(vViewAngles, vDest, iTick);
     }
 
     float flPercent = (g_pGlobalVars->interval_per_tick * (iTick - iStartTick)) / Settings.Aimbot.AimTime;
     if (iTick - iStartTick < 2) flPercent = flPercent > 1 ? 1 : flPercent;
-    else flPercent = flPercent > 1 ? Settings.Aimbot.AntilockFactor : flPercent; 
-
-
-    
+    else flPercent = flPercent > 1 ? Settings.Aimbot.AntilockFactor : flPercent;  
 
     //Clamp flPercent
 
@@ -151,15 +155,16 @@ Vector Aimbot::GetNewAngles(Vector vViewAngles, Vector vDest, int iTick){
 
     float flDistance = vViewAngles.Distance(vDest);
 
+    if (flDistance < 1) vOveraim.Invalidate();
+
     Vector vDelta = vViewAngles.Lerp(vDest, flPercent);
-    if (flDistance < 2) flPercent *= flDistance / 2;
 
     vDelta.x *= flPercent;
     vDelta.y *= flPercent;
     if (flPercent < .95f) {
         vDelta.x *= (1 + .15f * Settings.Aimbot.Curve);
-        vDelta.x *= 1 + (.01f * ((float(rand()) / float((RAND_MAX))) - .5f));
-        vDelta.y *= 1 + (.01f * ((float(rand()) / float((RAND_MAX))) - .5f));
+        vDelta.x *= 1 + .01f * (rand() / float(RAND_MAX) - .5f);
+        vDelta.y *= 1 + .01f * (rand() / float(RAND_MAX) - .5f);
     }
     
     if (vDelta.Magnitude() > 35) {

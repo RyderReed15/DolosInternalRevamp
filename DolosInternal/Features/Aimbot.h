@@ -13,7 +13,7 @@ namespace Aimbot {
 
    
     Vector FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimPunch, int iTickCount);
-    Vector CalculateOveraim(Vector vViewAngles, Vector vDest);
+    Vector CalculateOveraim(Vector vViewAngles, Vector vDest, int iTick);
     Vector GetNewAngles(Vector vViewAngles, Vector vDest, int iTicks);
 
 
@@ -22,8 +22,9 @@ namespace Aimbot {
     float FOVFormula(float flFOV, float flDistance);
     Vector CalculateAngle(Vector vStart, Vector vDest);
 
-    inline IClientEntity* pTarget = nullptr;
-    inline int iStartTick = 0;
+    inline IClientEntity*   pTarget     = nullptr;
+    inline int              iStartTick  = 0;
+    inline Vector           vOveraim;
 
     
 }
