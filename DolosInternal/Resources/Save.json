@@ -4,7 +4,7 @@
 	"version": "beta-1.0",
 	"data_created": "10-14-2021",
 	"aimbot": {
-		"active": "858993459",
+		"active": true,
 		"silent": true,
 		"target_all": true,
 		"overaim": true,
@@ -48,41 +48,44 @@
 		"track_kills": true,
 		"skins": [
 			{
-				"weapon_id": 7,
+				"new_index": 0,
 				"skin_id": 675,
 				"wear": 0.90000,
 				"stattrak_kills": -1,
 				"seed": 1,
 				"quality": 3,
-				"custom_name": ""
+				"custom_name": "",
+				"weapon_id": 7
 			},
 			{
-				"weapon_id": 16,
-				"skin_id": 309,
-				"wear": 0.01000,
-				"stattrak_kills": -1,
-				"seed": 1,
-				"quality": 7,
-				"custom_name": ""
-			},
-			{
-				"weapon_id": 9,
+				"new_index": 0,
 				"skin_id": 475,
 				"wear": 0.99000,
 				"stattrak_kills": -1,
 				"seed": 1,
 				"quality": 12,
-				"custom_name": ""
+				"custom_name": "",
+				"weapon_id": 9
 			},
 			{
-				"weapon_id": 59,
+				"new_index": 0,
+				"skin_id": 309,
+				"wear": 0.01000,
+				"stattrak_kills": -1,
+				"seed": 1,
+				"quality": 7,
+				"custom_name": "",
+				"weapon_id": 16
+			},
+			{
 				"new_index": 507,
 				"skin_id": 38,
 				"wear": 0.01000,
 				"stattrak_kills": 20,
 				"seed": 1,
 				"quality": 3,
-				"custom_name": ""
+				"custom_name": "",
+				"weapon_id": 59
 			}
 		]
 	},

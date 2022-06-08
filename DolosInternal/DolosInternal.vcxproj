@@ -50,10 +50,6 @@
     <ClCompile Include="Utils\ConfigManager.cpp" />
     <ClCompile Include="Utils\HookManager.cpp" />
     <ClCompile Include="Utils\HotKeyManager.cpp" />
-    <ClCompile Include="Utils\JsonParser\JsonArray.cpp" />
-    <ClCompile Include="Utils\JsonParser\JsonObject.cpp" />
-    <ClCompile Include="Utils\JsonParser\JsonParser.cpp" />
-    <ClCompile Include="Utils\JsonParser\JsonValue.cpp" />
     <ClCompile Include="Utils\NetvarManager.cpp" />
     <ClCompile Include="Utils\PatternScanner.cpp" />
   </ItemGroup>
@@ -125,10 +121,6 @@
     <ClInclude Include="Utils\ConfigManager.h" />
     <ClInclude Include="Utils\HookManager.h" />
     <ClInclude Include="Utils\HotKeyManager.h" />
-    <ClInclude Include="Utils\JsonParser\JsonArray.h" />
-    <ClInclude Include="Utils\JsonParser\JsonObject.h" />
-    <ClInclude Include="Utils\JsonParser\JsonParser.h" />
-    <ClInclude Include="Utils\JsonParser\JsonValue.h" />
     <ClInclude Include="Utils\Macros.h" />
     <ClInclude Include="Utils\NetvarManager.h" />
     <ClInclude Include="Utils\PatternScanner.h" />
@@ -207,7 +199,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>F:\Coding Projects\My Libraries\JSON--\include;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -251,6 +243,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>F:\Coding Projects\My Libraries\JSON--\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>json--.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -285,6 +279,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>F:\Coding Projects\My Libraries\JSON--\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>json--.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

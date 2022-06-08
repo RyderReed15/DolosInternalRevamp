@@ -132,9 +132,9 @@ Vector Aimbot::CalculateOveraim(Vector vViewAngles, Vector vDest, int iTick){
         vOveraim = { sinf(flAngle) * flDistance, cosf(flAngle) * flDistance, 0 };
     }
     else if (!vOveraim.IsValid()) {
-        return { 0,0,0 };
+        return vViewAngles;
     }
-    return vOveraim;
+    return vViewAngles + vOveraim;
 }
 
 Vector Aimbot::GetNewAngles(Vector vViewAngles, Vector vDest, int iTick){

@@ -3,7 +3,7 @@
 #ifndef CONFIG_MANAGER_H
 #define CONFIG_MANAGER_H
 
-#include "JsonParser/JsonParser.h"
+#include "Json--/JsonParser.h"
 #include "../Features/SkinChanger.h"
 #include <d3d9.h>
 #include <vector>

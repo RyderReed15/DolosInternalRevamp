@@ -107,7 +107,7 @@ void StoreValues() {
 
     JsonArray* pSkins = pSkinChanger->GetJsonArray("skins");
 
-    for (int i = 0; i < pSkins->GetSize(); i++) {
+    for (size_t i = 0; i < pSkins->GetSize(); i++) {
         SkinChanger::SkinStruct* pSkin = ParseSkin(pSkins->GetJsonObject(i));
         Settings.SkinChanger.Skins[pSkins->GetJsonObject(i)->GetNumber<int>("weapon_id")] = pSkin;
         if (pSkins->GetJsonObject(i)->GetNumber<int>("new_index")) Settings.SkinChanger.Skins[pSkins->GetJsonObject(i)->GetNumber<int>("new_index")] = pSkin;
@@ -167,26 +167,26 @@ void UpdateValues() {
 
     pMisc->SetBoolean("bhop", Settings.Misc.Bhop);
 
-    JsonObject* pSkinChanger = g_pParsedConfig->GetJsonObject("skins");
+    JsonObject* pSkinChanger = g_pParsedConfig->GetJsonObject("skin_changer");
 
     pSkinChanger->SetBoolean("track_kills", Settings.SkinChanger.TrackKills);
 
-    JsonArray* pSkins = pSkinChanger->GetJsonArray("skin_changer");
+    JsonArray* pSkins = pSkinChanger->GetJsonArray("skins");
 
     while (pSkins->GetSize())
     {
         pSkins->RemoveValue(0);
     }
 
-    std::map<int, SkinChanger::SkinStruct*>::iterator it = Settings.SkinChanger.Skins.begin();
-    while (it != Settings.SkinChanger.Skins.end()) {
+    
+    for (std::map<int, SkinChanger::SkinStruct*>::iterator it = Settings.SkinChanger.Skins.begin(); it != Settings.SkinChanger.Skins.end(); it++) {
         JsonObject* pSkin = WriteSkin(it->second);
+        if (!pSkin) continue;
         if (pSkin->GetNumber<int>("new_index")) {
             Settings.SkinChanger.Skins.erase(pSkin->GetNumber<int>("new_index"));
         }
         pSkin->AddNumber("weapon_id", it->first);
         pSkins->AddJsonObject(pSkin);
-        it++;
     }
 
 
