@@ -109,9 +109,15 @@ bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CU
 	g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer());
 	bool bReturn = oCreateMove(_this, edx, flInputSampleTime, pCmd);
 	if (pCmd->iTickCount != 0) {
+
 		ESP::GetWeaponNames();
+
+		int iFlags = EnginePrediction::Begin(g_pLocalPlayer, pCmd);
+
 		Aimbot::Tick(pCmd);
-		Bhop::Tick(pCmd, g_pLocalPlayer->GetFlags());
+		Bhop::Tick(pCmd, iFlags);
+
+		EnginePrediction::End(g_pLocalPlayer);
 	}
 	
 	return bReturn;

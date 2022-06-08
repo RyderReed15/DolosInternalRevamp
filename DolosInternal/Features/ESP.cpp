@@ -108,7 +108,7 @@ void ESP::DrawBoundingBox(CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex) {
 
     Vector2D vScreen;
     WorldToScreen(vScreen, vTransformed[0]);
-    D3DXVECTOR4 vSize = { vScreen.x, vScreen.y, vScreen.x, vScreen.y };
+    Vector4D vSize = { vScreen.x, vScreen.y, vScreen.x, vScreen.y };
     for (int i = 1; i < 8; i++) {
        
         if (WorldToScreen(vScreen, vTransformed[i])) {
@@ -124,15 +124,15 @@ void ESP::DrawBoundingBox(CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex) {
     if (vSize.z - vSize.x < 5 || vSize.w - vSize.y < 5 || vSize.z - vSize.x > 800 || vSize.w - vSize.y > 800) return;
 
     g_pRender->DrawRectangle({ vSize.x, vSize.y, vSize.z - vSize.x, vSize.w - vSize.y }, 0x33333333);
-    DrawOutline((Vector4D)vSize, cColor);
-    DrawDistance((Vector4D)vSize, pEntity);
+    DrawOutline(vSize, cColor);
+    DrawDistance(vSize, pEntity);
     if (pEntity->IsPlayer()) {
-        if (Settings.Visuals.Players.DrawHealth)    DrawHealth      (pEntity->GetHealth()   , (Vector4D)vSize);
-        if (Settings.Visuals.Players.DrawArmor)     DrawArmor       (pEntity->GetArmor()    , (Vector4D)vSize);
-        if (Settings.Visuals.Players.DrawName)      DrawPlayerName  ((Vector4D)vSize        , pEntity, iIndex);
+        if (Settings.Visuals.Players.DrawHealth)    DrawHealth      (pEntity->GetHealth()   , vSize);
+        if (Settings.Visuals.Players.DrawArmor)     DrawArmor       (pEntity->GetArmor()    , vSize);
+        if (Settings.Visuals.Players.DrawName)      DrawPlayerName  (vSize        , pEntity, iIndex);
     }
     if (pEntity->IsWeapon()) {
-        if (Settings.Visuals.Weapons.Enabled)       DrawWeaponName  ((Vector4D)vSize        , g_mWeaponNames[pEntity]);
+        if (Settings.Visuals.Weapons.Enabled)       DrawWeaponName  (vSize        , g_mWeaponNames[pEntity]);
     }
     
 
@@ -142,18 +142,18 @@ void ESP::DrawBoundingBox(CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex) {
 void ESP::DrawOutline(Vector4D vBounds, D3DCOLOR cColor){
     float flQuarterTop = (vBounds.z - vBounds.x) * .25f;
     float flQuarterSide = (vBounds.w - vBounds.y) * .25f;
-    g_pRender->DrawLine({ vBounds.x, vBounds.y }, { vBounds.x + flQuarterTop, vBounds.y }, GREEN);
-    g_pRender->DrawLine({ vBounds.z, vBounds.y }, { vBounds.z - flQuarterTop, vBounds.y }, 0xff00ff00);
+    g_pRender->DrawLine({ vBounds.x, vBounds.y }, { vBounds.x + flQuarterTop, vBounds.y }, cColor);
+    g_pRender->DrawLine({ vBounds.z, vBounds.y }, { vBounds.z - flQuarterTop, vBounds.y }, cColor);
 
 
-    g_pRender->DrawLine({ vBounds.z, vBounds.y }, { vBounds.z, vBounds.y + flQuarterSide }, 0xff00ff00);
-    g_pRender->DrawLine({ vBounds.z, vBounds.w }, { vBounds.z, vBounds.w - flQuarterSide }, 0xff00ff00);
+    g_pRender->DrawLine({ vBounds.z, vBounds.y }, { vBounds.z, vBounds.y + flQuarterSide }, cColor);
+    g_pRender->DrawLine({ vBounds.z, vBounds.w }, { vBounds.z, vBounds.w - flQuarterSide }, cColor);
 
-    g_pRender->DrawLine({ vBounds.x, vBounds.w }, { vBounds.x + flQuarterTop, vBounds.w }, 0xff00ff00);
-    g_pRender->DrawLine({ vBounds.z, vBounds.w }, { vBounds.z - flQuarterTop, vBounds.w }, 0xff00ff00);
+    g_pRender->DrawLine({ vBounds.x, vBounds.w }, { vBounds.x + flQuarterTop, vBounds.w }, cColor);
+    g_pRender->DrawLine({ vBounds.z, vBounds.w }, { vBounds.z - flQuarterTop, vBounds.w }, cColor);
 
-    g_pRender->DrawLine({ vBounds.x, vBounds.y }, { vBounds.x, vBounds.y + flQuarterSide }, 0xff00ff00);
-    g_pRender->DrawLine({ vBounds.x, vBounds.w }, { vBounds.x, vBounds.w - flQuarterSide }, 0xff00ff00);
+    g_pRender->DrawLine({ vBounds.x, vBounds.y }, { vBounds.x, vBounds.y + flQuarterSide }, cColor);
+    g_pRender->DrawLine({ vBounds.x, vBounds.w }, { vBounds.x, vBounds.w - flQuarterSide }, cColor);
 }
 
 void ESP::DrawBones(IClientEntity* pEntity) {
@@ -213,7 +213,7 @@ void ESP::DrawWeaponName(Vector4D vBounds, char* szWeaponName){
 }
 
 void ESP::DrawDistance(Vector4D vBounds, CBaseEntity* pEntity){
-    int iDistance = (int)((pEntity->GetVecOrigin() - g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer())->GetVecOrigin()).Magnitude() * 0.0254f);
+    int iDistance = static_cast<int>((pEntity->GetVecOrigin() - g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer())->GetVecOrigin()).Magnitude() * 0.0254f);
 
     char szDistance[33];  _itoa_s(iDistance, szDistance, 10);
     Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, szDistance);

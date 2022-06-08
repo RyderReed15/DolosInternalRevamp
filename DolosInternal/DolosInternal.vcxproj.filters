@@ -160,6 +160,9 @@
     <ClCompile Include="Features\Bhop.cpp">
       <Filter>Features</Filter>
     </ClCompile>
+    <ClCompile Include="Features\EnginePrediction.cpp">
+      <Filter>Features</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Initializer.h">

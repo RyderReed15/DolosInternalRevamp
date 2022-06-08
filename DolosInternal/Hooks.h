@@ -13,6 +13,7 @@
 #include "Features/SkinChanger.h"
 #include "Features/Aimbot.h"
 #include "Features/Bhop.h"
+#include "Features/EnginePrediction.h"
 
 #define CREATE_MOVE_INDEX           24
 
