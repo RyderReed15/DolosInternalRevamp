@@ -22,6 +22,7 @@ IGUIElement::IGUIElement(D3DXVECTOR4 vBounds, IGUIElement* pParent) {
 }
 
 void IGUIElement::OnClick(GUIEventHandler* pEventHandler, POINT ptLocation) {
+	
 	return;
 }
 void IGUIElement::OnDrag(GUIEventHandler* pEventHandler, POINT ptLocation) {

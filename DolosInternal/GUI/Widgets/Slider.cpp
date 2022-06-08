@@ -8,7 +8,7 @@ Slider::Slider(const char* szName, float* pValue, float flMaxValue, float flMinV
 
 	m_bExponential	= bExponential;
 
-	m_flBarPercent	= max(min(pow(((*pValue) - flMinValue) / m_flRange, 1 + bExponential * .5), 1.f), 0.f);
+	m_flBarPercent	= max(min(powf(((*pValue) - flMinValue) / m_flRange, 1 + bExponential * .5f), 1.f), 0.f);
 	m_flBarSize		= flBarSize;
 
 	m_szName		= szName;
@@ -40,25 +40,25 @@ HRESULT Slider::Draw(ID3DXFont* pFont, Render* pRender) {
 }
 
 void Slider::UpdateSlider() {
-	m_flBarPercent = max(min(pow(((*m_pValue) - m_flMinValue) / m_flRange, 1 + m_bExponential * .5), 1.f), 0.f);
+	m_flBarPercent = max(min(powf(((*m_pValue) - m_flMinValue) / m_flRange, 1 + m_bExponential * .5f), 1.f), 0.f);
 }
 
-void Slider::OnClick(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void Slider::OnClick(GUIEventHandler* pEventHandler, POINT) {
 	
 	pEventHandler->SetFocus(this);
 	
 	
 }
-void Slider::OnDrag(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void Slider::OnDrag(GUIEventHandler*, POINT ptLocation) {
 	
 		
 	m_flBarPercent = max(min((ptLocation.x - (m_vBounds.x + m_vBounds.z - m_flBarSize + m_vBounds.w)) / (m_flBarSize - m_vBounds.w), 1.f), 0.f);
 		
-	*m_pValue = m_flRange * pow(m_flBarPercent, 1 + m_bExponential * .5) + m_flMinValue;
+	*m_pValue = m_flRange * powf(m_flBarPercent, 1 + m_bExponential * .5f) + m_flMinValue;
 		
 	
 }
-void Slider::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void Slider::OnRelease(GUIEventHandler* pEventHandler, POINT) {
 	pEventHandler->ReleaseFocus();
 	
 }

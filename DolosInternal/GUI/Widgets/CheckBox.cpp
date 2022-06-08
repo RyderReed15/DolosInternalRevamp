@@ -21,7 +21,7 @@ void CheckBox::SetClickable(bool bClickable) {
 }
 
 
-void CheckBox::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void CheckBox::OnRelease(GUIEventHandler*, POINT) {
 	
 	*m_pBool = !*m_pBool;
 	IGUIElement* pCurr = m_pFirstChild;

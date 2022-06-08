@@ -48,12 +48,12 @@ protected:
 	bool			m_bShouldDraw;
 	bool			m_bEnabled;
 	D3DXVECTOR4		m_vBounds;
-	int				m_iChildCount;
+	unsigned int				m_iChildCount;
 	IGUIElement*	m_pFirstChild;
 	IGUIElement*	m_pSibling;
 	IGUIElement*	m_pParent;
 
-	int				m_iAnimStartTick;
+	unsigned int				m_iAnimStartTick;
 private:
 
 

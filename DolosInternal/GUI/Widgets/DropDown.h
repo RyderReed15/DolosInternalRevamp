@@ -19,8 +19,6 @@ public:
 	void	SetIndex	(int iIndex);
 	void	SetValue	(int iValue);
 
-
-	void	OnClick		(GUIEventHandler* pEventHandler, POINT ptLocation);
 	void	OnRelease	(GUIEventHandler* pEventHandler, POINT ptLocation);
 private:
 	D3DCOLOR			m_cColor;

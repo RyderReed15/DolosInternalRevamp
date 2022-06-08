@@ -29,7 +29,7 @@ namespace ESP {
     void DrawHealth         (int iHealth, Vector4D vBounds);
     void DrawArmor          (int iArmor, Vector4D vBounds);
     void DrawBones          (IClientEntity* pEntity);
-    void DrawPlayerName     (Vector4D vBounds, CBaseEntity* pEntity, int iIndex);
+    void DrawPlayerName     (Vector4D vBounds, int iIndex);
     void DrawWeaponName     (Vector4D vBounds, char* szWeaponName);
     void DrawDistance       (Vector4D vBounds, CBaseEntity* pEntity);
 

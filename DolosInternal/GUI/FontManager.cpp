@@ -69,9 +69,9 @@ HANDLE AddFontToResources(HMODULE hMod, int iFontId) {
 	if (hResource) {
 		HGLOBAL hMem = LoadResource(hMod, hResource);
 		void* pData = LockResource(hMem);
-		int iLength = SizeofResource(hMod, hResource);
+		DWORD dwLength = SizeofResource(hMod, hResource);
 		DWORD nFonts;
-		return AddFontMemResourceEx(pData, iLength, NULL, &nFonts);
+		return AddFontMemResourceEx(pData, dwLength, NULL, &nFonts);
 	}
 	return NULL;
 

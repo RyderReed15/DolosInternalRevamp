@@ -19,7 +19,7 @@ HRESULT Button::Draw(ID3DXFont* pFont, Render* pRender) {
 
 }
 
-void Button::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void Button::OnRelease(GUIEventHandler* pEventHandler, POINT) {
 	pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::BUTTON, m_pClickFunc);
 
 }

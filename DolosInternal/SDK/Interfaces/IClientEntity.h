@@ -40,7 +40,7 @@ public:
     NETVAR  (Vector         , GetVecOrigin      , "DT_BaseEntity", "m_vecOrigin");
 
     PNETVAR (int            , GetFlagsPointer   , "DT_BasePlayer", "m_fFlags");
-    NETVAR  (int            , GetViewModelHandle, "DT_BasePlayer", "m_hViewModel[0]");
+    NETVAR  (EHANDLE        , GetViewModelHandle, "DT_BasePlayer", "m_hViewModel[0]");
 
     ONETVAR (matrix3x4_t*   , GetBoneMatrix     , "DT_BaseAnimating", "m_nForceBone", 28);
 

@@ -44,9 +44,7 @@ HRESULT DropDown::Draw(ID3DXFont* pFont, Render* pRender) {
 
 }
 
-void DropDown::OnClick(GUIEventHandler* pEventHandler, POINT ptLocation) {
-	
-}
+
 void DropDown::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
 	if (m_pContainer->CheckBounds(ptLocation)) {
 		m_pContainer->SetOpen(true);
@@ -161,6 +159,6 @@ const char* DropDownElement::GetName() {
 	return m_szName;
 }
 
-void DropDownElement::OnHover(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void DropDownElement::OnHover(GUIEventHandler*, POINT) {
 	m_bEnabled = true;
 }

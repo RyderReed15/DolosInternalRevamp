@@ -26,7 +26,7 @@ VMTManager::VMTManager(void*** pVMT) {
 }
 
 VMTManager::~VMTManager() {
-	for (int i = 0; i < m_iSize; i++) {
+	for (unsigned int i = 0; i < m_iSize; i++) {
 		if (!FreeFunction(i)) {
 			std::cout << "Failed to unhook function " << i << std::endl;
 		}
@@ -38,7 +38,7 @@ VMTManager::~VMTManager() {
 }
 
 
-void* VMTManager::HookFunction(int iFuncIndex, void* pHookAddress)
+void* VMTManager::HookFunction(unsigned int iFuncIndex, void* pHookAddress)
 {
 
 	DWORD old;
@@ -52,7 +52,7 @@ void* VMTManager::HookFunction(int iFuncIndex, void* pHookAddress)
 	return m_pOldTable[iFuncIndex];
 }
 
-bool VMTManager::FreeFunction(int iFuncIndex) {
+bool VMTManager::FreeFunction(unsigned int iFuncIndex) {
 	DWORD old;
 	VirtualProtect(m_pTable + iFuncIndex, sizeof(void*), PAGE_EXECUTE_READWRITE, &old);
 	m_pTable[iFuncIndex] = m_pOldTable[iFuncIndex];
@@ -61,7 +61,7 @@ bool VMTManager::FreeFunction(int iFuncIndex) {
 	return out;
 }
 
-void* VMTManager::GetOriginalFunction(int iFuncIndex) {
+void* VMTManager::GetOriginalFunction(unsigned int iFuncIndex) {
 	return m_pOldTable[iFuncIndex];
 }
 
@@ -69,8 +69,8 @@ bool VMTManager::IsPopulated() {
 	return m_iSize;
 }
 
-int VMTManager::GetTableSize(void** pVMT) {
-	int iSize = 0;
+unsigned int VMTManager::GetTableSize(void** pVMT) {
+	unsigned int iSize = 0;
 	MEMORY_BASIC_INFORMATION memInfo = { 0 };
 	while (VirtualQuery(pVMT[iSize], &memInfo, sizeof(memInfo)) && memInfo.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY)) iSize++;
 		

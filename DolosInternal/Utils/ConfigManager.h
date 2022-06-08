@@ -34,7 +34,7 @@ struct Config {
         float WaitTime;
         float AntilockFactor;
         AimTarget* Targets;
-        int TargetCount;
+        unsigned int TargetCount;
     } Aimbot;
     struct VisualsConfig {
         struct PlayerViz {

@@ -13,17 +13,17 @@ public:
             VMTManager              (void);
             VMTManager              (void*** pVMT);
             ~VMTManager             (void);
-    void*   HookFunction            (int iFuncIndex, void* pHookAddress);
-    bool    FreeFunction            (int iFuncIndex);
-    void*   GetOriginalFunction     (int iFuncIndex);
+    void*   HookFunction            (unsigned int iFuncIndex, void* pHookAddress);
+    bool    FreeFunction            (unsigned int iFuncIndex);
+    void*   GetOriginalFunction     (unsigned int iFuncIndex);
     
 private:
-    bool    IsPopulated             (void);
-    int     GetTableSize            (void** pVMT);
+    bool            IsPopulated             (void);
+    unsigned int    GetTableSize            (void** pVMT);
 
-    void**  m_pTable;
-    void**  m_pOldTable;
-    int     m_iSize;
+    void**          m_pTable;
+    void**          m_pOldTable;
+    unsigned int    m_iSize;
 };
 
 

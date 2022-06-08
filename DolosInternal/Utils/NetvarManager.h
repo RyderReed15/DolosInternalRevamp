@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include "../SDK/Interfaces/IBaseClientDLL.h"
 
-inline std::unordered_map<int, std::unordered_map<int, char*>> mOffsets;
+inline std::unordered_map<unsigned int, std::unordered_map<unsigned int, char*>> mOffsets;
 inline std::hash<std::string> hash;
 
 class IClientClass;

@@ -129,7 +129,7 @@ void ESP::DrawBoundingBox(CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex) {
     if (pEntity->IsPlayer()) {
         if (Settings.Visuals.Players.DrawHealth)    DrawHealth      (pEntity->GetHealth()   , vSize);
         if (Settings.Visuals.Players.DrawArmor)     DrawArmor       (pEntity->GetArmor()    , vSize);
-        if (Settings.Visuals.Players.DrawName)      DrawPlayerName  (vSize        , pEntity, iIndex);
+        if (Settings.Visuals.Players.DrawName)      DrawPlayerName  (vSize        , iIndex);
     }
     if (pEntity->IsWeapon()) {
         if (Settings.Visuals.Weapons.Enabled)       DrawWeaponName  (vSize        , g_mWeaponNames[pEntity]);
@@ -193,7 +193,7 @@ void ESP::DrawBones(IClientEntity* pEntity) {
     }
 }
 
-void ESP::DrawPlayerName(Vector4D vBounds, CBaseEntity* pEntity, int iIndex){
+void ESP::DrawPlayerName(Vector4D vBounds, int iIndex){
  
     player_info_t playerInfo;
     g_pEngineClient->GetPlayerInfo(iIndex, &playerInfo);

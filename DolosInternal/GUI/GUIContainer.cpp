@@ -10,7 +10,7 @@ GUIContainer::GUIContainer(POINT ptScreenSize) {
 
 GUIContainer::~GUIContainer() {
     DeleteMap();
-    for (int i = 0; i < m_vElements.size(); i++) {
+    for (size_t i = 0; i < m_vElements.size(); i++) {
         delete m_vElements[i];
     }
     m_vElements.clear();
@@ -48,18 +48,18 @@ void GUIContainer::DeleteMap() {
 }
 void GUIContainer::InitializeMap() {
     m_aMap = new short* [m_ptScreenSize.x];
-    for (int i = 0; i < m_ptScreenSize.x; i++) {
+    for (long i = 0; i < m_ptScreenSize.x; i++) {
         m_aMap[i] = new short[m_ptScreenSize.y]{ -1 };
     }
 }
 // Generates an map of the screen with the id of the element stored as a short
 void GUIContainer::GenerateMap() {
     
-    for (short x = 0; x < m_ptScreenSize.x; x++)
+    for (long x = 0; x < m_ptScreenSize.x; x++)
     {
-        wmemset((wchar_t*)m_aMap[x], -1, m_ptScreenSize.y);
+        wmemset((wchar_t*)m_aMap[x], WCHAR_MAX, m_ptScreenSize.y);
     }
-    for (short i = 0; i < m_vElements.size(); i++) {
+    for (size_t i = 0; i < m_vElements.size(); i++) {
         if (m_vElements[i]->GetDrawState()) {
             D3DXVECTOR4 vBounds = m_vElements[i]->GetBounds();
             RECT rBounds = { vBounds.x, vBounds.y, vBounds.z, vBounds.w };
@@ -67,7 +67,7 @@ void GUIContainer::GenerateMap() {
             short iXSize = min(rBounds.left + rBounds.right, m_ptScreenSize.x);
             short iYSize = min(rBounds.top + rBounds.bottom, m_ptScreenSize.y);
 
-            for (short x = rBounds.left; x < iXSize; x++)
+            for (long x = rBounds.left; x < iXSize; x++)
             {
                 wmemset((wchar_t*)(m_aMap[x] + rBounds.top), i, (iYSize - rBounds.top));
                
@@ -94,7 +94,7 @@ IGUIElement* GUIContainer::GetWidgetById(int iElement) {
 
 void GUIContainer::DrawElements(Render* pRender, ID3DXFont* pFont) {
     pRender->Begin();
-    for (int i = 0; i < m_vElements.size(); i++) {
+    for (size_t i = 0; i < m_vElements.size(); i++) {
         if (m_vElements[i]->GetDrawState()) {
             m_vElements[i]->Draw(pFont, pRender);
         }

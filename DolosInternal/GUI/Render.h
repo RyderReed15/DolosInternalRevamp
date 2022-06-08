@@ -75,7 +75,7 @@ public:
     IDirect3DDevice9*   GetDevice               (void);
     bool                IsInitialized           (void);
 
-    void                ManageBatch             (D3DPRIMITIVETYPE tPrimitiveType, int iNeededVerts, int iNeededIndices);
+    void                ManageBatch             (D3DPRIMITIVETYPE tPrimitiveType, unsigned int iNeededVerts, unsigned int iNeededIndices);
     unsigned int        AddVertex               (D3DPRIMITIVETYPE tPrimitiveType, Vector2D vLocation, D3DCOLOR cColor);
     void                AddIndex                (D3DPRIMITIVETYPE tPrimitiveType, unsigned int iVertexPos);
     void                AddTriangle             (unsigned int iVertexPosOne, unsigned int iVertexPosTwo, unsigned int iVertexPosThree);
@@ -89,25 +89,24 @@ public:
     Vector2D            GetStringSize           (ID3DXFont* font, const WCHAR* string, ...);
     Vector2D            GetStringSize           (ID3DXFont* font, const char* string, ...);
     HRESULT             DrawRectangle           (D3DXVECTOR4 vBounds, D3DCOLOR cColor, D3DCOLOR cColor2 = 0, bool bVertical = true);
-    HRESULT             DrawOutlinedRect        (D3DXVECTOR4 vBounds, int iThickness, D3DCOLOR cOutline, D3DCOLOR cColor, D3DCOLOR cColor2 = 0, bool bVertical = true);
-    HRESULT             DrawCircle              (Vector2D vLocation, float flRadius, int iSides, D3DCOLOR cColor, float flFraction = 1, float flRotation = 0);
-    HRESULT             DrawCircleOutline       (Vector2D vLocation, float flRadius, int iSides, D3DCOLOR cColor, float flFraction = 1, float flRotation = 0);
+    HRESULT             DrawOutlinedRect        (D3DXVECTOR4 vBounds, unsigned int iThickness, D3DCOLOR cOutline, D3DCOLOR cColor, D3DCOLOR cColor2 = 0, bool bVertical = true);
+    HRESULT             DrawCircle              (Vector2D vLocation, float flRadius, unsigned int iSides, D3DCOLOR cColor, float flFraction = 1, float flRotation = 0);
+    HRESULT             DrawCircleOutline       (Vector2D vLocation, float flRadius, unsigned int iSides, D3DCOLOR cColor, float flFraction = 1, float flRotation = 0);
     HRESULT             DrawRoundedRectangle    (D3DXVECTOR4 vBounds, float flCornerSize, D3DCOLOR cColor, D3DCOLOR cColor2 = 0, bool bVertical = true);
 private:
-    HRESULT             DrawFadingCircle        (Vector2D vLocation, float flRadius, int iSides, D3DCOLOR cColor, D3DCOLOR cColor2, bool bVertical = true, float flFraction = 1, float flRotation = 0);
+    HRESULT             DrawFadingCircle        (Vector2D vLocation, float flRadius, unsigned int iSides, D3DCOLOR cColor, D3DCOLOR cColor2, bool bVertical = true, float flFraction = 1, float flRotation = 0);
 
     CustomVertex*           m_pLineVertex, * m_pTriVertex;
     unsigned int*           m_pLineIndex, * m_pTriIndex;
-    int                     m_iMaxVertices;
-    int                     m_iLineCount, m_iTriangleCount;
-    int                     m_iLineIndices, m_iTriangleIndices;
-    int                     m_iLineVertices, m_iTriangleVertices;
+    unsigned int            m_iMaxVertices;
+    unsigned int            m_iLineCount, m_iTriangleCount;
+    unsigned int            m_iLineIndices, m_iTriangleIndices;
+    unsigned int            m_iLineVertices, m_iTriangleVertices;
     IDirect3DDevice9*       m_pDevice;
     IDirect3DVertexBuffer9* m_pLineVertexBuffer, * m_pTriVertexBuffer;
     IDirect3DIndexBuffer9*  m_pLineIndexBuffer, * m_pTriIndexBuffer;
     ID3DXSprite*            m_pSprite;
     IDirect3DTexture9*      m_pTextureAtlas;
-    IDirect3DStateBlock9*   m_pState;
 };
 
 D3DCOLOR            LerpColor(D3DCOLOR cColorOne, D3DCOLOR cColorTwo, float flPercent);

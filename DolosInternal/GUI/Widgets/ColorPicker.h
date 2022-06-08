@@ -47,11 +47,11 @@ private:
 
 
 class ColorBox : public IGUIElement {
-public:
+
 	friend ColorPicker;
 	friend HueBox;
 
-			ColorBox		(D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent);
+			ColorBox		(D3DXVECTOR4 vBounds, IGUIElement* pParent);
 	HRESULT Draw			(ID3DXFont* pFont, Render* pRender);
 
 	void	UpdateColor		(void);
@@ -60,7 +60,7 @@ public:
 	void	OnClick			(GUIEventHandler* pEventHandler, POINT ptLocation);
 	void	OnDrag			(GUIEventHandler* pEventHandler, POINT ptLocation);
 	void	OnRelease		(GUIEventHandler* pEventHandler, POINT ptLocation);
-private:
+
 	
 	HueBox*			m_pHueBox;
 	ColorPicker*	m_pColorPicker;
@@ -70,7 +70,7 @@ private:
 
 
 class HueBox : public IGUIElement {
-public:
+
 	friend ColorBox;
 	friend ColorPicker;
 
@@ -83,9 +83,6 @@ public:
 	void	OnClick		(GUIEventHandler* pEventHandler, POINT ptLocation);
 	void	OnDrag		(GUIEventHandler* pEventHandler, POINT ptLocation);
 	void	OnRelease	(GUIEventHandler* pEventHandler, POINT ptLocation);
-private:
-private:
-
 	
 	ColorBox*		m_pColorBox;
 	ColorPicker*	m_pColorPicker;

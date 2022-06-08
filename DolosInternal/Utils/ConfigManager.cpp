@@ -68,7 +68,7 @@ void StoreValues() {
     if (Settings.Aimbot.Targets) delete Settings.Aimbot.Targets;
     Settings.Aimbot.Targets = new AimTarget[Settings.Aimbot.TargetCount];
 
-    for (int i = 0; i < Settings.Aimbot.TargetCount; i++) {
+    for (unsigned int i = 0; i < Settings.Aimbot.TargetCount; i++) {
         Settings.Aimbot.Targets[i].FOV      = pTargets->GetJsonObject(i)->GetNumber<float>  ("fov");
         Settings.Aimbot.Targets[i].Bone     = pTargets->GetJsonObject(i)->GetNumber<int>    ("bone");
     }
@@ -134,7 +134,7 @@ void UpdateValues() {
         pTargets->RemoveValue(0);
     }
 
-    for (int i = 0; i < Settings.Aimbot.TargetCount; i++) {
+    for (unsigned int i = 0; i < Settings.Aimbot.TargetCount; i++) {
         JsonObject* pTarget = new JsonObject();
         pTarget->AddNumber("fov", Settings.Aimbot.Targets[i].FOV);
         pTarget->AddNumber("bone", Settings.Aimbot.Targets[i].Bone);
@@ -143,20 +143,20 @@ void UpdateValues() {
 
     JsonObject* pPlayers = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("players");
 
-    pAimbot->SetBoolean("show_team"     , Settings.Visuals.Players.ShowTeam);
-    pAimbot->SetBoolean("show_enemy"    , Settings.Visuals.Players.ShowEnemy);
-    pAimbot->SetBoolean("draw_bones"    , Settings.Visuals.Players.DrawBones);
-    pAimbot->SetBoolean("draw_health"   , Settings.Visuals.Players.DrawHealth);
-    pAimbot->SetBoolean("draw_armor"    , Settings.Visuals.Players.DrawArmor);
+    pPlayers->SetBoolean("show_team"     , Settings.Visuals.Players.ShowTeam);
+    pPlayers->SetBoolean("show_enemy"    , Settings.Visuals.Players.ShowEnemy);
+    pPlayers->SetBoolean("draw_bones"    , Settings.Visuals.Players.DrawBones);
+    pPlayers->SetBoolean("draw_health"   , Settings.Visuals.Players.DrawHealth);
+    pPlayers->SetBoolean("draw_armor"    , Settings.Visuals.Players.DrawArmor);
 
-    pAimbot->SetString("enemy_color"    , std::to_string(Settings.Visuals.Players.EnemyColor));
-    pAimbot->SetString("team_color"     , std::to_string(Settings.Visuals.Players.TeamColor));
+    pPlayers->SetString("enemy_color"    , std::to_string(Settings.Visuals.Players.EnemyColor));
+    pPlayers->SetString("team_color"     , std::to_string(Settings.Visuals.Players.TeamColor));
 
     JsonObject* pWeapons = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("weapons");
 
-    pAimbot->SetBoolean("enabled"   , Settings.Visuals.Weapons.Enabled);
+    pWeapons->SetBoolean("enabled"   , Settings.Visuals.Weapons.Enabled);
 
-    pAimbot->SetString("color"      , std::to_string(Settings.Visuals.Weapons.Color));
+    pWeapons->SetString("color"      , std::to_string(Settings.Visuals.Weapons.Color));
 
     JsonObject* pRecoil = g_pParsedConfig->GetJsonObject("recoil");
 

@@ -42,7 +42,7 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimP
         if (pTarget->SanityCheck() && pTarget->GetCollideable()){
             
 
-            for (int j = 0; j < Settings.Aimbot.TargetCount; j++) {
+            for (unsigned int j = 0; j < Settings.Aimbot.TargetCount; j++) {
                 Vector vEnemyPos = pTarget->GetBonePos(Settings.Aimbot.Targets[j].Bone);
                 bool bVisible = Trace(g_pEngineTrace, g_pLocalPlayer, pTarget, vPlayerPos, vEnemyPos);
 
@@ -83,7 +83,7 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimP
             if (Settings.Aimbot.TargetAll || pEntity->GetTeam() != g_pLocalPlayer->GetTeam()) {
                 if (pEntity->GetCollideable()) {
                     
-                    for (int j = 0; j < Settings.Aimbot.TargetCount; j++) {
+                    for (unsigned int j = 0; j < Settings.Aimbot.TargetCount; j++) {
                         Vector vEnemyPos = pEntity->GetBonePos(Settings.Aimbot.Targets[j].Bone);
                         bool bVisible = Trace(g_pEngineTrace, g_pLocalPlayer, pEntity, vPlayerPos, vEnemyPos);
 

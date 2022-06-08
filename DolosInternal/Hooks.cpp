@@ -100,7 +100,7 @@ void __fastcall hkFrameStageNotify(void* _this, void* edx, ClientFrameStage_t st
 	if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START) SkinChanger::PostTick();
 }
 
-void __fastcall hkDrawModelExecute(void* _this, void* edx, void* pCtx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, void* pCustomBoneToWorld) {
+void __fastcall hkDrawModelExecute(void* _this, void*, void* pCtx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, void* pCustomBoneToWorld) {
 
 	return oDrawModelExecute(_this, pCtx, state, pInfo, pCustomBoneToWorld);
 }

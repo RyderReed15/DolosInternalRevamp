@@ -28,13 +28,13 @@ public:
         return (int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iItemDefinitionIndex"));
 
     }
-    unsigned int* AccountID() {
-        return (unsigned int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iAccountID"));
+    int* AccountID() {
+        return (int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iAccountID"));
 
     }
 
     char* CustomName() {
-        return (char*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + (int)GetNetvar("DT_ScriptCreatedItem", "m_szCustomName"));
+        return (char*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_szCustomName"));
     }
 
     int* EntityQuality() {

@@ -195,7 +195,7 @@ bool Render::IsInitialized() {
 	return m_pDevice && m_pLineVertexBuffer && m_pLineIndexBuffer && m_pTriIndexBuffer && m_pTriVertexBuffer;
 }
 
-void Render::ManageBatch(D3DPRIMITIVETYPE tPrimitiveType, int iNeededVerts, int iNeededIndices) {
+void Render::ManageBatch(D3DPRIMITIVETYPE tPrimitiveType, unsigned int iNeededVerts, unsigned int iNeededIndices) {
 	//Ensure there is enough room in the buffer for the next primitive, empty if needed
 	switch (tPrimitiveType) {
 	case D3DPT_LINELIST:
@@ -221,12 +221,12 @@ unsigned int Render::AddVertex(D3DPRIMITIVETYPE tPrimitiveType, Vector2D vLocati
 		m_pLineVertex[m_iLineVertices] = { vLocation.x, vLocation.y, 0, 1, cColor };
 		m_iLineVertices++;
 		return m_iLineVertices - 1;
-		break;
 	case D3DPT_TRIANGLELIST:
 		m_pTriVertex[m_iTriangleVertices] = { vLocation.x, vLocation.y, 0, 1, cColor };
 		m_iTriangleVertices++;
 		return m_iTriangleVertices - 1;
-		break;
+	default:
+		return UINT_MAX;
 	}
 
 }
@@ -309,7 +309,7 @@ HRESULT Render::DrawRectangle(D3DXVECTOR4 vBounds, D3DCOLOR cColor, D3DCOLOR cCo
 	}
 	return OLE_E_BLANK;
 }
-HRESULT Render::DrawOutlinedRect(D3DXVECTOR4 vBounds, int iThickness, D3DCOLOR cOutline, D3DCOLOR cColor, D3DCOLOR cColor2, bool bVertical) {
+HRESULT Render::DrawOutlinedRect(D3DXVECTOR4 vBounds, unsigned int iThickness, D3DCOLOR cOutline, D3DCOLOR cColor, D3DCOLOR cColor2, bool bVertical) {
 	if (IsInitialized()) {
 		DrawRectangle(vBounds, cOutline);
 		vBounds.x += iThickness; vBounds.y += iThickness; vBounds.z -= iThickness * 2, vBounds.w -= iThickness * 2;
@@ -359,7 +359,7 @@ HRESULT Render::DrawRoundedRectangle(D3DXVECTOR4 vBounds, float flCornerSize, D3
 
 
 }
-HRESULT Render::DrawFadingCircle(Vector2D vLocation, float flRadius, int iSides, D3DCOLOR cColor, D3DCOLOR cColor2, bool bVertical, float flFraction, float flRotation) {
+HRESULT Render::DrawFadingCircle(Vector2D vLocation, float flRadius, unsigned int iSides, D3DCOLOR cColor, D3DCOLOR cColor2, bool bVertical, float flFraction, float flRotation) {
 	if (IsInitialized()) {
 		ManageBatch(D3DPT_TRIANGLELIST, iSides + 2, iSides * 3);
 		float flCos = cosf(2 * PI / iSides * flFraction);
@@ -373,7 +373,7 @@ HRESULT Render::DrawFadingCircle(Vector2D vLocation, float flRadius, int iSides,
 		unsigned int iPrev = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x + flR, vLocation.y + flD }, LerpColor(cColor, cColor2, (bVertical ? flD : flR) / flRadius + 1 / 2));
 
 
-		for (int i = 0; i < iSides; i++) {
+		for (unsigned int i = 0; i < iSides; i++) {
 			flTemp = flR;
 			flR = flCos * flR - flSin * flD;
 			flD = flSin * flTemp + flCos * flD;
@@ -391,7 +391,7 @@ HRESULT Render::DrawFadingCircle(Vector2D vLocation, float flRadius, int iSides,
 	return OLE_E_BLANK;
 }
 
-HRESULT Render::DrawCircleOutline(Vector2D vLocation, float flRadius, int iSides, D3DCOLOR cColor, float flFraction, float flRotation) {
+HRESULT Render::DrawCircleOutline(Vector2D vLocation, float flRadius, unsigned int iSides, D3DCOLOR cColor, float flFraction, float flRotation) {
 	if (IsInitialized()) {
 		ManageBatch(D3DPT_LINELIST, iSides + 1, iSides * 2);
 		float flCos = cosf(2 * PI / iSides * flFraction);
@@ -406,7 +406,7 @@ HRESULT Render::DrawCircleOutline(Vector2D vLocation, float flRadius, int iSides
 		unsigned int iPrev = AddVertex(D3DPT_LINELIST, { vLocation.x + flR, vLocation.y + flD }, cColor);
 
 
-		for (int i = 0; i < iSides; i++) {
+		for (unsigned int i = 0; i < iSides; i++) {
 			flTemp = flR;
 			flR = flCos * flR - flSin * flD;
 			flD = flSin * flTemp + flCos * flD;
@@ -428,7 +428,7 @@ HRESULT Render::DrawCircleOutline(Vector2D vLocation, float flRadius, int iSides
 	return OLE_E_BLANK;
 }
 
-HRESULT Render::DrawCircle(Vector2D vLocation, float flRadius, int iSides, D3DCOLOR cColor, float flFraction, float flRotation) {
+HRESULT Render::DrawCircle(Vector2D vLocation, float flRadius, unsigned int iSides, D3DCOLOR cColor, float flFraction, float flRotation) {
 	if (IsInitialized()) {
 		ManageBatch(D3DPT_TRIANGLELIST, iSides + 2, iSides * 3);
 		float flCos = cosf(2 * PI / iSides * flFraction);
@@ -443,7 +443,7 @@ HRESULT Render::DrawCircle(Vector2D vLocation, float flRadius, int iSides, D3DCO
 		unsigned int iPrev = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x + flR, vLocation.y + flD }, cColor);
 
 
-		for (int i = 0; i < iSides; i++) {
+		for (unsigned int i = 0; i < iSides; i++) {
 			flTemp = flR;
 			flR = flCos * flR - flSin * flD;
 			flD = flSin * flTemp + flCos * flD;

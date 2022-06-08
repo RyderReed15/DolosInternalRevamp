@@ -65,7 +65,7 @@ void HotKey::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
 
 }
 
-void HotKey::OnKey(GUIEventHandler* pEventHandler, char chKey, long keyInfo) {
+void HotKey::OnKey(GUIEventHandler* pEventHandler, char chKey, long) {
     
    
     if (!m_szDisplay.compare("- Enter Key -")) {

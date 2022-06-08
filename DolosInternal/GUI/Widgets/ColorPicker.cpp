@@ -10,7 +10,7 @@ ColorPicker::ColorPicker(const char* szName, D3DXVECTOR4 vBounds, D3DCOLOR cBack
 	m_pTarget = nullptr;
 	
 	UpdateColor(*pColor);
-	m_pColorBox = new ColorBox({ 10, 30, 200, 200 }, *pColor, this);
+	m_pColorBox = new ColorBox({ 10, 30, 200, 200 }, this);
 	m_pHueBox = new HueBox({ 220, 30 ,20, 200 }, *pColor, this);
 	m_pRedSlider = new Slider("Red: ", &m_flRed, 255, 0, { 10, 240, 260, 8 }, 150, BLACK, WHITE, RED, false, this);
 	m_pGreenSlider = new Slider("Green: ", &m_flGreen, 255, 0, { 10, 260, 260, 8 }, 150, BLACK, WHITE, GREEN, false, this);
@@ -128,7 +128,7 @@ void ColorPicker::OnDrag(GUIEventHandler* pEventHandler, POINT ptLocation) {
 	m_pHueBox->UpdateHue();
 	m_pColorBox->UpdatePosition();
 }
-void ColorPicker::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void ColorPicker::OnRelease(GUIEventHandler* pEventHandler, POINT) {
 	if (m_pActiveSlider) {
 		pEventHandler->ReleaseFocus();
 		return;
@@ -137,7 +137,7 @@ void ColorPicker::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
 }
 
 
-ColorBox::ColorBox(D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
+ColorBox::ColorBox(D3DXVECTOR4 vBounds, IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
 	m_pColorPicker = (ColorPicker*)pParent;
 	m_vSelectionLocation = { 0,0 };
 	m_pHueBox = m_pColorPicker->m_pHueBox;
@@ -195,7 +195,7 @@ void ColorBox::UpdatePosition() {
 	}
 }
 
-HRESULT ColorBox::Draw(ID3DXFont* pFont, Render* pRender) {
+HRESULT ColorBox::Draw(ID3DXFont*, Render* pRender) {
 
 	/* Color Gradient */
 	pRender->DrawRectangle(m_vBounds, WHITE, m_pHueBox->m_cHue, false);
@@ -211,18 +211,18 @@ HRESULT ColorBox::Draw(ID3DXFont* pFont, Render* pRender) {
 
 }
 
-void ColorBox::OnClick(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void ColorBox::OnClick(GUIEventHandler* pEventHandler, POINT) {
 
 	pEventHandler->SetFocus(this);
 }
-void ColorBox::OnDrag(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void ColorBox::OnDrag(GUIEventHandler*, POINT ptLocation) {
 
 	m_vSelectionLocation = { min(max(ptLocation.x, m_vBounds.x), m_vBounds.x + m_vBounds.z), min(max(ptLocation.y, m_vBounds.y), m_vBounds.y + m_vBounds.w) }; m_vSelectionLocation -= {m_vBounds.x, m_vBounds.y};
 	UpdateColor();
 	m_pColorPicker->UpdateSliders();
 
 }
-void ColorBox::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void ColorBox::OnRelease(GUIEventHandler* pEventHandler, POINT) {
 	pEventHandler->ReleaseFocus();
 
 }
@@ -237,7 +237,7 @@ HueBox::HueBox(D3DXVECTOR4 vBounds, D3DCOLOR cHue, IGUIElement* pParent) : IGUIE
 	m_pColorBox = m_pColorPicker->m_pColorBox;
 }
 
-HRESULT HueBox::Draw(ID3DXFont* pFont, Render* pRender) {
+HRESULT HueBox::Draw(ID3DXFont*, Render* pRender) {
 
 
 	/* Hue Slider*/
@@ -319,11 +319,11 @@ void HueBox::UpdatePosition() {
 	m_flSelection = hue;
 }
 
-void HueBox::OnClick(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void HueBox::OnClick(GUIEventHandler* pEventHandler, POINT) {
 	
 	pEventHandler->SetFocus(this);
 }
-void HueBox::OnDrag(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void HueBox::OnDrag(GUIEventHandler*, POINT ptLocation) {
 
 	m_flSelection = min(max(ptLocation.y, m_vBounds.y), m_vBounds.y + m_vBounds.w) - m_vBounds.y;
 	UpdateHue();
@@ -332,7 +332,7 @@ void HueBox::OnDrag(GUIEventHandler* pEventHandler, POINT ptLocation) {
 	m_pColorPicker->UpdateSliders();
 	
 }
-void HueBox::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void HueBox::OnRelease(GUIEventHandler* pEventHandler, POINT) {
 	pEventHandler->ReleaseFocus();
 	
 }
@@ -357,7 +357,7 @@ D3DCOLOR* ColorButton::GetColorPtr(void) {
 	return m_pColor;
 }
 
-void ColorButton::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void ColorButton::OnRelease(GUIEventHandler* pEventHandler, POINT) {
 
 	if (m_pColorPicker->GetTarget() == this) {
 		m_pColorPicker->SetDrawState(!m_pColorPicker->GetDrawState());

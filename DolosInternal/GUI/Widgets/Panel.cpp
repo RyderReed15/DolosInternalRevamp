@@ -10,7 +10,7 @@ Panel::Panel(D3DXVECTOR4 vBounds, bool bMoveable, D3DCOLOR cColor, D3DCOLOR cCol
 
 }
 
-HRESULT Panel::Draw(ID3DXFont* pFont, Render* pRender) {
+HRESULT Panel::Draw(ID3DXFont*, Render* pRender) {
 	
 	return pRender->DrawRectangle(m_vBounds, LerpAlpha(m_cColorOne, GetAnimLerp(FADE_LENGTH)), LerpAlpha(m_cColorTwo, GetAnimLerp(FADE_LENGTH)), true);;
 
@@ -26,7 +26,7 @@ void Panel::OnClick(GUIEventHandler* pEventHandler, POINT ptLocation) {
 		
 }
 
-void Panel::OnDrag(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void Panel::OnDrag(GUIEventHandler*, POINT ptLocation) {
 	if (m_bMoving) {
 			
 		POINT ptMoveDelta = { ptLocation.x - m_ptMoveOrigin.x, ptLocation.y - m_ptMoveOrigin.y };
@@ -36,7 +36,7 @@ void Panel::OnDrag(GUIEventHandler* pEventHandler, POINT ptLocation) {
 	}
 }
 
-void Panel::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
+void Panel::OnRelease(GUIEventHandler* pEventHandler, POINT) {
 	
 	if (m_bMoving) {
 		pEventHandler->ReleaseFocus();

@@ -3,7 +3,7 @@
 bool MakeHotKey(int iHotKeyId, HotKeyStruct* pHotKeyInfo) {
     if (!hValveWnd) hValveWnd = FindWindow("Valve001", NULL);
     mKeys[iHotKeyId] = pHotKeyInfo;
-    int bModifiers = MOD_NOREPEAT | (pHotKeyInfo->Ctrl * MOD_CONTROL) | (pHotKeyInfo->Alt * MOD_ALT) | (pHotKeyInfo->Shift * MOD_SHIFT) | (pHotKeyInfo->Win * MOD_WIN);
+    unsigned int bModifiers = MOD_NOREPEAT | (pHotKeyInfo->Ctrl * MOD_CONTROL) | (pHotKeyInfo->Alt * MOD_ALT) | (pHotKeyInfo->Shift * MOD_SHIFT) | (pHotKeyInfo->Win * MOD_WIN);
     return RegisterHotKey(hValveWnd, iHotKeyId, bModifiers, pHotKeyInfo->Key);
 }
 bool DestroyHotKey(int iHotKey) {

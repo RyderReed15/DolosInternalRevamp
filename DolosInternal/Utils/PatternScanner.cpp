@@ -11,7 +11,7 @@ char* FindPattern(void* pDLLBase, const char* szPattern, bool bRelative, int aOf
 
 	MODULEINFO modInfo;
 	GetModuleInformation(GetCurrentProcess(), (HMODULE)pDLLBase, &modInfo, sizeof(MODULEINFO));
-	int iModuleSize = modInfo.SizeOfImage;
+	DWORD dwModuleSize = modInfo.SizeOfImage;
 
 	if (ParsePattern(szPattern, szParsedPattern, szMask)) {
 
@@ -22,7 +22,7 @@ char* FindPattern(void* pDLLBase, const char* szPattern, bool bRelative, int aOf
 		//Iterate through each region, checking to make sure its readeable and not protected
 
 		std::cout << "Scanning Module: " << pDLLBase << std::endl;
-		for (char* pRegionBase = (char*)pDLLBase; pRegionBase < (char*)pDLLBase + iModuleSize; pRegionBase = (char*)(memInfo.RegionSize + memInfo.BaseAddress)) {
+		for (char* pRegionBase = (char*)pDLLBase; pRegionBase < (char*)pDLLBase + dwModuleSize; pRegionBase = (char*)(memInfo.RegionSize + memInfo.BaseAddress)) {
 
 			if (!VirtualQuery(reinterpret_cast<LPCVOID>(pRegionBase), reinterpret_cast<PMEMORY_BASIC_INFORMATION>(&memInfo), sizeof(MEMORY_BASIC_INFORMATION))) //Iterate memory by using VirtualQuery
 				continue;
@@ -30,7 +30,7 @@ char* FindPattern(void* pDLLBase, const char* szPattern, bool bRelative, int aOf
 			if (memInfo.State != MEM_COMMIT || memInfo.Protect == PAGE_NOACCESS || memInfo.Protect & PAGE_GUARD) //Filter Regions
 				continue;
 			std::cout << " - Scanning Region: " << (void*)memInfo.BaseAddress << " | " << (void*)(memInfo.BaseAddress + memInfo.RegionSize) << std::endl;
-			int iLength = memInfo.BaseAddress + memInfo.RegionSize - iPatternSize + 1;
+			unsigned int iLength = memInfo.BaseAddress + memInfo.RegionSize - iPatternSize + 1;
 			for (char* j = (char*)memInfo.BaseAddress; j < (char*)iLength; j++) {
 
 				//Check each byte within the region for the start and then following bytes of the pattern
