@@ -8,13 +8,12 @@ bool InitializeConfig() {
 
 bool UninitializeConfig() {
     
-    bool bReturn =  SaveConfig("F:\\Coding Projects\\VS\\DolosInternal\\DolosInternal\\Resources\\Save.json");
+    bool bReturn = SaveConfig("F:\\Coding Projects\\VS\\DolosInternal\\DolosInternal\\Resources\\Save.json");
     UnloadSkins();
     if (Settings.Aimbot.Targets) delete Settings.Aimbot.Targets;
     delete g_pParsedConfig;
     return bReturn;
     
-
 }
 
 bool LoadConfig(const char* szPath) {

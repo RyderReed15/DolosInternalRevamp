@@ -125,7 +125,7 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimP
 
 Vector Aimbot::CalculateOveraim(Vector vViewAngles, Vector vDest, int iTick){
     if (iTick == iStartTick && !vOveraim.IsValid()) {
-        float flDistance = vDest.Lerp(vViewAngles, 1).Magnitude() / 15;
+        float flDistance = vDest.Lerp(vViewAngles, 1).Magnitude() / 30;
 
         float flAngle = static_cast<float>(rand() % 360);
 
