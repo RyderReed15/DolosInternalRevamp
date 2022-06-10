@@ -288,7 +288,7 @@ inline bool Trace(IEngineTrace* pEngineTrace, IClientEntity* pLocalPlayer, IClie
     }
     return false;
 }
-typedef void(__fastcall* tTraceRay)(void* thisptr, void* not_edx, Ray_t& ray, unsigned int fMask, CTraceFilter* pTraceFilter, CGameTrace* pTrace);
+
 
 
 #endif // !ENGINE_TRACE_H

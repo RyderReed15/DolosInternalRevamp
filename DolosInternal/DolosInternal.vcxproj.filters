@@ -148,6 +148,9 @@
     <ClCompile Include="Features\EnginePrediction.cpp">
       <Filter>Features</Filter>
     </ClCompile>
+    <ClCompile Include="Features\Triggerbot.cpp">
+      <Filter>Features</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Initializer.h">

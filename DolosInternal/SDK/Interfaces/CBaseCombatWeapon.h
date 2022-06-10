@@ -24,8 +24,8 @@ public:
         return (int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iItemIDHigh"));
 
     }
-    int* ItemDefinitionIndex() {
-        return (int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iItemDefinitionIndex"));
+	int16_t* ItemDefinitionIndex() {
+        return (int16_t*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iItemDefinitionIndex"));
 
     }
     int* AccountID() {
@@ -41,7 +41,7 @@ public:
         return (int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iEntityQuality"));
     }
     int GetWeaponId() {
-        return *(int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iItemDefinitionIndex"));
+        return *ItemDefinitionIndex();
     }
 
 };
@@ -49,8 +49,8 @@ public:
 class CBaseCombatWeapon : public CBaseAttributableItem
 {
 public:
-    NETVAR(float, m_flNextPrimaryAttack, "DT_BaseCombatWeapon", "m_flNextPrimaryAttack");
-    NETVAR(float, m_flNextSecondaryAttack, "DT_BaseCombatWeapon", "m_flNextSecondaryAttack");
+    NETVAR(float, m_flNextPrimaryAttack, "DT_LocalActiveWeaponData", "m_flNextPrimaryAttack");
+    NETVAR(float, m_flNextSecondaryAttack, "DT_LocalActiveWeaponData", "m_flNextSecondaryAttack");
     NETVAR(int, m_iClip1, "DT_BaseCombatWeapon", "m_iClip1");
     NETVAR(int, m_iClip2, "DT_BaseCombatWeapon", "m_iClip2");
     NETVAR(float, m_flRecoilIndex, "DT_WeaponCSBase", "m_flRecoilIndex");
@@ -100,58 +100,90 @@ public:
 enum WeaponIndexs
 {
     WEAPON_NONE = 0,
-    WEAPON_DEAGLE = 1,
-    WEAPON_DUAL = 2,
-    WEAPON_FIVE7 = 3,
-    WEAPON_GLOCK = 4,
-    WEAPON_AK47 = 7,
-    WEAPON_AUG = 8,
-    WEAPON_AWP = 9,
-    WEAPON_FAMAS = 10,
-    WEAPON_G3SG1 = 11,
-    WEAPON_GALIL = 13,
-    WEAPON_M249 = 14,
-    WEAPON_M4A4 = 16,
-    WEAPON_MAC10 = 17,
-    WEAPON_P90 = 19,
-    WEAPON_UMP = 24,
-    WEAPON_XM1014 = 25,
-    WEAPON_BIZON = 26,
-    WEAPON_MAG7 = 27,
-    WEAPON_NEGEV = 28,
-    WEAPON_SAWEDOFF = 29,
-    WEAPON_TEC9 = 30,
-    WEAPON_TASER = 31,
-    WEAPON_HKP2000 = 32,
-    WEAPON_MP7 = 33,
-    WEAPON_MP9 = 34,
-    WEAPON_NOVA = 35,
-    WEAPON_P250 = 36,
-    WEAPON_SCAR20 = 38,
-    WEAPON_SG553 = 39,
-    WEAPON_SSG08 = 40,
-    WEAPON_KNIFEGG = 41,
-    WEAPON_KNIFECT = 42,
-    WEAPON_FLASHBANG = 43,
-    WEAPON_HEGRENADE = 44,
-    WEAPON_SMOKE = 45,
-    WEAPON_T_MOLOTOV = 46,
-    WEAPON_DECOY = 47,
-    WEAPON_CT_MOLOTOV = 48,
-    WEAPON_C4 = 49,
-    WEAPON_KNIFET = 59,
-    WEAPON_M4A1 = 60,
-    WEAPON_USP = 61,
-    WEAPON_CZ75 = 63,
-    WEAPON_BAYONET = 500,
-    WEAPON_FLIP = 505,
-    WEAPON_GUT = 506,
-    WEAPON_KARAMBIT = 507,
-    WEAPON_M9 = 508,
-    WEAPON_HUNTSMAN = 509,
-    WEAPON_FALCHION = 512,
-    WEAPON_BUTTERFLY = 515,
-    WEAPON_DAGGER = 516, // ez
+	WEAPON_DEAGLE = 1,
+	WEAPON_ELITE = 2,
+	WEAPON_FIVESEVEN = 3,
+	WEAPON_GLOCK = 4,
+	WEAPON_AK47 = 7,
+	WEAPON_AUG = 8,
+	WEAPON_AWP = 9,
+	WEAPON_FAMAS = 10,
+	WEAPON_G3SG1 = 11,
+	WEAPON_GALILAR = 13,
+	WEAPON_M249 = 14,
+	WEAPON_M4A1 = 16,
+	WEAPON_MAC10 = 17,
+	WEAPON_P90 = 19,
+	WEAPON_MP5SD = 23,
+	WEAPON_UMP45 = 24,
+	WEAPON_XM1014 = 25,
+	WEAPON_BIZON = 26,
+	WEAPON_MAG7 = 27,
+	WEAPON_NEGEV = 28,
+	WEAPON_SAWEDOFF = 29,
+	WEAPON_TEC9 = 30,
+	WEAPON_TASER = 31,
+	WEAPON_HKP2000 = 32,
+	WEAPON_MP7 = 33,
+	WEAPON_MP9 = 34,
+	WEAPON_NOVA = 35,
+	WEAPON_P250 = 36,
+	WEAPON_SHIELD = 37,
+	WEAPON_SCAR20 = 38,
+	WEAPON_SG556 = 39,
+	WEAPON_SSG08 = 40,
+	WEAPON_KNIFEGG = 41,
+	WEAPON_KNIFE = 42,
+	WEAPON_FLASHBANG = 43,
+	WEAPON_HEGRENADE = 44,
+	WEAPON_SMOKEGRENADE = 45,
+	WEAPON_MOLOTOV = 46,
+	WEAPON_DECOY = 47,
+	WEAPON_INCGRENADE = 48,
+	WEAPON_C4 = 49,
+	WEAPON_HEALTHSHOT = 57,
+	WEAPON_KNIFE_T = 59,
+	WEAPON_M4A1_SILENCER = 60,
+	WEAPON_USP_SILENCER = 61,
+	WEAPON_CZ75A = 63,
+	WEAPON_REVOLVER = 64,
+	WEAPON_TAGRENADE = 68,
+	WEAPON_FISTS = 69,
+	WEAPON_BREACHCHARGE = 70,
+	WEAPON_TABLET = 72,
+	WEAPON_MELEE = 74,
+	WEAPON_AXE = 75,
+	WEAPON_HAMMER = 76,
+	WEAPON_SPANNER = 78,
+	WEAPON_KNIFE_GHOST = 80,
+	WEAPON_FIREBOMB = 81,
+	WEAPON_DIVERSION = 82,
+	WEAPON_FRAG_GRENADE = 83,
+	WEAPON_SNOWBALL = 84,
+	WEAPON_BUMPMINE = 85,
+	WEAPON_BAYONET = 500,
+	WEAPON_KNIFE_FLIP = 505,
+	WEAPON_KNIFE_GUT = 506,
+	WEAPON_KNIFE_KARAMBIT = 507,
+	WEAPON_KNIFE_M9_BAYONET = 508,
+	WEAPON_KNIFE_TACTICAL = 509,
+	WEAPON_KNIFE_FALCHION = 512,
+	WEAPON_KNIFE_SURVIVAL_BOWIE = 514,
+	WEAPON_KNIFE_BUTTERFLY = 515,
+	WEAPON_KNIFE_PUSH = 516,
+	WEAPON_KNIFE_URSUS = 519,
+	WEAPON_KNIFE_GYPSY_JACKKNIFE = 520,
+	WEAPON_KNIFE_STILETTO = 522,
+	WEAPON_KNIFE_WIDOWMAKER = 523,
+	STUDDED_BLOODHOUND_GLOVES = 5027,
+	T_GLOVES = 5028,
+	CT_GLOVES = 5029,
+	SPORTY_GLOVES = 5030,
+	SLICK_GLOVES = 5031,
+	LEATHER_HANDWRAPS = 5032,
+	MOTORCYCLE_GLOVES = 5033,
+	SPECIALIST_GLOVES = 5034,
+	STUDDED_HYDRA_GLOVES = 5035
 };
 
 #endif // !BASE_COMBAT_WEAPON_H

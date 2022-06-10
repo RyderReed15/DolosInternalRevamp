@@ -92,7 +92,7 @@ public:
 
     }
     bool SanityCheck() {
-        return IsAlive() && !IsDormant() && !GetImmunity();
+        return IsPlayer() && IsAlive() && !IsDormant() && !GetImmunity();
     }
 };
 

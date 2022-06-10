@@ -116,7 +116,7 @@ bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CU
 
 		Aimbot::Tick(pCmd);
 		Bhop::Tick(pCmd, iFlags);
-
+		Triggerbot::Tick(pCmd);
 		EnginePrediction::End(g_pLocalPlayer);
 	}
 	

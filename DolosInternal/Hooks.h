@@ -14,6 +14,7 @@
 #include "Features/Aimbot.h"
 #include "Features/Bhop.h"
 #include "Features/EnginePrediction.h"
+#include "Features/Triggerbot.h"
 
 #define CREATE_MOVE_INDEX           24
 
