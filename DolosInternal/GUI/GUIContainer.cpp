@@ -3,7 +3,7 @@
 
 GUIContainer::GUIContainer(POINT ptScreenSize) {
    
-    m_ptScreenSize       = ptScreenSize;
+    m_ptScreenSize      = ptScreenSize;
     m_pEventHandler     = new GUIEventHandler(this);
     InitializeMap();
 }
@@ -11,11 +11,12 @@ GUIContainer::GUIContainer(POINT ptScreenSize) {
 GUIContainer::~GUIContainer() {
     DeleteMap();
     for (size_t i = 0; i < m_vElements.size(); i++) {
+
         delete m_vElements[i];
     }
     m_vElements.clear();
   
-    m_ptScreenSize   = { 0, 0 };
+    m_ptScreenSize  = { 0, 0 };
     m_aMap          = nullptr;
     delete          m_pEventHandler;
 }
@@ -64,8 +65,8 @@ void GUIContainer::GenerateMap() {
             D3DXVECTOR4 vBounds = m_vElements[i]->GetBounds();
             RECT rBounds = { vBounds.x, vBounds.y, vBounds.z, vBounds.w };
 
-            short iXSize = min(rBounds.left + rBounds.right, m_ptScreenSize.x);
-            short iYSize = min(rBounds.top + rBounds.bottom, m_ptScreenSize.y);
+            long iXSize = min(rBounds.left + rBounds.right, m_ptScreenSize.x);
+            long iYSize = min(rBounds.top + rBounds.bottom, m_ptScreenSize.y);
 
             for (long x = rBounds.left; x < iXSize; x++)
             {

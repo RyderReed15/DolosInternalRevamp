@@ -64,9 +64,6 @@
     <ClCompile Include="Utils\PatternScanner.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Utils\HookManager.cpp">
-      <Filter>Utils\Headers</Filter>
-    </ClCompile>
     <ClCompile Include="Hooks.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -150,6 +147,9 @@
     </ClCompile>
     <ClCompile Include="Features\Triggerbot.cpp">
       <Filter>Features</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\HookManager.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

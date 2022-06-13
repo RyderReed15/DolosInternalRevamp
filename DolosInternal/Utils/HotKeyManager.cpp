@@ -16,7 +16,7 @@ void CallHotKey(int iHotKeyId) {
         if (hValveWnd == GetFocus()) {
             ((fnVoid)(mKeys[iHotKeyId]->Function))();
         }else{
-            SendMessage(GetForegroundWindow(), WM_CHAR, mKeys[iHotKeyId]->Key, 0);
+            PostMessage(GetForegroundWindow(), WM_KEYDOWN, mKeys[iHotKeyId]->Key, 0);            
         } 
     }
 }

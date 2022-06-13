@@ -1,7 +1,7 @@
 #include "DropDown.h"
 #include <iostream>
 
-DropDown::DropDown(const char* szName, int iDefaultIndex, int* pValue, DropDownElement* pElemementArray, int iNumElements, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cColor, IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
+DropDown::DropDown(const char* szName, unsigned int iDefaultIndex, int* pValue, DropDownElement* pElemementArray, unsigned int iNumElements, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cColor, IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
 
 	
 	m_cColor		= cColor;
@@ -23,7 +23,7 @@ DropDown::~DropDown() {
 	}
 }
 
-void DropDown::SetIndex(int iIndex) {
+void DropDown::SetIndex(unsigned int iIndex) {
 	m_iIndex = iIndex;
 }
 void DropDown::SetValue(int iValue) {
@@ -54,7 +54,7 @@ void DropDown::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
 	
 }
 
-DropDownContainer::DropDownContainer(DropDownElement* pElementArray, int iNumElements, D3DXVECTOR4 vBounds, int iNumDisplayElements, int iStartIndex, D3DCOLOR cColor, IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
+DropDownContainer::DropDownContainer(DropDownElement* pElementArray, unsigned int iNumElements, D3DXVECTOR4 vBounds, unsigned int iNumDisplayElements, unsigned int iStartIndex, D3DCOLOR cColor, IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
 	
 	m_iTopIndex				= iStartIndex;
 	m_iIndex				= iStartIndex;
@@ -79,7 +79,7 @@ HRESULT DropDownContainer::Draw(ID3DXFont* pFont, Render* pRender) {
 		// Draw current selection
 		pRender->DrawRoundedRectangle({ m_vBounds.x, m_vBounds.y + m_vBounds.w + 2, m_vBounds.z, m_vBounds.w * (m_iNumDisplayElements * 1.3f + .25f) }, 2, LerpAlpha(m_cColor, GetAnimLerp(FADE_LENGTH)));
 			
-		for (int i = m_iTopIndex; i < m_iTopIndex + m_iNumDisplayElements && i < m_iNumElements; i++) {
+		for (unsigned int i = m_iTopIndex; i < m_iTopIndex + m_iNumDisplayElements && i < m_iNumElements; i++) {
 			// Draw drop down menu
 			m_pElementArray[i].SetBounds({ m_vBounds.x, m_vBounds.w * .25f + m_vBounds.y + (i + 1) * m_vBounds.w * 1.3f - 3, m_vBounds.z, m_vBounds.w * 1.3f });
 			m_pElementArray[i].Draw(pFont, pRender);
@@ -104,7 +104,7 @@ bool DropDownContainer::GetOpen() {
 void DropDownContainer::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
 	
 	//only ever called when bOpen is true because this element isn't indexed
-	for (int i = m_iTopIndex; i < m_iTopIndex + m_iNumDisplayElements && i < m_iNumElements; i++) {
+	for (unsigned int i = m_iTopIndex; i < m_iTopIndex + m_iNumDisplayElements && i < m_iNumElements; i++) {
 		if (m_pElementArray[i].CheckBounds(ptLocation)) {
 
 			m_iIndex = i;
@@ -122,7 +122,7 @@ void DropDownContainer::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocati
 void DropDownContainer::OnHover(GUIEventHandler* pEventHandler, POINT ptLocation) {
 	if (m_bOpen) {
 
-		for (int i = m_iTopIndex; i < m_iTopIndex + m_iNumDisplayElements && i < m_iNumElements; i++) {
+		for (unsigned int i = m_iTopIndex; i < m_iTopIndex + m_iNumDisplayElements && i < m_iNumElements; i++) {
 
 			if (m_pElementArray[i].CheckBounds(ptLocation)) {
 				m_pElementArray[i].OnHover(pEventHandler, ptLocation);

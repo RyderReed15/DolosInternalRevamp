@@ -21,6 +21,11 @@ IGUIElement::IGUIElement(D3DXVECTOR4 vBounds, IGUIElement* pParent) {
 	}
 }
 
+IGUIElement::~IGUIElement(void)
+{
+	return;
+}
+
 void IGUIElement::OnClick(GUIEventHandler* pEventHandler, POINT ptLocation) {
 	
 	return;

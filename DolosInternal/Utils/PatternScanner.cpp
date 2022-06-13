@@ -3,7 +3,7 @@
 
 
 
-char* FindPattern(void* pDLLBase, const char* szPattern, bool bRelative, int aOffsets[], int iOffsetsSize) {
+char* FindPattern(void* pDLLBase, const char* szPattern, bool bRelative, unsigned int aOffsets[], unsigned int iOffsetsSize) {
 	char szParsedPattern[64]{ '\0' };
 	char szMask[64]{ '\0' };
 
@@ -15,7 +15,7 @@ char* FindPattern(void* pDLLBase, const char* szPattern, bool bRelative, int aOf
 
 	if (ParsePattern(szPattern, szParsedPattern, szMask)) {
 
-		int iPatternSize = 0;
+		unsigned int iPatternSize = 0;
 		while (szMask[iPatternSize] != '\0') {
 			iPatternSize++;
 		}
@@ -36,7 +36,7 @@ char* FindPattern(void* pDLLBase, const char* szPattern, bool bRelative, int aOf
 				//Check each byte within the region for the start and then following bytes of the pattern
 
 				bool bFound = true;
-				for (int x = 0; x < iPatternSize; x++) {
+				for (unsigned int x = 0; x < iPatternSize; x++) {
 
 					if (szMask[x] != '?' && szParsedPattern[x] != j[x]) {
 						bFound = false;
@@ -52,11 +52,11 @@ char* FindPattern(void* pDLLBase, const char* szPattern, bool bRelative, int aOf
 	return 0;
 }
 
-bool ParsePattern(const char* szInPattern,  char szOutPattern[64], char szOutMask[64]) {
+bool ParsePattern(const char* szInPattern, char szOutPattern[64], char szOutMask[64]) {
 	//Replace string with actual byte array
 
-	int i = 0;
-	int iSize = 0;
+	unsigned int i = 0;
+	unsigned int iSize = 0;
 	while (szInPattern[i + 1] != '\0') {
 		if (szInPattern[i] == '?') {
 			szOutPattern[iSize] = '\xFF';
@@ -75,10 +75,10 @@ bool ParsePattern(const char* szInPattern,  char szOutPattern[64], char szOutMas
 	return iSize;
 }
 
-char* ResolveOffsets(char* pAddress, int iOffsets[], int iOffsetsSize) {
+char* ResolveOffsets(char* pAddress, unsigned int iOffsets[], unsigned int iOffsetsSize) {
 	char* pOut = pAddress;
 	if (iOffsetsSize) {
-		for (int i = 0; i < iOffsetsSize; i++) {
+		for (unsigned int i = 0; i < iOffsetsSize; i++) {
 			pOut += iOffsets[i];
 			pOut = *(char**)pOut;
 		}

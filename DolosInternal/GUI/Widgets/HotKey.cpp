@@ -138,5 +138,5 @@ std::string HotKey::MakeKey(char chKey) {
     case VK_BACK:       return "BACK"; 
     case VK_RETURN:     return "ENTER"; 
     default:            return std::string(1, chKey);
-}
+    }
 }

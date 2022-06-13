@@ -1,6 +1,6 @@
 #include "TextBox.h"
 
-TextBox::TextBox(const char* szName, char* aText, short iMaxCharacters, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cContainerColor, IGUIElement* pParent) :IGUIElement(vBounds, pParent) {
+TextBox::TextBox(const char* szName, char* aText, unsigned short iMaxCharacters, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cContainerColor, IGUIElement* pParent) :IGUIElement(vBounds, pParent) {
     m_szName = szName;
     m_aText = aText;
     m_flContainerSize = flContainerSize;
@@ -41,6 +41,8 @@ void TextBox::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
 }
 
 void TextBox::OnType(GUIEventHandler* pEventHandler, char chKey) {
+    char chConverted = MapVirtualKey(chKey, MAPVK_VK_TO_CHAR);
+
     switch (chKey) {
     case VK_BACK:
         if (m_iTextSize > 0) {

@@ -10,7 +10,7 @@
 {\
 	return VFuncCall<type, index>argscall; \
 }
-template <typename T, int index, typename ...Args>
+template <typename T, unsigned int index, typename ...Args>
 inline static T VFuncCall(void* _this, Args ... args) {
 	typedef T(__thiscall* name)(void*, Args...);
 
@@ -21,7 +21,7 @@ inline static T VFuncCall(void* _this, Args ... args) {
 
 #define NETVAR( type, func, table, var ) type& func() \
 {\
-	return *(type*)((int)(this) + GetNetvar(table, var));\
+	return *(type*)((unsigned int)(this) + GetNetvar(table, var));\
 }
 
 
@@ -29,7 +29,7 @@ inline static T VFuncCall(void* _this, Args ... args) {
 
 #define ONETVAR( type, func, table, var, offset ) type& func() \
 {\
-	return *(type*)((int)(this) + GetNetvar(table, var) + offset);\
+	return *(type*)((unsigned int)(this) + GetNetvar(table, var) + offset);\
 }
 
 
@@ -37,7 +37,7 @@ inline static T VFuncCall(void* _this, Args ... args) {
 
 #define PNETVAR( type, func, table, var ) type* func() \
 {\
-	return (type*)((int)(this) + GetNetvar(table, var));\
+	return (type*)((unsigned int)(this) + GetNetvar(table, var));\
 }
 
 
@@ -45,7 +45,7 @@ inline static T VFuncCall(void* _this, Args ... args) {
 
 #define OPNETVAR( type, func, table, var, offset ) type* func() \
 {\
-	return (type*)((int)(this) + GetNetvar(table, var) + offset);\
+	return (type*)((unsigned int)(this) + GetNetvar(table, var) + offset);\
 }
 
 

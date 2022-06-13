@@ -12,20 +12,20 @@ class DropDown : public IGUIElement {
 public:
 
 
-			DropDown	(const char* szName, int iDefaultIndex, int* pValue, DropDownElement* pElemementArray, int iNumElements, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cColor, IGUIElement* pParent = nullptr);
+			DropDown	(const char* szName, unsigned int iDefaultIndex, int* pValue, DropDownElement* pElemementArray, unsigned int iNumElements, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cColor, IGUIElement* pParent = nullptr);
 			~DropDown	(void);
 	HRESULT Draw		(ID3DXFont* pFont, Render* pRender);
 
-	void	SetIndex	(int iIndex);
+	void	SetIndex	(unsigned  int iIndex);
 	void	SetValue	(int iValue);
 
 	void	OnRelease	(GUIEventHandler* pEventHandler, POINT ptLocation);
 private:
 	D3DCOLOR			m_cColor;
-	int					m_iIndex;
+	unsigned int		m_iIndex;
 	int*				m_pValue;
 	const char*			m_szName;
-	int					m_iArraySize;
+	unsigned int		m_iArraySize;
 	DropDownContainer*	m_pContainer;
 
 
@@ -33,7 +33,7 @@ private:
 
 class DropDownContainer : public IGUIElement {
 public:
-			DropDownContainer	(DropDownElement* m_pElementArray, int iNumElements, D3DXVECTOR4 vBounds, int iNumDisplayElements, int iStartIndex, D3DCOLOR cColor, IGUIElement* pParent);
+			DropDownContainer	(DropDownElement* m_pElementArray, unsigned int iNumElements, D3DXVECTOR4 vBounds, unsigned int iNumDisplayElements, unsigned int iStartIndex, D3DCOLOR cColor, IGUIElement* pParent);
 	HRESULT Draw				(ID3DXFont* pFont, Render* pRender);
 
 	void	SetOpen				(bool bOpen);
@@ -45,9 +45,9 @@ public:
 private:
 
 	DropDownElement*	m_pElementArray;
-	int					m_iNumElements;
-	int					m_iNumDisplayElements;
-	int					m_iTopIndex, m_iIndex;
+	unsigned int		m_iNumElements;
+	unsigned int		m_iNumDisplayElements;
+	unsigned int		m_iTopIndex, m_iIndex;
 	D3DCOLOR			m_cColor;
 	bool				m_bOpen;
 };

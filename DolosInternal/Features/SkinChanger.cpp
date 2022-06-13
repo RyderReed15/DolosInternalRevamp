@@ -3,6 +3,7 @@
 std::map<CBaseCombatWeapon*, int> g_mOwnedWeapons;
 
 //Rework to set g_mOwnedWeapons in PreTick to prevent bugs and game errors
+//Reqork to use entire list of changed skins
 //Changes models and item index before frame stage notify call
 void SkinChanger::PreTick() {
 	for (int i = 1; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {

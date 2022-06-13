@@ -13,6 +13,7 @@ class IGUIElement {
 public:
 
 					IGUIElement		(D3DXVECTOR4 vBounds, IGUIElement* pParent = nullptr);
+	virtual			~IGUIElement(void);
 
 	virtual HRESULT Draw			(ID3DXFont* pFont, Render* pRender) = 0;
 
@@ -48,12 +49,12 @@ protected:
 	bool			m_bShouldDraw;
 	bool			m_bEnabled;
 	D3DXVECTOR4		m_vBounds;
-	unsigned int				m_iChildCount;
+	unsigned int	m_iChildCount;
 	IGUIElement*	m_pFirstChild;
 	IGUIElement*	m_pSibling;
 	IGUIElement*	m_pParent;
 
-	unsigned int				m_iAnimStartTick;
+	unsigned int	m_iAnimStartTick;
 private:
 
 
