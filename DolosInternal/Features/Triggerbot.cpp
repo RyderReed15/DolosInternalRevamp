@@ -17,7 +17,7 @@ void Triggerbot::Tick(CUserCmd* pCmd){
             CBaseCombatWeapon* pWeapon = g_pLocalPlayer->GetWeapon();
             if (pWeapon) {
 
-                if (pWeapon->m_flNextPrimaryAttack() > g_pGlobalVars->curtime || pWeapon->m_iClip1() <= 0) {
+                if (pWeapon->m_flNextPrimaryAttack() > g_pGlobalVars->curtime || (pWeapon->m_iClip1() <= 0 && pWeapon->GetClientClass()->m_ClassID != CKNIFE)) {
 
                     if (pWeapon->GetWeaponId() == WeaponIndices::WEAPON_REVOLVER) {
                         pCmd->iButtons &= ~IN_ATTACK2;

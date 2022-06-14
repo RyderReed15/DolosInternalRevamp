@@ -51,6 +51,7 @@ void ESP::GetWeaponNames() {
             if (pEntity->GetOwner() == -1) {
                 if (pEntity->GetClientClass()->m_pNetworkName[1] != 'B') {
                     //Ensure there is an owner and its class is not a base class
+                    // 13 is length of prefix to name
                     g_mWeaponNames[pEntity] = pEntity->GetWeaponData()->szHudName + 13;
                 }
             }

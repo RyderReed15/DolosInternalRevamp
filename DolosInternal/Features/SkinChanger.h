@@ -23,10 +23,11 @@ namespace SkinChanger {
     void PreTick();
     void PostTick();
 
-    void ChangeItemIndex    (CBaseCombatWeapon* pWeapon, int nItemDefIndex);
-    void OverrideSkin       (CBaseCombatWeapon* pWeapon, SkinStruct* pSkinInfo);
-    void OverrideModel      (CBaseCombatWeapon* pWeapon, int nItemDefinitionIndex);
-    int  GetModelIndexFromId(int iWeaponIndex);
+    void ChangeItemIndex        (CBaseCombatWeapon* pWeapon, int nItemDefIndex);
+    void OverrideSkin           (CBaseCombatWeapon* pWeapon, SkinStruct* pSkinInfo);
+    void OverrideModel          (CBaseCombatWeapon* pWeapon, int nItemDefinitionIndex);
+
+    bool InitializeSkinChanger  (void);
 }
 
 

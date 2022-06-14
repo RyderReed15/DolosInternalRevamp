@@ -15,6 +15,9 @@ class ClassId;
 
 class RecvTable;
 class RecvProp;
+
+#define CKNIFE 107
+
 class IClientClass
 {
 public:

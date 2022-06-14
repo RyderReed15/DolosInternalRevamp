@@ -57,6 +57,16 @@ bool InitializeCheat(HMODULE hMod) {
 
 	std::cout << "Hooks Initialized" << std::endl;
 
+	if (!SkinChanger::InitializeSkinChanger()) {
+
+		UninitializeGUI();
+		UninitializeFonts();
+		UninitializeHooks();
+		return false;
+	}
+
+	std::cout << "SkinChanger Initialized" << std::endl;
+
 	return true;
 }
 
@@ -86,6 +96,7 @@ LRESULT hkInitWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		InitializeCheat((HMODULE)lParam);
 		MakeHotKey(0x1000, &EndThread);
 		// Pass hook along to main hook function
+
 		SetWindowLongPtrW(FindWindow("Valve001", NULL), GWLP_WNDPROC, (LONG_PTR)hkWndProc);
 	}
 	return CallWindowProc((WNDPROC)oWndProc, hWnd, uMsg, wParam, lParam);
