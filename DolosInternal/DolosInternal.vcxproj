@@ -138,6 +138,7 @@
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Resources\Models.txt" />
     <Text Include="Resources\Netvar.txt" />
   </ItemGroup>
   <ItemGroup>

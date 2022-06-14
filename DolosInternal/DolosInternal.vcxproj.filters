@@ -389,6 +389,9 @@
     <Text Include="Resources\Netvar.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="Resources\Models.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Config.json">

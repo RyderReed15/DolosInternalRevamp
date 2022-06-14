@@ -54,7 +54,7 @@ public:
     NETVAR(int, m_iClip1, "DT_BaseCombatWeapon", "m_iClip1");
     NETVAR(int, m_iClip2, "DT_BaseCombatWeapon", "m_iClip2");
     NETVAR(float, m_flRecoilIndex, "DT_WeaponCSBase", "m_flRecoilIndex");
-    NETVAR(int, m_iViewModelIndex, "DT_BaseCombatWeapon", "m_iViewModelIndex");
+	NETVAR(int, m_iViewModelIndex, "DT_BaseCombatWeapon", "m_iViewModelIndex");
     NETVAR(int, m_iWorldModelIndex, "DT_BaseCombatWeapon", "m_iWorldModelIndex");
     NETVAR(int, m_iWorldDroppedModelIndex, "DT_BaseCombatWeapon", "m_iWorldDroppedModelIndex");
     NETVAR(bool, m_bPinPulled, "DT_BaseCSGrenade", "m_bPinPulled");
@@ -97,7 +97,7 @@ public:
     int32_t iRecoilSeed;
     int8_t pad11[32];
 };
-enum WeaponIndexs
+enum WeaponIndices
 {
     WEAPON_NONE = 0,
 	WEAPON_DEAGLE = 1,
@@ -114,6 +114,7 @@ enum WeaponIndexs
 	WEAPON_M4A1 = 16,
 	WEAPON_MAC10 = 17,
 	WEAPON_P90 = 19,
+	WEAPON_ZONE_REPULSOR = 20,
 	WEAPON_MP5SD = 23,
 	WEAPON_UMP45 = 24,
 	WEAPON_XM1014 = 25,
@@ -162,6 +163,7 @@ enum WeaponIndexs
 	WEAPON_SNOWBALL = 84,
 	WEAPON_BUMPMINE = 85,
 	WEAPON_BAYONET = 500,
+	WEAPON_KNIFE_CSS = 503,
 	WEAPON_KNIFE_FLIP = 505,
 	WEAPON_KNIFE_GUT = 506,
 	WEAPON_KNIFE_KARAMBIT = 507,
@@ -171,10 +173,15 @@ enum WeaponIndexs
 	WEAPON_KNIFE_SURVIVAL_BOWIE = 514,
 	WEAPON_KNIFE_BUTTERFLY = 515,
 	WEAPON_KNIFE_PUSH = 516,
+	WEAPON_KNIFE_CORD = 517,
+	WEAPON_KNIFE_CANIS = 518,
 	WEAPON_KNIFE_URSUS = 519,
 	WEAPON_KNIFE_GYPSY_JACKKNIFE = 520,
+	WEAPON_KNIFE_OUTDOOR = 521,
 	WEAPON_KNIFE_STILETTO = 522,
 	WEAPON_KNIFE_WIDOWMAKER = 523,
+	WEAPON_KNIFE_SKELETON = 525,
+	STUDDED_BROKENFANG_GLOVES = 4725,
 	STUDDED_BLOODHOUND_GLOVES = 5027,
 	T_GLOVES = 5028,
 	CT_GLOVES = 5029,

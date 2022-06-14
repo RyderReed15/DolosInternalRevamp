@@ -41,8 +41,7 @@ void TextBox::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
 }
 
 void TextBox::OnType(GUIEventHandler* pEventHandler, char chKey) {
-    char chConverted = MapVirtualKey(chKey, MAPVK_VK_TO_CHAR);
-
+    
     switch (chKey) {
     case VK_BACK:
         if (m_iTextSize > 0) {

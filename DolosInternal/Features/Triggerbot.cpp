@@ -19,14 +19,14 @@ void Triggerbot::Tick(CUserCmd* pCmd){
 
                 if (pWeapon->m_flNextPrimaryAttack() > g_pGlobalVars->curtime || pWeapon->m_iClip1() <= 0) {
 
-                    if (pWeapon->GetWeaponId() == WeaponIndexs::WEAPON_REVOLVER) {
+                    if (pWeapon->GetWeaponId() == WeaponIndices::WEAPON_REVOLVER) {
                         pCmd->iButtons &= ~IN_ATTACK2;
                     }else{
                         pCmd->iButtons &= ~IN_ATTACK;
                     }
                 }
                 else {
-                    if (pWeapon->GetWeaponId() == WeaponIndexs::WEAPON_REVOLVER) {
+                    if (pWeapon->GetWeaponId() == WeaponIndices::WEAPON_REVOLVER) {
 
                         pCmd->iButtons |= IN_ATTACK2;
                     }
