@@ -1,9 +1,14 @@
 #include "SkinChanger.h"
 
 std::map<CBaseCombatWeapon*, int> g_mOwnedWeapons; // this will hoepfully go when implementing an event listener
-std::map<int, int> g_mNewModels;
-std::map<int, std::string> g_mModelNames;
+std::unordered_map<int, int> g_mNewModels;
+std::unordered_map<int, std::string> g_mModelNames;
+std::unordered_map<int, std::string> g_mWeapNames;
+std::unordered_map<std::string, int> g_mWeapIds;
+std::unordered_map<int, std::vector<SkinChanger::GameSkin>> g_mWeapSkins; // I very much dislike this but have no better ideas right now
 
+//Counter-Strike Global Offensive\csgo\scripts\items\items_game_cdn.txt contains links to pictures for all skins for use in gui
+// //Counter-Strike Global Offensive\csgo\scripts\items\items_game.txt contains all skin ids paired with their names under paint_kits 
 //Rework to set g_mOwnedWeapons in PreTick to prevent bugs and game errors
 //Reqork to use entire list of changed skins
 //Changes models and item index before frame stage notify call
@@ -174,33 +179,98 @@ std::string ParseModelName(JsonObject* pItem, JsonObject* pPrefabs) {
 }
 
 
+bool SkinChanger::InitializeModels(JsonObject* pItems) {
+	JsonObject* pPrefabs = pItems->GetJsonObject("prefabs");
+	JsonObject* pWeapons = pItems->GetJsonObject("items");
+
+	for (size_t i = 0; i < pWeapons->m_vValues.size(); i++) {
+		if (pWeapons->m_vValues[i].m_tType == VALUE_TYPE::OBJECT) {
+			JsonObject* pItem = pWeapons->m_vValues[i].m_pObject;
+			if (pItem->GetString("name").find("weapon") != -1 || pItem->GetString("prefab").find("hands") != -1) {
+				g_mModelNames[strtol(pItem->m_szName.c_str(), 0, 10)] = ParseModelName(pItem, pPrefabs);
+				g_mWeapNames[strtol(pItem->m_szName.c_str(), 0, 10)] = pItem->GetString("name");
+				g_mWeapIds[pItem->GetString("name")] = strtol(pItem->m_szName.c_str(), 0, 10);
+
+			}
+		}
+	}
+	return true;
+}
+
+bool SkinChanger::InitializeSkins(JsonObject* pItems, std::string szPath) {
+
+	std::unordered_map<std::string, int> mSkinIds;
+	JsonObject* pPaintKits = pItems->GetJsonObject("paint_kits");
+	for (size_t i = 0; i < pPaintKits->m_vValues.size(); i++) {
+		if (pPaintKits->m_vValues[i].m_tType == VALUE_TYPE::OBJECT) {
+			JsonObject* pKit = pPaintKits->m_vValues[i].m_pObject;
+			if (pKit->GetString("name") != "") {
+				std::string szKitName = pKit->GetString("name");
+				for (size_t i = 0; i < szKitName.length(); i++) {
+					szKitName[i] = std::tolower(szKitName[i]);
+				}
+				mSkinIds[szKitName] = strtol(pKit->m_szName.c_str(), 0, 10);
+			}
+		}
+	}
+
+
+	std::ifstream fCDN; fCDN.open(szPath);
+
+	if (fCDN.is_open()) {
+		std::string skinName;
+		std::string temp;
+		std::getline(fCDN, temp);
+		std::getline(fCDN, temp);
+		std::getline(fCDN, temp);
+		while (!fCDN.eof() && fCDN.good()) {
+
+			std::getline(fCDN, skinName, '=');
+			std::getline(fCDN, temp);
+			for (size_t i = 0; i < skinName.length(); i++) {
+				skinName[i] = std::tolower(skinName[i]);
+			}
+			int iStart = 0;
+			while (skinName.find('_', iStart) != -1) {
+				if (mSkinIds.count(skinName.substr(iStart, skinName.length() - iStart))) {
+
+					g_mWeapSkins[g_mWeapIds[skinName.substr(0, iStart - 1)]].push_back({ skinName.substr(iStart, skinName.length() - iStart), mSkinIds[skinName.substr(iStart, skinName.length() - iStart)] });
+					break;
+				}
+				iStart = skinName.find('_', iStart) + 1;
+			}
+		}
+		fCDN.close();
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 bool SkinChanger::InitializeSkinChanger() {
 	char name[MAX_PATH];
 
 	GetModuleFileName(NULL, name, MAX_PATH);
 
-	std::string szName = name;
-	szName = szName.substr(0, szName.find_last_of('\\'));
-	szName += "\\csgo\\scripts\\items\\items_game.txt";
+	std::string szItemsName = name;
+	std::string szCDNName;
+	szItemsName = szItemsName.substr(0, szItemsName.find_last_of('\\'));
+	szCDNName = szItemsName;
+	szItemsName += "\\csgo\\scripts\\items\\items_game.txt";
+	szCDNName += "\\csgo\\scripts\\items\\items_game_cdn.txt";
 
-	JsonObject* pItems = ParseJsonFile(szName.c_str());
+	JsonObject* pItems = ParseJsonFile(szItemsName.c_str());
 
 	if (pItems) {
-		JsonObject* pPrefabs = pItems->GetJsonObject("prefabs");
-		JsonObject* pWeapons = pItems->GetJsonObject("items");
 
-		for (size_t i = 0; i < pWeapons->m_vValues.size(); i++) {
-			if (pWeapons->m_vValues[i].m_tType == VALUE_TYPE::OBJECT) {
-				JsonObject* pItem = pWeapons->m_vValues[i].m_pObject;
-				if (pItem->GetString("name").find("weapon") != -1 || pItem->GetString("prefab").find("hands") != -1) {
-					g_mModelNames[strtol(pItem->m_szName.c_str(), 0, 10)] = ParseModelName(pItem, pPrefabs);
-
-				}
-			}
+		if (InitializeModels(pItems) && InitializeSkins(pItems, szCDNName)) {
+			delete pItems;
+			return true;
 		}
-
+		
 		delete pItems;
-		return true;
+		return false;
 	}
 	return false;
 
