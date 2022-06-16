@@ -1,7 +1,7 @@
 #include "Aimbot.h"
 
 
-void Aimbot::Tick(CUserCmd* pCmd) {
+bool Aimbot::Tick(CUserCmd* pCmd) {
 
     if (g_pLocalPlayer && g_pLocalPlayer->IsAlive()) {
 
@@ -16,20 +16,31 @@ void Aimbot::Tick(CUserCmd* pCmd) {
 
             if (vTarget.IsValid()) {
 
+
+                
                 QAngle qNewAngles = GetNewAngles(vViewAngles, vTarget, pCmd->iTickCount);
-                if (!Settings.Aimbot.Silent) g_pEngineClient->SetViewAngles(qNewAngles);
+                if (!Settings.Aimbot.Silent) {
+                    RecoilControl::UpdateOldPunch(vAimPunch);
+                    g_pEngineClient->SetViewAngles(qNewAngles);
+                }
+                else {
+                    QAngle qRecoil = RecoilControl::RecoilControl(vViewAngles, vAimPunch, false);
+                    g_pEngineClient->SetViewAngles(qRecoil);
+                }
+
                 pCmd->qViewAngles = qNewAngles;
-                return;
+                return !Settings.Aimbot.Silent;
             }
             
         }
         
         QAngle qNewAngles = RecoilControl::RecoilControl(vViewAngles, vAimPunch, false);
-        if (!Settings.Aimbot.Silent) g_pEngineClient->SetViewAngles(qNewAngles);
+        g_pEngineClient->SetViewAngles(qNewAngles);
         pCmd->qViewAngles = qNewAngles;
        
         
     }
+    return true;
 }
 
 Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimPunch, int iTickCount) {
@@ -125,7 +136,7 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimP
 
 Vector Aimbot::CalculateOveraim(Vector vViewAngles, Vector vDest, int iTick){
     if (iTick == iStartTick && !vOveraim.IsValid()) {
-        float flDistance = vDest.Lerp(vViewAngles, 1).Magnitude() / 30;
+        float flDistance = vDest.Lerp(vViewAngles, 1).Magnitude() / (30 * Settings.Aimbot.OveraimFactor);
 
         float flAngle = static_cast<float>(rand() % 360);
 

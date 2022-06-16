@@ -7,16 +7,19 @@ Vector RecoilControl::RecoilControl(Vector vAngles, Vector vAimPunch, bool bAimb
     }
 
     if (bAimbot) {
-        vOldAimPunch = vAimPunch * Settings.Recoil.ControlFactor;
-        return (vAngles - vOldAimPunch).ToAngles();
+        return (vAngles - vAimPunch * Settings.Recoil.ControlFactor).ToAngles();
     }
     else {
         
         Vector vNewAngles = ((vAngles + vOldAimPunch) - (vAimPunch * Settings.Recoil.ControlFactor)).ToAngles();
 
-        vOldAimPunch = vAimPunch * Settings.Recoil.ControlFactor;
+        UpdateOldPunch(vAimPunch);
 
         return vNewAngles;
     }
 
+}
+
+void RecoilControl::UpdateOldPunch(Vector vAimPunch){
+    vOldAimPunch = vAimPunch * Settings.Recoil.ControlFactor;
 }

@@ -33,6 +33,7 @@ struct Config {
         float AimTime;
         float WaitTime;
         float AntilockFactor;
+        float OveraimFactor;
         AimTarget* Targets;
         unsigned int TargetCount;
     } Aimbot;
@@ -62,7 +63,8 @@ struct Config {
         std::map<int, SkinChanger::SkinStruct*> Skins;
     } SkinChanger;
     struct TriggerConfig {
-        bool b;
+        bool    Enabled;
+        float   Range;
     } Trigger;
     struct RecoilConfig {
         bool Enabled;

@@ -50,7 +50,7 @@ bool SaveConfig(const char* szPath) {
 void StoreValues() {
     JsonObject* pAimbot = g_pParsedConfig->GetJsonObject("aimbot");
 
-    Settings.Aimbot.Active      = pAimbot->GetBoolean       ("active");
+    Settings.Aimbot.Active      = pAimbot->GetBoolean       ("enabled");
     Settings.Aimbot.Silent      = pAimbot->GetBoolean       ("silent");
     Settings.Aimbot.TargetAll   = pAimbot->GetBoolean       ("target_all");
     Settings.Aimbot.Overaim     = pAimbot->GetBoolean       ("overaim");
@@ -60,6 +60,7 @@ void StoreValues() {
     Settings.Aimbot.AimTime         = pAimbot->GetNumber<float> ("time_to_aim");
     Settings.Aimbot.WaitTime        = pAimbot->GetNumber<float> ("wait_time");
     Settings.Aimbot.AntilockFactor  = pAimbot->GetNumber<float> ("antilock_factor");
+    Settings.Aimbot.OveraimFactor   = pAimbot->GetNumber<float> ("overaim_factor");
 
     JsonArray* pTargets = pAimbot->GetJsonArray("targets");
 
@@ -98,6 +99,11 @@ void StoreValues() {
 
     Settings.Misc.Bhop = pMisc->GetBoolean("bhop");
 
+    JsonObject* pTrigger = g_pParsedConfig->GetJsonObject("trigger");
+
+    Settings.Trigger.Enabled    = pTrigger->GetBoolean      ("enabled");
+    Settings.Trigger.Range      = pTrigger->GetNumber<float>("range");
+
     Settings.Visuals.Weapons.Color  = ParseColor(pWeapons->GetString("color"));
 
     JsonObject* pSkinChanger = g_pParsedConfig->GetJsonObject("skin_changer");
@@ -116,7 +122,7 @@ void StoreValues() {
 void UpdateValues() {
     JsonObject* pAimbot = g_pParsedConfig->GetJsonObject("aimbot");
 
-    pAimbot->SetBoolean ("active"       , Settings.Aimbot.Active);
+    pAimbot->SetBoolean ("enabled"       , Settings.Aimbot.Active);
     pAimbot->SetBoolean ("silent"       , Settings.Aimbot.Silent);
     pAimbot->SetBoolean ("target_all"   , Settings.Aimbot.TargetAll);
     pAimbot->SetBoolean ("overaim"      , Settings.Aimbot.Overaim);
@@ -126,6 +132,7 @@ void UpdateValues() {
     pAimbot->SetNumber("time_to_aim"            , Settings.Aimbot.AimTime);
     pAimbot->SetNumber("wait_time"              , Settings.Aimbot.WaitTime);
     pAimbot->SetNumber("antilock_factor"        , Settings.Aimbot.AntilockFactor);
+    pAimbot->SetNumber("overaim_factor"         , Settings.Aimbot.OveraimFactor);
 
     JsonArray* pTargets = pAimbot->GetJsonArray("targets");
 
@@ -165,6 +172,11 @@ void UpdateValues() {
     JsonObject* pMisc = g_pParsedConfig->GetJsonObject("misc");
 
     pMisc->SetBoolean("bhop", Settings.Misc.Bhop);
+
+    JsonObject* pTrigger = g_pParsedConfig->GetJsonObject("trigger");
+
+    pTrigger->SetBoolean("enabled", Settings.Trigger.Enabled);
+    pTrigger->SetNumber ("range", Settings.Trigger.Range);
 
     JsonObject* pSkinChanger = g_pParsedConfig->GetJsonObject("skin_changer");
 

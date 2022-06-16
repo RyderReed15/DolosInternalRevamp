@@ -1,13 +1,14 @@
 #include "Triggerbot.h"
 
 void Triggerbot::Tick(CUserCmd* pCmd){
+    if (!Settings.Trigger.Enabled) return;
 
     CGameTrace trace;
     Ray_t ray;
     CTraceFilter tracefilter;
     tracefilter.pSkip = g_pLocalPlayer;
     Vector vViewAngles = { pCmd->qViewAngles.pitch, pCmd->qViewAngles.yaw, 0 };
-    ray.Init(g_pLocalPlayer->GetEyePos(), vViewAngles.Forward(2000) + g_pLocalPlayer->GetEyePos());
+    ray.Init(g_pLocalPlayer->GetEyePos(), vViewAngles.Forward(Settings.Trigger.Range) + g_pLocalPlayer->GetEyePos());
 
     g_pEngineTrace->TraceRay(ray, MASK_SHOT | CONTENTS_GRATE, &tracefilter, &trace);
 

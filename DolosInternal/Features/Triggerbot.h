@@ -5,6 +5,7 @@
 
 #include "../SDK/SDK.h"
 #include "../Utils/ConfigManager.h"
+#include "RecoilControl.h"
 
 namespace Triggerbot {
 

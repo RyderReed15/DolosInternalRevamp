@@ -4,18 +4,19 @@
 	"version": "beta-1.0",
 	"data_created": "10-14-2021",
 	"aimbot": {
-		"active": true,
-		"silent": true,
+		"enabled": true,
+		"silent": false,
 		"target_all": true,
-		"overaim": true,
+		"overaim": false,
+		"overaim_factor": 1,
 		"curve": true,
 		"range_dec_multiplier": 1,
-		"time_to_aim": 1,
+		"time_to_aim": 0.75000,
 		"wait_time": 1,
 		"antilock_factor": 0.50000,
 		"targets": [
 			{
-				"fov": 15,
+				"fov": 5,
 				"bone": 8
 			},
 			{
@@ -90,9 +91,8 @@
 		]
 	},
 	"trigger": {
-		"active": true,
-		"silent": true,
-		"fov": 4
+		"enabled": true,
+		"range": 2000
 	},
 	"recoil": {
 		"enabled": true,

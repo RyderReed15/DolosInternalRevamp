@@ -9,7 +9,7 @@
 
 namespace Aimbot {
 
-    void Tick(CUserCmd* pCmd);
+    bool   Tick(CUserCmd* pCmd);
 
    
     Vector FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimPunch, int iTickCount);
