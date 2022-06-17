@@ -16,7 +16,6 @@ bool Aimbot::Tick(CUserCmd* pCmd) {
 
             if (vTarget.IsValid()) {
 
-
                 
                 QAngle qNewAngles = GetNewAngles(vViewAngles, vTarget, pCmd->iTickCount);
                 if (!Settings.Aimbot.Silent) {
@@ -27,17 +26,12 @@ bool Aimbot::Tick(CUserCmd* pCmd) {
                     QAngle qRecoil = RecoilControl::RecoilControl(vViewAngles, vAimPunch, false);
                     g_pEngineClient->SetViewAngles(qRecoil);
                 }
-
                 pCmd->qViewAngles = qNewAngles;
                 return !Settings.Aimbot.Silent;
             }
-            
         }
-        
         QAngle qNewAngles = RecoilControl::RecoilControl(vViewAngles, vAimPunch, false);
-        g_pEngineClient->SetViewAngles(qNewAngles);
-        pCmd->qViewAngles = qNewAngles;
-       
+        pCmd->qViewAngles = qNewAngles;    
         
     }
     return true;
@@ -157,7 +151,7 @@ Vector Aimbot::GetNewAngles(Vector vViewAngles, Vector vDest, int iTick){
     }
 
     float flPercent = (g_pGlobalVars->interval_per_tick * (iTick - iStartTick)) / Settings.Aimbot.AimTime;
-    if (iTick - iStartTick < 2) flPercent = flPercent > 1 ? 1 : flPercent;
+    if (iTick - iStartTick < 2 || Settings.Aimbot.Silent) flPercent = flPercent >= 1 ? 1 : flPercent;
     else flPercent = flPercent > 1 ? Settings.Aimbot.AntilockFactor : flPercent;  
 
     //Clamp flPercent

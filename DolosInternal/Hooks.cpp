@@ -107,7 +107,7 @@ void __fastcall hkDrawModelExecute(void* _this, void*, void* pCtx, const DrawMod
 
 bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd) {
 	g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer());
-	bool bReturn = false; // oCreateMove(_this, edx, flInputSampleTime, pCmd);
+	bool bReturn = oCreateMove(_this, edx, flInputSampleTime, pCmd);
 	bool bAimbot = true;
 	if (pCmd->iTickCount != 0) {
 
@@ -124,7 +124,7 @@ bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CU
 
 		
 	}
-	return false;
+	return bReturn && bAimbot;
 }
 
 
