@@ -21,9 +21,9 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Features\Aimbot.cpp" />
-    <ClCompile Include="Features\Bhop.cpp" />
     <ClCompile Include="Features\EnginePrediction.cpp" />
     <ClCompile Include="Features\ESP.cpp" />
+    <ClCompile Include="Features\Misc.cpp" />
     <ClCompile Include="Features\RecoilControl.cpp" />
     <ClCompile Include="Features\SkinChanger.cpp" />
     <ClCompile Include="Features\Triggerbot.cpp" />
@@ -58,7 +58,6 @@
     <ClInclude Include="Features\Aimbot.h" />
     <ClInclude Include="Features\AntiAim.h" />
     <ClInclude Include="Features\Backtrack.h" />
-    <ClInclude Include="Features\Bhop.h" />
     <ClInclude Include="Features\Chams.h" />
     <ClInclude Include="Features\EnginePrediction.h" />
     <ClInclude Include="Features\ESP.h" />

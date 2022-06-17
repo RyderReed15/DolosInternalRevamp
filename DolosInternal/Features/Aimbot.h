@@ -7,6 +7,14 @@
 #include "../GUI/GUI.h"
 #include "RecoilControl.h"
 
+
+
+#define OVERAIM_REDUCTION_FACTOR    30
+#define DISTANCE_REDUCTION_FACTOR   512
+#define DISTANCE_WEIGHT             3584
+
+#define MAX_DEG_PER_TICK            35
+
 namespace Aimbot {
 
     bool   Tick(CUserCmd* pCmd);

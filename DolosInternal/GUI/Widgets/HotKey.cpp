@@ -2,7 +2,7 @@
 
 char ToUpper(char chKey) {
 
-    return chKey - 0x20 * (chKey >= 'a' && chKey <= 'z');
+    return chKey - DIFF_UPPER_LOWER * (chKey >= 'a' && chKey <= 'z');
 
 }
 

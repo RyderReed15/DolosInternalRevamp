@@ -6,6 +6,8 @@
 #include "../Utils/ConfigManager.h"
 #include "../GUI/GUI.h"
 
+#define NAME_PREFIX_LEN     13
+
 enum BONES {
     GROUND = 1, 
     HEIGHT, 
@@ -35,7 +37,7 @@ namespace ESP {
 
     void Tick();
 
-    void GetData            ();
+    void GetData            (void);
     void GetEntityInfo      (CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int iIndex);
     void GetBones           (IClientEntity* pEntity, EntityData* pEntityData);
 
@@ -48,7 +50,7 @@ namespace ESP {
     void DrawWeaponName     (Vector4D vBounds, const char* szWeaponName);
     void DrawDistance       (Vector4D vBounds, int iDistance);
 
-    void DrawElements       ();
+    void DrawElements       (void);
 
     bool WorldToScreen      (Vector2D& vScreen, Vector vPos);
     bool WorldToScreen      (Vector2D& vScreen, Vector vPos, VMatrix vMatrix);

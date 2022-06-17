@@ -130,7 +130,7 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimP
 
 Vector Aimbot::CalculateOveraim(Vector vViewAngles, Vector vDest, int iTick){
     if (iTick == iStartTick && !vOveraim.IsValid()) {
-        float flDistance = vDest.Lerp(vViewAngles, 1).Magnitude() / (30 * Settings.Aimbot.OveraimFactor);
+        float flDistance = vDest.Lerp(vViewAngles, 1).Magnitude() / (OVERAIM_REDUCTION_FACTOR * Settings.Aimbot.OveraimFactor);
 
         float flAngle = static_cast<float>(rand() % 360);
 
@@ -172,20 +172,20 @@ Vector Aimbot::GetNewAngles(Vector vViewAngles, Vector vDest, int iTick){
         vDelta.y *= 1 + .01f * (rand() / float(RAND_MAX) - .5f);
     }
     
-    if (vDelta.Magnitude() > 35) {
+    if (vDelta.Magnitude() > MAX_DEG_PER_TICK) {
         //Prevent Untrusted ban from rotating too fast
-        vDelta = vDelta.Normalize() * 35;
+        vDelta = vDelta.Normalize() * MAX_DEG_PER_TICK;
     }
     return (vViewAngles - vDelta).ToAngles();
     
 }
 
 float Aimbot::WeightFormula(float flFOV, float flDistance, float flRotateDistance){
-    return flRotateDistance + (flFOV / (.1f + Settings.Aimbot.RangeFactor * 3500 / flDistance));
+    return flRotateDistance + (flFOV / (.01f + Settings.Aimbot.RangeFactor * DISTANCE_WEIGHT / flDistance));
 }
 
 float Aimbot::FOVFormula(float flFOV, float flDistance){
-    return flFOV / (1 + Settings.Aimbot.RangeFactor * flDistance / 500);
+    return flFOV / (1 + Settings.Aimbot.RangeFactor * flDistance / DISTANCE_REDUCTION_FACTOR);
 }
 
 Vector Aimbot::CalculateAngle(Vector vStart, Vector vDest) {
@@ -193,8 +193,8 @@ Vector Aimbot::CalculateAngle(Vector vStart, Vector vDest) {
 
     Vector vDelta = (vStart - vDest);
 
-    vAngles.x = atanf(vDelta.z / std::hypot(vDelta.x, vDelta.y)) * 180.f / PI;
-    vAngles.y = atanf(vDelta.y / vDelta.x) * 180.f / PI;
+    vAngles.x = atanf(vDelta.z / std::hypot(vDelta.x, vDelta.y)) * RAD_TO_DEG;
+    vAngles.y = atanf(vDelta.y / vDelta.x) * RAD_TO_DEG;
     vAngles.z = 0.0f;
 
     if (vDelta.x >= 0.0f)

@@ -139,9 +139,6 @@
     <ClCompile Include="Features\RecoilControl.cpp">
       <Filter>Features</Filter>
     </ClCompile>
-    <ClCompile Include="Features\Bhop.cpp">
-      <Filter>Features</Filter>
-    </ClCompile>
     <ClCompile Include="Features\EnginePrediction.cpp">
       <Filter>Features</Filter>
     </ClCompile>
@@ -150,6 +147,9 @@
     </ClCompile>
     <ClCompile Include="Utils\HookManager.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Misc.cpp">
+      <Filter>Features</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -196,9 +196,6 @@
       <Filter>Features\Headers</Filter>
     </ClInclude>
     <ClInclude Include="Features\AntiAim.h">
-      <Filter>Features\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Features\Bhop.h">
       <Filter>Features\Headers</Filter>
     </ClInclude>
     <ClInclude Include="Utils\HookManager.h">

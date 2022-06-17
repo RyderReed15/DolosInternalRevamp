@@ -14,6 +14,10 @@
 #define D3DFVF_CUSTOMVERTEX             (D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
 #define D3DFVF_CUSTOMVERTEX_TEXTURE     (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1 )
 #define PI                              3.14159265358979323846f
+#define RAD_TO_DEG                      180.0f / PI
+#define DEG_TO_RAD                      PI / 180.0f
+
+#define ROUND_CORNER_LOD                3
 
 #define EMPTY       0x00000000
 
@@ -32,6 +36,10 @@
 #define CYAN        0xff00ffff
 #define GREEN       0xff00ff00
 #define YELLOW      0xffffff00
+
+#define TRANSPARENT_GRAY    0x33333333
+
+
 
 enum class BUFFER_TYPE {
     BUFFER_ALL,

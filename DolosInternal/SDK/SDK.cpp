@@ -49,7 +49,10 @@ bool InitializeSDK() {
 fnCreateInterface GetFactory(const char* szDLLName)
 {
     HMODULE hDLLBase = GetModuleHandle(szDLLName);
-    return (fnCreateInterface)GetProcAddress(hDLLBase, "CreateInterface");
+    if (hDLLBase) {
+        return (fnCreateInterface)GetProcAddress(hDLLBase, "CreateInterface");
+    }
+    return (fnCreateInterface)nullptr;
 }
 
 void* GetInterface(fnCreateInterface pFactory, const char* szInterface) {

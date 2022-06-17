@@ -12,7 +12,7 @@
 #include "Features/ESP.h"
 #include "Features/SkinChanger.h"
 #include "Features/Aimbot.h"
-#include "Features/Bhop.h"
+#include "Features/Misc.h"
 #include "Features/EnginePrediction.h"
 #include "Features/Triggerbot.h"
 

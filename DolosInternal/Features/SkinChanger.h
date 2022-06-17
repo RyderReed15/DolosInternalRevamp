@@ -6,6 +6,9 @@
 #include "../SDK/SDK.h"
 #include "Json--/JsonParser.h"
 
+#define ITEMS_PATH  "\\csgo\\scripts\\items\\items_game.txt"
+#define CDN_PATH    "\\csgo\\scripts\\items\\items_game_cdn.txt"
+
 namespace SkinChanger {
 
     struct SkinStruct {

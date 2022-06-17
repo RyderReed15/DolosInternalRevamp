@@ -116,13 +116,15 @@ bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CU
 		int iFlags = EnginePrediction::Begin(g_pLocalPlayer, pCmd);
 
 		bAimbot = Aimbot::Tick(pCmd);
-		Bhop::Tick(pCmd, iFlags);
+
+		Misc::Bhop(pCmd, iFlags);
+
 		Triggerbot::Tick(pCmd);
+
 		EnginePrediction::End(g_pLocalPlayer);
 
-		g_pLocalPlayer->SetFlags(iFlags);
+		g_pLocalPlayer->SetFlags(iFlags); //Return flags to before prediction to preserve state
 
-		
 	}
 	return bReturn && bAimbot;
 }

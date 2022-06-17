@@ -257,8 +257,8 @@ bool SkinChanger::InitializeSkinChanger() {
 	std::string szCDNName;
 	szItemsName = szItemsName.substr(0, szItemsName.find_last_of('\\'));
 	szCDNName = szItemsName;
-	szItemsName += "\\csgo\\scripts\\items\\items_game.txt";
-	szCDNName += "\\csgo\\scripts\\items\\items_game_cdn.txt";
+	szItemsName += ITEMS_PATH;
+	szCDNName += CDN_PATH;
 
 	JsonObject* pItems = ParseJsonFile(szItemsName.c_str());
 

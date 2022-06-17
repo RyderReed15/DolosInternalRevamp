@@ -1,23 +1,20 @@
 #include "ESP.h"
 
-std::unordered_map<int, EntityData> mEntityData;
+std::unordered_map<int, EntityData> g_mEntityData;
 
 void ESP::GetData() {
     if (g_pLocalPlayer == 0) return;
     for (int i = 0; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
-        if (mEntityData.count(i)) mEntityData[i].bDeleted = true;
+
+        if (g_mEntityData.count(i)) g_mEntityData[i].bDeleted = true;
+
         CBaseEntity* pEntity = g_pClientEntityList->GetClientEntity(i);
+
         if (!pEntity || !(pEntity->IsWeapon() || pEntity->IsPlayer())) continue;
-        if (pEntity->IsWeapon()) {
-            if (Settings.Visuals.Weapons.Enabled) {
-                if (pEntity->GetOwner() == -1) {
-                    if (pEntity->GetClientClass()->m_pNetworkName[1] != 'B') {
-                        //Ensure there is an owner and its class is not a base class
-                        GetEntityInfo(pEntity, Settings.Visuals.Weapons.Color, false, i);
-                    }
-                }
-            }
+
+        if (pEntity->IsWeapon() && Settings.Visuals.Weapons.Enabled && pEntity->GetOwner() == -1) {
             
+                GetEntityInfo(pEntity, Settings.Visuals.Weapons.Color, false, i);
         }
        else if (pEntity->SanityCheck() && pEntity != g_pLocalPlayer) {
             bool bSameTeam = pEntity->GetTeam() == g_pLocalPlayer->GetTeam();
@@ -47,11 +44,6 @@ void ESP::GetEntityInfo(CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int
     Vector vMax, vMin;
     if (!pEntity) return;
 
-    if (pEntity->GetClientClass()->m_pNetworkName[1] == 'B') {
-        // Prevents race condition but will likely never actually return
-        // Class could change between this and last call and cause an error
-        return;
-    }
 
     //Find bounding boxes for weapons and model dimensions for players
     if (!bPlayer) {
@@ -101,29 +93,27 @@ void ESP::GetEntityInfo(CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int
             if (vSize.z < vScreen.x) vSize.z = vScreen.x;
             if (vSize.w < vScreen.y) vSize.w = vScreen.y;
         }
-        
-
     }
     
-    mEntityData[iIndex].bDeleted     = false;
-    mEntityData[iIndex].vSize        = vSize;
-    mEntityData[iIndex].cColor       = cColor;
-    mEntityData[iIndex].iDistance    = static_cast<int>((pEntity->GetVecOrigin() - g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer())->GetVecOrigin()).Magnitude() * 0.0254f);
-    mEntityData[iIndex].bPlayer      = bPlayer;
+    g_mEntityData[iIndex].bDeleted     = false;
+    g_mEntityData[iIndex].vSize        = vSize;
+    g_mEntityData[iIndex].cColor       = cColor;
+    g_mEntityData[iIndex].iDistance    = static_cast<int>((pEntity->GetVecOrigin() - g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer())->GetVecOrigin()).Magnitude() * 0.0254f);
+    g_mEntityData[iIndex].bPlayer      = bPlayer;
     if (bPlayer) {
 
-        mEntityData[iIndex].iHealth  = pEntity->GetHealth();
-        mEntityData[iIndex].iArmor   = pEntity->GetArmor();
+        g_mEntityData[iIndex].iHealth  = pEntity->GetHealth();
+        g_mEntityData[iIndex].iArmor   = pEntity->GetArmor();
 
         player_info_t playerInfo; g_pEngineClient->GetPlayerInfo(iIndex, &playerInfo);
         
-        strcpy_s(mEntityData[iIndex].szName, 128, playerInfo.szName);
+        strcpy_s(g_mEntityData[iIndex].szName, 128, playerInfo.szName);
 
-        GetBones(pEntity, &mEntityData[iIndex]);
+        GetBones(pEntity, &g_mEntityData[iIndex]);
 
     }
     else {
-        strcpy_s(mEntityData[iIndex].szName, 128, pEntity->GetWeaponData()->szHudName + 13);
+        strcpy_s(g_mEntityData[iIndex].szName, 128, pEntity->GetWeaponData()->szHudName + NAME_PREFIX_LEN);
     } 
 
     
@@ -211,12 +201,12 @@ void ESP::DrawDistance(Vector4D vBounds, int iDistance){
 }
 
 void ESP::DrawElements(){
-    for (std::unordered_map<int, EntityData>::iterator it = mEntityData.begin(); it != mEntityData.end(); it++) {
+    for (std::unordered_map<int, EntityData>::iterator it = g_mEntityData.begin(); it != g_mEntityData.end(); it++) {
         //SCREEN SIZE HERE - dont render boxes if too big
         if (it->second.bDeleted || it->second.vSize.z - it->second.vSize.x < 5 || it->second.vSize.w - it->second.vSize.y < 5 || it->second.vSize.z - it->second.vSize.x > 800 || it->second.vSize.w - it->second.vSize.y > 800) continue;
 
         
-        g_pRender-> DrawRectangle   ({ it->second.vSize.x, it->second.vSize.y, it->second.vSize.z - it->second.vSize.x, it->second.vSize.w - it->second.vSize.y }, 0x33333333);
+        g_pRender-> DrawRectangle   ({ it->second.vSize.x, it->second.vSize.y, it->second.vSize.z - it->second.vSize.x, it->second.vSize.w - it->second.vSize.y }, TRANSPARENT_GRAY);
                     DrawOutline     (it->second.vSize, it->second.cColor);
                     DrawDistance    (it->second.vSize, it->second.iDistance);
 

@@ -45,10 +45,10 @@ void Render::Initialize(IDirect3DDevice9* pDevice, HMODULE hMod) {
 
 	//Create buffers to hold lines and triangle meshes
 
-	m_pDevice->CreateVertexBuffer	(m_iMaxVertices * sizeof(CustomVertex), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &m_pLineVertexBuffer, NULL);
-	m_pDevice->CreateIndexBuffer	(m_iMaxVertices * 2 * sizeof(int), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX32, D3DPOOL_DEFAULT, &m_pLineIndexBuffer, NULL);
-	m_pDevice->CreateVertexBuffer	(m_iMaxVertices * sizeof(CustomVertex), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &m_pTriVertexBuffer, NULL);
-	m_pDevice->CreateIndexBuffer	(m_iMaxVertices * 2 * sizeof(int), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX32, D3DPOOL_DEFAULT, &m_pTriIndexBuffer, NULL);
+	m_pDevice->CreateVertexBuffer	(m_iMaxVertices * sizeof(CustomVertex)	, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &m_pLineVertexBuffer, NULL);
+	m_pDevice->CreateIndexBuffer	(m_iMaxVertices * 2 * sizeof(int)		, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX32		, D3DPOOL_DEFAULT, &m_pLineIndexBuffer, NULL);
+	m_pDevice->CreateVertexBuffer	(m_iMaxVertices * sizeof(CustomVertex)	, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &m_pTriVertexBuffer, NULL);
+	m_pDevice->CreateIndexBuffer	(m_iMaxVertices * 2 * sizeof(int)		, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX32		, D3DPOOL_DEFAULT, &m_pTriIndexBuffer, NULL);
 }
 
 Render::~Render() {
@@ -98,18 +98,18 @@ void Render::Begin(BUFFER_TYPE tBufferType) {
 		switch (tBufferType) {
 		case BUFFER_TYPE::BUFFER_ALL:
 			m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
-			m_pLineVertexBuffer->Lock(0, 0, (void**)&m_pLineVertex, D3DLOCK_DISCARD);
-			m_pLineIndexBuffer->Lock(0, 0, (void**)&m_pLineIndex, D3DLOCK_DISCARD);
-			m_pTriVertexBuffer->Lock(0, 0, (void**)&m_pTriVertex, D3DLOCK_DISCARD);
-			m_pTriIndexBuffer->Lock(0, 0, (void**)&m_pTriIndex, D3DLOCK_DISCARD);
+			m_pLineVertexBuffer->	Lock(0, 0, (void**)&m_pLineVertex, D3DLOCK_DISCARD);
+			m_pLineIndexBuffer->	Lock(0, 0, (void**)&m_pLineIndex, D3DLOCK_DISCARD);
+			m_pTriVertexBuffer->	Lock(0, 0, (void**)&m_pTriVertex, D3DLOCK_DISCARD);
+			m_pTriIndexBuffer->		Lock(0, 0, (void**)&m_pTriIndex, D3DLOCK_DISCARD);
 			break;
 		case BUFFER_TYPE::BUFFER_LINE:
-			m_pLineVertexBuffer->Lock(0, 0, (void**)&m_pLineVertex, D3DLOCK_DISCARD);
-			m_pLineIndexBuffer->Lock(0, 0, (void**)&m_pLineIndex, D3DLOCK_DISCARD);
+			m_pLineVertexBuffer->	Lock(0, 0, (void**)&m_pLineVertex, D3DLOCK_DISCARD);
+			m_pLineIndexBuffer->	Lock(0, 0, (void**)&m_pLineIndex, D3DLOCK_DISCARD);
 			break;
 		case BUFFER_TYPE::BUFFER_TRI:
-			m_pTriVertexBuffer->Lock(0, 0, (void**)&m_pTriVertex, D3DLOCK_DISCARD);
-			m_pTriIndexBuffer->Lock(0, 0, (void**)&m_pTriIndex, D3DLOCK_DISCARD);
+			m_pTriVertexBuffer->	Lock(0, 0, (void**)&m_pTriVertex, D3DLOCK_DISCARD);
+			m_pTriIndexBuffer->		Lock(0, 0, (void**)&m_pTriIndex, D3DLOCK_DISCARD);
 			break;
 		case BUFFER_TYPE::BUFFER_TEXT:
 			m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
@@ -130,10 +130,10 @@ void Render::End(BUFFER_TYPE tBufferType) {
 		switch (tBufferType) {
 		case BUFFER_TYPE::BUFFER_ALL:
 			//Draw both line and triangle batch
-			m_pLineVertexBuffer->Unlock();
-			m_pLineIndexBuffer->Unlock();
-			m_pTriVertexBuffer->Unlock();
-			m_pTriIndexBuffer->Unlock();
+			m_pLineVertexBuffer->	Unlock();
+			m_pLineIndexBuffer->	Unlock();
+			m_pTriVertexBuffer->	Unlock();
+			m_pTriIndexBuffer->		Unlock();
 
 			m_pDevice->SetStreamSource(0, m_pTriVertexBuffer, 0, sizeof(CustomVertex));
 			m_pDevice->SetIndices(m_pTriIndexBuffer);
@@ -153,8 +153,8 @@ void Render::End(BUFFER_TYPE tBufferType) {
 			break;
 		case BUFFER_TYPE::BUFFER_LINE:
 			//Draw line batch
-			m_pLineVertexBuffer->Unlock();
-			m_pLineIndexBuffer->Unlock();
+			m_pLineVertexBuffer->	Unlock();
+			m_pLineIndexBuffer->	Unlock();
 
 			m_pDevice->SetStreamSource(0, m_pLineVertexBuffer, 0, sizeof(CustomVertex));
 			m_pDevice->SetIndices(m_pLineIndexBuffer);
@@ -166,7 +166,7 @@ void Render::End(BUFFER_TYPE tBufferType) {
 		case BUFFER_TYPE::BUFFER_TRI:
 			//Draw traingle batch
 			m_pTriVertexBuffer->Unlock();
-			m_pTriIndexBuffer->Unlock();
+			m_pTriIndexBuffer->	Unlock();
 
 			m_pDevice->SetStreamSource(0, m_pTriVertexBuffer, 0, sizeof(CustomVertex));
 			m_pDevice->SetIndices(m_pTriIndexBuffer);
@@ -321,28 +321,32 @@ HRESULT Render::DrawRoundedRectangle(D3DXVECTOR4 vBounds, float flCornerSize, D3
 
 		if (bVertical) {
 			if (cColor2) {
-				DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, LerpColor(cColor, cColor2, flCornerSize * 2 / vBounds.w), bVertical, .25, 180);
-				DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, LerpColor(cColor, cColor2, flCornerSize * 2 / vBounds.w), bVertical, .25, 270);
-				DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, LerpColor(cColor2, cColor, flCornerSize * 2 / vBounds.w), cColor2, bVertical, .25, 90);
-				DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, LerpColor(cColor2, cColor, flCornerSize * 2 / vBounds.w), cColor2, bVertical, .25, 0);
+				D3DCOLOR cLerpOne = LerpColor(cColor, cColor2, flCornerSize * 2 / vBounds.w);
+				D3DCOLOR cLerpTwo = LerpColor(cColor2, cColor, flCornerSize * 2 / vBounds.w);
+				DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + flCornerSize }, flCornerSize, ROUND_CORNER_LOD, cColor, cLerpOne, bVertical, .25, 180);
+				DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + flCornerSize }, flCornerSize, ROUND_CORNER_LOD, cColor, cLerpOne, bVertical, .25, 270);
+				DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, ROUND_CORNER_LOD, cLerpTwo, cColor2, bVertical, .25, 90);
+				DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, ROUND_CORNER_LOD, cLerpTwo, cColor2, bVertical, .25, 0);
 				DrawRectangle({ vBounds.x, vBounds.y + flCornerSize, vBounds.z, vBounds.w - flCornerSize * 2 }, LerpColor(cColor, cColor2, flCornerSize / vBounds.w), LerpColor(cColor2, cColor, flCornerSize / vBounds.w), bVertical);
 
 			}
 			else {
-				DrawCircle({ vBounds.x + flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, .25, 180);
-				DrawCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, .25, 270);
-				DrawCircle({ vBounds.x + flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, cColor, .25, 90);
-				DrawCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, cColor, .25, 0);
+				DrawCircle({ vBounds.x + flCornerSize, vBounds.y + flCornerSize }, flCornerSize, ROUND_CORNER_LOD, cColor, .25, 180);
+				DrawCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + flCornerSize }, flCornerSize, ROUND_CORNER_LOD, cColor, .25, 270);
+				DrawCircle({ vBounds.x + flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, ROUND_CORNER_LOD, cColor, .25, 90);
+				DrawCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, ROUND_CORNER_LOD, cColor, .25, 0);
 				DrawRectangle({ vBounds.x, vBounds.y + flCornerSize, vBounds.z, vBounds.w - flCornerSize * 2 }, cColor, cColor2, bVertical);
 
 			}
 			DrawRectangle({ vBounds.x + flCornerSize, vBounds.y, vBounds.z - flCornerSize * 2, vBounds.w }, cColor, cColor2, bVertical);
 		}
 		else {
-			DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, cColor, LerpColor(cColor, cColor2, flCornerSize * 2 / vBounds.z), bVertical, .25, 180);
-			DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + flCornerSize }, flCornerSize, 3, LerpColor(cColor2, cColor, flCornerSize * 2 / vBounds.z), cColor2, bVertical, .25, 270);
-			DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, cColor, LerpColor(cColor, cColor2, flCornerSize * 2 / vBounds.z), bVertical, .25, 90);
-			DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, 3, LerpColor(cColor2, cColor, flCornerSize * 2 / vBounds.z), cColor2, bVertical, .25, 0);
+			D3DCOLOR cLerpOne = LerpColor(cColor, cColor2, flCornerSize * 2 / vBounds.z);
+			D3DCOLOR cLerpTwo = LerpColor(cColor2, cColor, flCornerSize * 2 / vBounds.z);
+			DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + flCornerSize }, flCornerSize, ROUND_CORNER_LOD, cColor, cLerpOne, bVertical, .25, 180);
+			DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + flCornerSize }, flCornerSize, ROUND_CORNER_LOD, cLerpTwo, cColor2, bVertical, .25, 270);
+			DrawFadingCircle({ vBounds.x + flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, ROUND_CORNER_LOD, cColor, cLerpOne, bVertical, .25, 90);
+			DrawFadingCircle({ vBounds.x + vBounds.z - flCornerSize, vBounds.y + vBounds.w - flCornerSize }, flCornerSize, ROUND_CORNER_LOD, cLerpTwo, cColor2, bVertical, .25, 0);
 
 			DrawRectangle({ vBounds.x + flCornerSize, vBounds.y, vBounds.z - flCornerSize * 2, vBounds.w }, LerpColor(cColor, cColor2, flCornerSize / vBounds.z), LerpColor(cColor2, cColor, flCornerSize / vBounds.z), bVertical);
 			DrawRectangle({ vBounds.x, vBounds.y + flCornerSize, vBounds.z, vBounds.w - flCornerSize * 2 }, cColor, cColor2, bVertical);
@@ -360,13 +364,13 @@ HRESULT Render::DrawFadingCircle(Vector2D vLocation, float flRadius, unsigned in
 		ManageBatch(D3DPT_TRIANGLELIST, iSides + 2, iSides * 3);
 		float flCos = cosf(2 * PI / iSides * flFraction);
 		float flSin = sinf(2 * PI / iSides * flFraction);
-		float flFracCos = cosf(flRotation / 180.f * PI);
-		float flFracSin = sinf(flRotation / 180.f * PI);
+		float flFracCos = cosf(flRotation * DEG_TO_RAD);
+		float flFracSin = sinf(flRotation * DEG_TO_RAD);
 		float flR = flRadius * flFracCos;
 		float flD = flRadius * flFracSin;
 		float flTemp;
 		unsigned int iCenter = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x, vLocation.y }, LerpColor(cColor, cColor2, .5));
-		unsigned int iPrev = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x + flR, vLocation.y + flD }, LerpColor(cColor, cColor2, (bVertical ? flD : flR) / flRadius + 1 / 2));
+		unsigned int iPrev = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x + flR, vLocation.y + flD }, LerpColor(cColor, cColor2, (bVertical ? flD : flR) / flRadius));
 
 
 		for (unsigned int i = 0; i < iSides; i++) {
@@ -374,7 +378,7 @@ HRESULT Render::DrawFadingCircle(Vector2D vLocation, float flRadius, unsigned in
 			flR = flCos * flR - flSin * flD;
 			flD = flSin * flTemp + flCos * flD;
 
-			unsigned int iTemp = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x + flR, vLocation.y + flD }, LerpColor(cColor, cColor2, (bVertical ? flD : flR) / flRadius + 1 / 2));
+			unsigned int iTemp = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x + flR, vLocation.y + flD }, LerpColor(cColor, cColor2, (bVertical ? flD : flR) / flRadius));
 			AddTriangle(iTemp, iCenter, iPrev);
 
 			iPrev = iTemp;
@@ -392,8 +396,8 @@ HRESULT Render::DrawCircleOutline(Vector2D vLocation, float flRadius, unsigned i
 		ManageBatch(D3DPT_LINELIST, iSides + 1, iSides * 2);
 		float flCos = cosf(2 * PI / iSides * flFraction);
 		float flSin = sinf(2 * PI / iSides * flFraction);
-		float flFracCos = cosf(flRotation / 180.f * PI);
-		float flFracSin = sinf(flRotation / 180.f * PI);
+		float flFracCos = cosf(flRotation * DEG_TO_RAD);
+		float flFracSin = sinf(flRotation * DEG_TO_RAD);
 		float flR = flRadius * flFracCos;
 		float flD = flRadius * flFracSin;
 		float flTemp;
@@ -429,8 +433,8 @@ HRESULT Render::DrawCircle(Vector2D vLocation, float flRadius, unsigned int iSid
 		ManageBatch(D3DPT_TRIANGLELIST, iSides + 2, iSides * 3);
 		float flCos = cosf(2 * PI / iSides * flFraction);
 		float flSin = sinf(2 * PI / iSides * flFraction);
-		float flFracCos = cosf(flRotation / 180.f * PI);
-		float flFracSin = sinf(flRotation / 180.f * PI);
+		float flFracCos = cosf(flRotation * DEG_TO_RAD);
+		float flFracSin = sinf(flRotation * DEG_TO_RAD);
 		float flR = flRadius * flFracCos;
 		float flD = flRadius * flFracSin;
 		float flTemp;
@@ -481,7 +485,7 @@ Vector2D Render::GetStringSize(ID3DXFont* pFont, const WCHAR* szString, ...) {
 	rect.top = 0;
 	rect.bottom = 0;
 	rect.right = 0;
-	pFont->DrawTextW(NULL, szString, -1, &rect, DT_CALCRECT, 0xffffffff);
+	pFont->DrawTextW(NULL, szString, -1, &rect, DT_CALCRECT, WHITE);
 	return { (float)rect.right, (float)rect.bottom };
 }
 Vector2D Render::GetStringSize(ID3DXFont* pFont, const char* szString, ...) {
@@ -491,7 +495,7 @@ Vector2D Render::GetStringSize(ID3DXFont* pFont, const char* szString, ...) {
 	rect.top = 0;
 	rect.bottom = 0;
 	rect.right = 0;
-	pFont->DrawTextA(NULL, szString, -1, &rect, DT_CALCRECT, 0xffffffff);
+	pFont->DrawTextA(NULL, szString, -1, &rect, DT_CALCRECT, WHITE);
 	return { (float)rect.right, (float)rect.bottom };
 }
 

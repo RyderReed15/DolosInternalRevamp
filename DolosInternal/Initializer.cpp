@@ -9,7 +9,7 @@ bool StartCheat(HMODULE hMod) {
 	// Hook WndProc and send it a message letting it know its been hooked so that initialization can be done from a game thread
 	oWndProc = SetWindowLongPtrW(FindWindow("Valve001", NULL), GWLP_WNDPROC, LONG_PTR(&hkInitWndProc));
 
-	SendMessage(FindWindow("Valve001", NULL), 0x9999, 0, (LONG_PTR)hMod);
+	SendMessage(FindWindow("Valve001", NULL), INIT_MESSAGE, 0, (LONG_PTR)hMod);
 
 	hModule = hMod;
 
@@ -81,7 +81,10 @@ bool UninitializeCheat() {
 	UninitializeConfig();
 	fclose(fConsole);
 	FreeConsole();
-	return CloseHandle(CreateThread(nullptr, 0, LPTHREAD_START_ROUTINE(CloseCheat), hModule, 0, nullptr));
+	if (HANDLE hThread = CreateThread(nullptr, 0, LPTHREAD_START_ROUTINE(CloseCheat), hModule, 0, nullptr)) {
+		return CloseHandle(hThread);
+	}
+	return false;
 }
 
 bool CloseCheat(HMODULE hMod) {
@@ -92,9 +95,9 @@ bool CloseCheat(HMODULE hMod) {
 
 LRESULT hkInitWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
-	if (uMsg == 0x9999) {
+	if (uMsg == INIT_MESSAGE) {
 		InitializeCheat((HMODULE)lParam);
-		MakeHotKey(0x1000, &EndThread);
+		MakeHotKey(EJECT_HOTKEY, &EndThread);
 		// Pass hook along to main hook function
 
 		SetWindowLongPtrW(FindWindow("Valve001", NULL), GWLP_WNDPROC, (LONG_PTR)hkWndProc);

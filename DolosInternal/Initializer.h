@@ -12,6 +12,9 @@
 #include "GUI/GUI.h"
 #include "Utils/ConfigManager.h"
 
+#define INIT_MESSAGE    0x9999
+#define EJECT_HOTKEY    0x1000
+
 
 bool UninitializeCheat  (void);
 bool StartCheat         (HMODULE hMod);

@@ -6,6 +6,9 @@
 #include "IGUIElement.h"
 #include "../../Utils/HotKeyManager.h"
 
+#define DIFF_UPPER_LOWER 0x20
+
+
 class GUIEventHanlder;
 
 struct HotKeyStruct;
