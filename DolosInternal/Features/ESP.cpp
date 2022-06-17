@@ -1,11 +1,11 @@
 #include "ESP.h"
 
+std::unordered_map<int, EntityData> mEntityData;
 
-void ESP::Tick() {
+void ESP::GetData() {
     if (g_pLocalPlayer == 0) return;
-    g_pRender->Begin();
     for (int i = 0; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
-        
+        if (mEntityData.count(i)) mEntityData[i].bDeleted = true;
         CBaseEntity* pEntity = g_pClientEntityList->GetClientEntity(i);
         if (!pEntity || !(pEntity->IsWeapon() || pEntity->IsPlayer())) continue;
         if (pEntity->IsWeapon()) {
@@ -13,7 +13,7 @@ void ESP::Tick() {
                 if (pEntity->GetOwner() == -1) {
                     if (pEntity->GetClientClass()->m_pNetworkName[1] != 'B') {
                         //Ensure there is an owner and its class is not a base class
-                        DrawBoundingBox(pEntity, Settings.Visuals.Weapons.Color, i);
+                        GetEntityInfo(pEntity, Settings.Visuals.Weapons.Color, false, i);
                     }
                 }
             }
@@ -24,43 +24,26 @@ void ESP::Tick() {
 
             if (!bSameTeam && Settings.Visuals.Players.ShowEnemy) {
 
-                DrawBoundingBox(pEntity, Settings.Visuals.Players.EnemyColor, i);
-                if (Settings.Visuals.Players.DrawBones)     DrawBones(pEntity);
+                GetEntityInfo(pEntity, Settings.Visuals.Players.EnemyColor, true, i);
             }
             else if (bSameTeam && Settings.Visuals.Players.ShowTeam) {
 
-                DrawBoundingBox(pEntity, Settings.Visuals.Players.TeamColor, i);
-                if (Settings.Visuals.Players.DrawBones)     DrawBones(pEntity);
+                GetEntityInfo(pEntity, Settings.Visuals.Players.TeamColor, true, i);
             }
         }
     }
+}
+
+void ESP::Tick() {
+    if (g_pLocalPlayer == 0) return;
+    g_pRender->Begin();
+    DrawElements();
     g_pRender->End();
 }
 
-void ESP::GetWeaponNames() {
-    //Names need to be gotten in CreateMove due to a race condition that will cause an access violation
-    //Entity class could change during call and cause an error
-    //Player names should also be gotten here but their pointers change too often to store and race condition is very unlikely
 
-    for (int i = 0; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
 
-        CBaseEntity* pEntity = g_pClientEntityList->GetClientEntity(i);
-        if (!pEntity || !pEntity->IsWeapon()) continue;
-        
-        if (Settings.Visuals.Weapons.Enabled && Settings.Visuals.Weapons.DrawName) {
-            if (pEntity->GetOwner() == -1) {
-                if (pEntity->GetClientClass()->m_pNetworkName[1] != 'B') {
-                    //Ensure there is an owner and its class is not a base class
-                    // 13 is length of prefix to name
-                    g_mWeaponNames[pEntity] = pEntity->GetWeaponData()->szHudName + 13;
-                }
-            }
-        }
-
-    }
-}
-
-void ESP::DrawBoundingBox(CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex) {
+void ESP::GetEntityInfo(CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int iIndex) {
     Vector vMax, vMin;
     if (!pEntity) return;
 
@@ -71,7 +54,7 @@ void ESP::DrawBoundingBox(CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex) {
     }
 
     //Find bounding boxes for weapons and model dimensions for players
-    if (pEntity->IsWeapon()) {
+    if (!bPlayer) {
         ICollideable* pCollide = pEntity->GetCollideable();
         if (!pCollide) return;
         vMax = pCollide->OBBMaxs();
@@ -121,21 +104,27 @@ void ESP::DrawBoundingBox(CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex) {
         
 
     }
-    //SCREEN SIZE HERE - dont render boxes if too big
-    if (vSize.z - vSize.x < 5 || vSize.w - vSize.y < 5 || vSize.z - vSize.x > 800 || vSize.w - vSize.y > 800) return;
-
-    g_pRender->DrawRectangle({ vSize.x, vSize.y, vSize.z - vSize.x, vSize.w - vSize.y }, 0x33333333);
-    DrawOutline(vSize, cColor);
-    DrawDistance(vSize, pEntity);
-    if (pEntity->IsPlayer()) {
-        if (Settings.Visuals.Players.DrawHealth)    DrawHealth      (pEntity->GetHealth()   , vSize);
-        if (Settings.Visuals.Players.DrawArmor)     DrawArmor       (pEntity->GetArmor()    , vSize);
-        if (Settings.Visuals.Players.DrawName)      DrawPlayerName  (vSize        , iIndex);
-    }
-    if (pEntity->IsWeapon()) {
-        if (Settings.Visuals.Weapons.Enabled)       DrawWeaponName  (vSize        , g_mWeaponNames[pEntity]);
-    }
     
+    mEntityData[iIndex].bDeleted     = false;
+    mEntityData[iIndex].vSize        = vSize;
+    mEntityData[iIndex].cColor       = cColor;
+    mEntityData[iIndex].iDistance    = static_cast<int>((pEntity->GetVecOrigin() - g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer())->GetVecOrigin()).Magnitude() * 0.0254f);
+    mEntityData[iIndex].bPlayer      = bPlayer;
+    if (bPlayer) {
+
+        mEntityData[iIndex].iHealth  = pEntity->GetHealth();
+        mEntityData[iIndex].iArmor   = pEntity->GetArmor();
+
+        player_info_t playerInfo; g_pEngineClient->GetPlayerInfo(iIndex, &playerInfo);
+        
+        strcpy_s(mEntityData[iIndex].szName, 128, playerInfo.szName);
+
+        GetBones(pEntity, &mEntityData[iIndex]);
+
+    }
+    else {
+        strcpy_s(mEntityData[iIndex].szName, 128, pEntity->GetWeaponData()->szHudName + 13);
+    } 
 
     
 }
@@ -157,7 +146,8 @@ void ESP::DrawOutline(Vector4D vBounds, D3DCOLOR cColor){
     g_pRender->DrawLine({ vBounds.x, vBounds.w }, { vBounds.x, vBounds.w - flQuarterSide }, cColor);
 }
 
-void ESP::DrawBones(IClientEntity* pEntity) {
+void ESP::GetBones(IClientEntity* pEntity, EntityData* pEntityData) {
+    pEntityData->vBones.clear();
     if (!pEntity || !pEntity->GetModel()) return;
 
     studiohdr_t* pStudioHdr = g_pModelInfo->GetStudiomodel(pEntity->GetModel());
@@ -188,22 +178,21 @@ void ESP::DrawBones(IClientEntity* pEntity) {
             Vector2D vScreenChild, vScreenParent;
             WorldToScreen(vScreenChild, vChild);
             WorldToScreen(vScreenParent, vParent);
-            g_pRender->DrawLine(vScreenChild, vScreenParent, WHITE);
+            pEntityData->vBones.push_back({ vScreenChild.x, vScreenChild.y, vScreenParent.x, vScreenParent.y });
             
         }
     }
 }
 
-void ESP::DrawPlayerName(Vector4D vBounds, int iIndex){
+void ESP::DrawPlayerName(Vector4D vBounds, const char* szPlayerName){
  
-    player_info_t playerInfo;
-    g_pEngineClient->GetPlayerInfo(iIndex, &playerInfo);
-    Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, playerInfo.szName);
-    g_pRender->DrawString({ (vBounds.x + vBounds.z - vSize.x) / 2 , vBounds.y - vSize.y }, WHITE, g_pWeaponFont, playerInfo.szName);
+
+    Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, szPlayerName);
+    g_pRender->DrawString({ (vBounds.x + vBounds.z - vSize.x) / 2 , vBounds.y - vSize.y }, WHITE, g_pWeaponFont, szPlayerName);
     
 }
 
-void ESP::DrawWeaponName(Vector4D vBounds, char* szWeaponName){
+void ESP::DrawWeaponName(Vector4D vBounds, const char* szWeaponName){
    
     if (szWeaponName) {
         Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, szWeaponName);
@@ -213,12 +202,35 @@ void ESP::DrawWeaponName(Vector4D vBounds, char* szWeaponName){
     
 }
 
-void ESP::DrawDistance(Vector4D vBounds, CBaseEntity* pEntity){
-    int iDistance = static_cast<int>((pEntity->GetVecOrigin() - g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer())->GetVecOrigin()).Magnitude() * 0.0254f);
+void ESP::DrawDistance(Vector4D vBounds, int iDistance){
+   
 
     char szDistance[33];  _itoa_s(iDistance, szDistance, 10);
     Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, szDistance);
     g_pRender->DrawString({ (vBounds.x + vBounds.z - vSize.x) / 2 , vBounds.w  }, WHITE, g_pWeaponFont, szDistance);
+}
+
+void ESP::DrawElements(){
+    for (std::unordered_map<int, EntityData>::iterator it = mEntityData.begin(); it != mEntityData.end(); it++) {
+        //SCREEN SIZE HERE - dont render boxes if too big
+        if (it->second.bDeleted || it->second.vSize.z - it->second.vSize.x < 5 || it->second.vSize.w - it->second.vSize.y < 5 || it->second.vSize.z - it->second.vSize.x > 800 || it->second.vSize.w - it->second.vSize.y > 800) continue;
+
+        
+        g_pRender-> DrawRectangle   ({ it->second.vSize.x, it->second.vSize.y, it->second.vSize.z - it->second.vSize.x, it->second.vSize.w - it->second.vSize.y }, 0x33333333);
+                    DrawOutline     (it->second.vSize, it->second.cColor);
+                    DrawDistance    (it->second.vSize, it->second.iDistance);
+
+        if (it->second.bPlayer) {
+            if (Settings.Visuals.Players.DrawHealth)    DrawHealth      (it->second.iHealth, it->second.vSize);
+            if (Settings.Visuals.Players.DrawArmor)     DrawArmor       (it->second.iArmor, it->second.vSize);
+            if (Settings.Visuals.Players.DrawName)      DrawPlayerName  (it->second.vSize, it->second.szName);
+            if (Settings.Visuals.Players.DrawBones)     DrawBones       (it->second.vBones, WHITE);
+        }
+        else {
+            if (Settings.Visuals.Weapons.Enabled)       DrawWeaponName  (it->second.vSize, it->second.szName);
+        }
+    }
+    
 }
 
 
@@ -236,6 +248,13 @@ void ESP::DrawArmor(int iArmor, Vector4D vBounds) {
 
     g_pRender->DrawRectangle({ vBounds.z + 4, vBounds.y - 1, 1, (vBounds.w - vBounds.y) * iArmor / 100.f }, LIGHTBLUE);
 
+}
+
+void ESP::DrawBones(std::vector<Vector4D> vBones, D3DCOLOR cColor){
+
+    for (std::vector<Vector4D>::iterator it = vBones.begin(); it != vBones.end(); it++) {
+        g_pRender->DrawLine({ it->x, it->y }, { it->z, it->w }, cColor);
+    }
 }
 
 bool ESP::WorldToScreen(Vector2D& vScreen, Vector vPos) {

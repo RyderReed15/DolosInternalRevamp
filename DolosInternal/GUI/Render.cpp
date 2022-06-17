@@ -87,16 +87,12 @@ void Render::Release() {
 
 void Render::Begin(BUFFER_TYPE tBufferType) {
 	if (IsInitialized()) {
-		
 
 		m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX);
 		m_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 		m_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		m_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
-
 		m_pDevice->SetRenderState(D3DRS_CLIPPING, TRUE);
-
 		m_pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 		switch (tBufferType) {

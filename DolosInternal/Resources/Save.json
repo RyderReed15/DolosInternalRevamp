@@ -5,7 +5,7 @@
 	"data_created": "10-14-2021",
 	"aimbot": {
 		"enabled": true,
-		"silent": false,
+		"silent": true,
 		"target_all": true,
 		"overaim": false,
 		"overaim_factor": 1,
@@ -91,12 +91,12 @@
 		]
 	},
 	"trigger": {
-		"enabled": true,
+		"enabled": false,
 		"range": 2000
 	},
 	"recoil": {
 		"enabled": true,
-		"factor": 2
+		"factor": 1
 	},
 	"anti_aim": {
 		"active": true,

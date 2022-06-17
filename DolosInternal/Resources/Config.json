@@ -93,12 +93,12 @@
 		
 	},
 	"trigger": {
-		"enabled": true,
+		"enabled": false,
 		"range":  2000
 	},
 	"recoil": {
 		"enabled": true,
-		"factor": 2
+		"factor": 1
 	},
 	"anti_aim": {
 		"active": true,

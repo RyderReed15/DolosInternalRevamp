@@ -18,20 +18,37 @@ enum BONES {
     NECK2
 };
 
+struct EntityData {
+    D3DCOLOR cColor = 0;
+    Vector4D vSize = { 0,0,0,0 };
+    int iHealth = 0;
+    int iArmor = 0;
+    int iDistance = 0;
+    char szName[128];
+    bool bPlayer = false;
+    bool bDeleted = true;
+    std::vector<Vector4D> vBones;
+
+};
+
 namespace ESP {
-    inline std::map<void*, char*> g_mWeaponNames;
 
     void Tick();
-    void GetWeaponNames();
 
-    void DrawBoundingBox    (CBaseEntity* pEntity, D3DCOLOR cColor, int iIndex);
+    void GetData            ();
+    void GetEntityInfo      (CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int iIndex);
+    void GetBones           (IClientEntity* pEntity, EntityData* pEntityData);
+
+
     void DrawOutline        (Vector4D vBounds, D3DCOLOR cColor);
     void DrawHealth         (int iHealth, Vector4D vBounds);
     void DrawArmor          (int iArmor, Vector4D vBounds);
-    void DrawBones          (IClientEntity* pEntity);
-    void DrawPlayerName     (Vector4D vBounds, int iIndex);
-    void DrawWeaponName     (Vector4D vBounds, char* szWeaponName);
-    void DrawDistance       (Vector4D vBounds, CBaseEntity* pEntity);
+    void DrawBones          (std::vector<Vector4D> vBones, D3DCOLOR cColor);
+    void DrawPlayerName     (Vector4D vBounds, const char* szPlayerName);
+    void DrawWeaponName     (Vector4D vBounds, const char* szWeaponName);
+    void DrawDistance       (Vector4D vBounds, int iDistance);
+
+    void DrawElements       ();
 
     bool WorldToScreen      (Vector2D& vScreen, Vector vPos);
     bool WorldToScreen      (Vector2D& vScreen, Vector vPos, VMatrix vMatrix);

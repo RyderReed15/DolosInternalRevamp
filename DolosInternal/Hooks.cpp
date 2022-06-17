@@ -107,11 +107,11 @@ void __fastcall hkDrawModelExecute(void* _this, void*, void* pCtx, const DrawMod
 
 bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd) {
 	g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer());
-	bool bReturn = oCreateMove(_this, edx, flInputSampleTime, pCmd);
+	bool bReturn = false; // oCreateMove(_this, edx, flInputSampleTime, pCmd);
 	bool bAimbot = true;
 	if (pCmd->iTickCount != 0) {
 
-		ESP::GetWeaponNames();
+		ESP::GetData();
 
 		int iFlags = EnginePrediction::Begin(g_pLocalPlayer, pCmd);
 
@@ -121,9 +121,10 @@ bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CU
 		EnginePrediction::End(g_pLocalPlayer);
 
 		g_pLocalPlayer->SetFlags(iFlags);
+
+		
 	}
-	
-	return bReturn && bAimbot;
+	return false;
 }
 
 
@@ -146,6 +147,7 @@ HRESULT APIENTRY hkPresent(IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST R
 	pDevice->CreateStateBlock(D3DSBT_PIXELSTATE, &pState);
 
 	if (g_pGUIContainer && g_pRender) {
+
 
 		ESP::Tick();
 
