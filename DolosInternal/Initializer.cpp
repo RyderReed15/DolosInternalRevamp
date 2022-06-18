@@ -71,8 +71,17 @@ bool InitializeCheat(HMODULE hMod) {
 }
 
 bool UninitializeCheat() {
-	UninitializeHooks();
+	UninitializeHooks(); //Hook are auto deleted when game is close so no need 
+	
+	//This will close main exe if not called from thread created from this dll
+	if (HANDLE hThread = CreateThread(nullptr, 0, LPTHREAD_START_ROUTINE(CloseCheat), hModule, 0, nullptr)) {
+		return CloseHandle(hThread);
+	}
 
+	return false;
+}
+
+bool ExitCheat(){
 	Sleep(100);
 
 	UninitializeFonts();
@@ -81,16 +90,13 @@ bool UninitializeCheat() {
 	UninitializeConfig();
 	fclose(fConsole);
 	FreeConsole();
-	if (HANDLE hThread = CreateThread(nullptr, 0, LPTHREAD_START_ROUTINE(CloseCheat), hModule, 0, nullptr)) {
-		return CloseHandle(hThread);
-	}
-	return false;
+	return true;
 }
 
-bool CloseCheat(HMODULE hMod) {
-	Sleep(100);
-	FreeLibraryAndExitThread(hMod, 0);
-	return true;
+void CloseCheat(HMODULE hMod) {
+	//Would like to eliminate this entirely but can only pass one arg in CreateThread so exit code 
+	//is garbage which might be an issue | std::thread doesn't work
+	FreeLibraryAndExitThread(hMod, 0); 
 }
 
 LRESULT hkInitWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {

@@ -29,9 +29,6 @@
 #define RESET_INDEX                 16
 
 
-
-
-
 inline VMTManager* g_vD3D;
 inline VMTManager* g_vClient;
 inline VMTManager* g_vModelRender;

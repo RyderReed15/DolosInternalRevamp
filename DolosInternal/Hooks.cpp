@@ -53,9 +53,7 @@ LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	//Hook WndProc to get keyboard and mouse inputs which are then passes to the gui event handler
 
 	if (uMsg == WM_HOTKEY) {
-	
 		CallHotKey(wParam);
-		
 	}
 	if (g_bMenuOpen) {
 		POINTS ptLoc = *(POINTS*)&lParam;
@@ -87,6 +85,7 @@ LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			}
 			break;
 		}
+		
 	}
 	
 

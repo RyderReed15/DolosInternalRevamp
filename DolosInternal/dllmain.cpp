@@ -10,13 +10,15 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     {
     case DLL_PROCESS_ATTACH:
         if (HANDLE hThread = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)StartCheat, hModule, 0, nullptr)) {
-            CloseHandle(hThread);
+            return CloseHandle(hThread);
         }
         
         break;
     case DLL_THREAD_ATTACH:
     case DLL_THREAD_DETACH:
+        break;
     case DLL_PROCESS_DETACH:
+        ExitCheat();
         break;
     }
     return TRUE;

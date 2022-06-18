@@ -17,9 +17,10 @@
 
 
 bool UninitializeCheat  (void);
+bool ExitCheat          (void);
+void CloseCheat         (HMODULE hMod);
 bool StartCheat         (HMODULE hMod);
 bool InitializeCheat    (HMODULE hMod);
-bool CloseCheat         (HMODULE hMod);
 
 LRESULT hkInitWndProc   (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 #endif
