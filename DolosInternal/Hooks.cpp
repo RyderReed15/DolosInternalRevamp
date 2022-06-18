@@ -4,10 +4,10 @@
 bool InitializeHooks() {
 
 	
-	g_vClient			= new VMTManager((void***)g_pClientMode);
-	g_vClientBase		= new VMTManager((void***)g_pBaseClient);
-	g_vD3D				= new VMTManager((void***)g_pD3DDevice);
-	g_vModelRender		= new VMTManager((void***)g_pModelRender);
+	g_vClient				= new VMTManager((void***)g_pClientMode);
+	g_vClientBase			= new VMTManager((void***)g_pBaseClient);
+	g_vD3D					= new VMTManager((void***)g_pD3DDevice);
+	g_vModelRender			= new VMTManager((void***)g_pModelRender);
 	
 
 	oCreateMove				= (fnCreateMove)			g_vClient->HookFunction			(CREATE_MOVE_INDEX			, hkCreateMove);
@@ -22,7 +22,7 @@ bool InitializeHooks() {
 	oEndScene				= (fnEndScene)				g_vD3D->HookFunction			(END_SCENE_INDEX			, hkEndscene);
 	oReset					= (fnReset)					g_vD3D->HookFunction			(RESET_INDEX				, hkReset);
 
-	hValveWnd = FindWindow("Valve001", NULL);	
+	hValveWnd				= FindWindow("Valve001", NULL);	
 
 	return true;
 }
@@ -82,7 +82,9 @@ LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			if (wParam & MK_LBUTTON) {
 				pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::DRAG, pEventHandler->BuildFunction(&GUIEventHandler::HandleDrag, pEventHandler, ptLocation));
 			}
-			//Hover maybe?
+			else {
+				pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::HOVER, pEventHandler->BuildFunction(&GUIEventHandler::HandleHover, pEventHandler, ptLocation));
+			}
 			break;
 		}
 	}
@@ -180,6 +182,7 @@ HRESULT APIENTRY hkReset(IDirect3DDevice9* pDevice, D3DPRESENT_PARAMETERS* pPres
 }
 
 void FixD3D(void*** pDevice) {
+	//D3D Virtual funcs are reset after every call for some reason
 	(*pDevice)[BEGIN_SCENE_INDEX]			= hkBeginScene;
 	(*pDevice)[END_SCENE_INDEX]				= hkEndscene;
 	(*pDevice)[RESET_INDEX]					= hkReset;

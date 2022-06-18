@@ -12,27 +12,29 @@
 #define OVERAIM_REDUCTION_FACTOR    30
 #define DISTANCE_REDUCTION_FACTOR   512
 #define DISTANCE_WEIGHT             3584
+#define AIM_CURVE_AMOUNT            0.15f
 
 #define MAX_DEG_PER_TICK            35
 
+
 namespace Aimbot {
 
-    bool   Tick(CUserCmd* pCmd);
+    bool   Tick                 (CUserCmd* pCmd);
 
    
-    Vector FindClosestTarget(Vector vPlayerPos, Vector vAngles, Vector vAimPunch, int iTickCount);
-    Vector CalculateOveraim(Vector vViewAngles, Vector vDest, int iTick);
-    Vector GetNewAngles(Vector vViewAngles, Vector vDest, int iTicks);
+    Vector FindClosestTarget    (Vector vPlayerPos , Vector vViewAngles, Vector vAimPunch, int iTickCount);
+    Vector CalculateOveraim     (Vector vViewAngles, Vector vTargetAngles, int iTick);
+    Vector GetNewAngles         (Vector vViewAngles, Vector vTargetAngles, int iTicks);
 
 
 
-    float WeightFormula(float flFOV, float flDistance, float flRotateDistance);
-    float FOVFormula(float flFOV, float flDistance);
-    Vector CalculateAngle(Vector vStart, Vector vDest);
+    float   WeightFormula       (float flFOV, float flDistance, float flRotateDistance);
+    float   FOVFormula          (float flFOV, float flDistance);
+    Vector  CalculateAngle      (Vector vStart, Vector vDest);
 
-    inline IClientEntity*   pTarget     = nullptr;
-    inline int              iStartTick  = 0;
-    inline Vector           vOveraim;
+    inline IClientEntity*       pTarget     = nullptr;
+    inline int                  iStartTick  = 0;
+    inline Vector               vOveraim;
 
     
 }

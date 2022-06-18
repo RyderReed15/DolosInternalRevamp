@@ -8,6 +8,8 @@
 
 #define NAME_PREFIX_LEN     13
 
+#define INCH_TO_METER       0.0254f
+
 enum BONES {
     GROUND = 1, 
     HEIGHT, 

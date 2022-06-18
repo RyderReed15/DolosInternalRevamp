@@ -14,8 +14,8 @@
 #define D3DFVF_CUSTOMVERTEX             (D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
 #define D3DFVF_CUSTOMVERTEX_TEXTURE     (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1 )
 #define PI                              3.14159265358979323846f
-#define RAD_TO_DEG                      180.0f / PI
-#define DEG_TO_RAD                      PI / 180.0f
+#define RAD_TO_DEG                      57.2957795130823208767f // 180 / PI
+#define DEG_TO_RAD                      0.01745329251994329576f // PI / 180
 
 #define ROUND_CORNER_LOD                3
 

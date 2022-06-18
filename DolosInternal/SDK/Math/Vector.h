@@ -8,7 +8,9 @@
 #define ALIGN16 DECL_ALIGN(16)
 #define ALIGN16_POST DECL_ALIGN(16)
 #ifndef PI
-#define PI 3.14159265358979323846f
+#define PI          3.14159265358979323846f
+#define RAD_TO_DEG  57.2957795130823208767f // 180 / PI
+#define DEG_TO_RAD  0.01745329251994329576f // PI / 180
 #endif
 
 class Vector
@@ -128,27 +130,27 @@ public:
     }
     Vector Forward(float dist) {
         Vector out;
-        out.x = cos(y / 180.f * PI) * cos(x / 180.f * PI) * dist;;
-        out.y = cos(x / 180.f * PI) * sin(y / 180.f * PI) * dist;
+        out.x = cos(y * DEG_TO_RAD) * cos(x * DEG_TO_RAD) * dist;;
+        out.y = cos(x * DEG_TO_RAD) * sin(y * DEG_TO_RAD) * dist;
         
-        out.z = sin(-x / 180.f * PI) * dist;
+        out.z = sin(-x * DEG_TO_RAD) * dist;
         return out;
     }
     Vector Left(float dist) {
         Vector out;
-        out.x = sin(-y / 180.f * PI) * dist;
-        out.y = cos(-y / 180.f * PI) * dist;
+        out.x = sin(-y * DEG_TO_RAD) * dist;
+        out.y = cos(-y * DEG_TO_RAD) * dist;
         
         out.z = 0;
         return out;
     }
     Vector Up(float dist) {
         Vector out;
-        out.x = cos(y / 180.f * PI) * sin(x / 180.f * PI) * dist;
+        out.x = cos(y * DEG_TO_RAD) * sin(x * DEG_TO_RAD) * dist;
 
-        out.y = sin(x / 180.f * PI) * sin(y / 180.f * PI) * dist;
+        out.y = sin(x * DEG_TO_RAD) * sin(y * DEG_TO_RAD) * dist;
         
-        out.z = cos(x / 180.f * PI) * dist;
+        out.z = cos(x * DEG_TO_RAD) * dist;
         return out;
     }
     // @param Vector to calculate dot product with

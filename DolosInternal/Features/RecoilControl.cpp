@@ -1,5 +1,7 @@
 #include "RecoilControl.h"
 
+
+//Removes the expected recoil to the view angles
 Vector RecoilControl::RecoilControl(Vector vAngles, Vector vAimPunch, bool bAimbot){
     
     if (Settings.Recoil.ControlFactor == 0 || !Settings.Recoil.Enabled) {

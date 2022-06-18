@@ -2,6 +2,7 @@
 
 std::unordered_map<int, EntityData> g_mEntityData;
 
+//Use a game thread to get and store data for all displayable entities
 void ESP::GetData() {
     if (g_pLocalPlayer == 0) return;
     for (int i = 0; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
@@ -31,6 +32,7 @@ void ESP::GetData() {
     }
 }
 
+//Render data and a render thread
 void ESP::Tick() {
     if (g_pLocalPlayer == 0) return;
     g_pRender->Begin();
@@ -39,7 +41,7 @@ void ESP::Tick() {
 }
 
 
-
+// Finds bounding boxes, names, health, armor, location and more info - stored in g_mEntityData[iIndex]
 void ESP::GetEntityInfo(CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int iIndex) {
     Vector vMax, vMin;
     if (!pEntity) return;
@@ -65,6 +67,7 @@ void ESP::GetEntityInfo(CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int
         vMin = pStudioHdr->hull_min;
     }
 
+    //Outerbounds of the hitboxes
     VMatrix mTranspose(pEntity->GetCoordinateFrame());
     Vector vBounds[] = {
         Vector(vMin.x, vMin.y, vMin.z),//      .6 -----.5
@@ -85,6 +88,7 @@ void ESP::GetEntityInfo(CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int
     Vector2D vScreen;
     WorldToScreen(vScreen, vTransformed[0]);
     Vector4D vSize = { vScreen.x, vScreen.y, vScreen.x, vScreen.y };
+    //Most extreme coordinates
     for (int i = 1; i < 8; i++) {
        
         if (WorldToScreen(vScreen, vTransformed[i])) {
@@ -98,7 +102,7 @@ void ESP::GetEntityInfo(CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int
     g_mEntityData[iIndex].bDeleted     = false;
     g_mEntityData[iIndex].vSize        = vSize;
     g_mEntityData[iIndex].cColor       = cColor;
-    g_mEntityData[iIndex].iDistance    = static_cast<int>((pEntity->GetVecOrigin() - g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer())->GetVecOrigin()).Magnitude() * 0.0254f);
+    g_mEntityData[iIndex].iDistance    = static_cast<int>((pEntity->GetVecOrigin() - g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer())->GetVecOrigin()).Magnitude() * INCH_TO_METER);
     g_mEntityData[iIndex].bPlayer      = bPlayer;
     if (bPlayer) {
 
@@ -136,6 +140,7 @@ void ESP::DrawOutline(Vector4D vBounds, D3DCOLOR cColor){
     g_pRender->DrawLine({ vBounds.x, vBounds.w }, { vBounds.x, vBounds.w - flQuarterSide }, cColor);
 }
 
+//Gets location of important bones in a player model
 void ESP::GetBones(IClientEntity* pEntity, EntityData* pEntityData) {
     pEntityData->vBones.clear();
     if (!pEntity || !pEntity->GetModel()) return;
@@ -148,6 +153,7 @@ void ESP::GetBones(IClientEntity* pEntity, EntityData* pEntityData) {
     Vector vNeck    = pEntity->GetBonePos(BONES::NECK);
 
     //Loop through bones finding only those with a hitbox and eliminating uneeded ones.
+    //This will form a skeleton using head, feet, knees, elbows, chest, and arms
     Vector vAttach  = (vChest + vNeck) / 2;
     for (int i = 0; i < pStudioHdr->numbones; i++) {
         mstudiobone_t* pBone = pStudioHdr->GetBone(i);
@@ -161,7 +167,7 @@ void ESP::GetBones(IClientEntity* pEntity, EntityData* pEntityData) {
             if (i == 7) {
                 vChild = vAttach;
             }else if (i != 6) {
-                if (vChild.Distance(vAttach) < 5) continue;
+                if (vChild.Distance(vAttach) < 5) continue; // Eliminate close together bones - magic number
                 if (vParent.Distance(vAttach) < 5) vParent = vAttach;
             }
             
@@ -200,7 +206,10 @@ void ESP::DrawDistance(Vector4D vBounds, int iDistance){
     g_pRender->DrawString({ (vBounds.x + vBounds.z - vSize.x) / 2 , vBounds.w  }, WHITE, g_pWeaponFont, szDistance);
 }
 
+
 void ESP::DrawElements(){
+
+    //Loop through all stored entities and draw the show data
     for (std::unordered_map<int, EntityData>::iterator it = g_mEntityData.begin(); it != g_mEntityData.end(); it++) {
         //SCREEN SIZE HERE - dont render boxes if too big
         if (it->second.bDeleted || it->second.vSize.z - it->second.vSize.x < 5 || it->second.vSize.w - it->second.vSize.y < 5 || it->second.vSize.z - it->second.vSize.x > 800 || it->second.vSize.w - it->second.vSize.y > 800) continue;
@@ -251,6 +260,7 @@ bool ESP::WorldToScreen(Vector2D& vScreen, Vector vPos) {
     return WorldToScreen(vScreen, vPos, *g_pViewMatrix);
 }
 
+//Convertes world coordinates to screen space using matrix multiplication
 bool ESP::WorldToScreen(Vector2D& vScreen, Vector vPos, VMatrix vMatrix){
 
     int iScreenWidth, iScreenHeight;
@@ -264,7 +274,7 @@ bool ESP::WorldToScreen(Vector2D& vScreen, Vector vPos, VMatrix vMatrix){
 
     if (vClipCoords.w < 0.1f) { vScreen = { 99999,99999 };  return false; }
 
-    //perspective division, dividing by vClipCoords.w = Normalized Device Coordinates
+    //Dividing by vClipCoords.w = Normalized perspective
     Vector NDC;
     NDC.x = vClipCoords.x / vClipCoords.w;
     NDC.y = vClipCoords.y / vClipCoords.w;

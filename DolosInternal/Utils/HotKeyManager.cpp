@@ -16,6 +16,7 @@ void CallHotKey(int iHotKeyId) {
         if (hValveWnd == GetFocus()) {
             ((fnVoid)(mKeys[iHotKeyId]->Function))();
         }else{
+            //Pass hotkey through to another program with the focus
             PostMessage(GetForegroundWindow(), WM_KEYDOWN, mKeys[iHotKeyId]->Key, 0);            
         } 
     }

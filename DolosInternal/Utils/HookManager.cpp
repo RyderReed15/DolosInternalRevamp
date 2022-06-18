@@ -12,6 +12,8 @@ VMTManager::VMTManager() {
 }
 
 VMTManager::VMTManager(void*** pVMT) {
+	//Replace function table with our own copy, storing the old version
+
 	m_iSize = GetTableSize(*pVMT);
 	m_pOldTable = new void* [m_iSize];
 	DWORD old;
@@ -38,8 +40,8 @@ VMTManager::~VMTManager() {
 }
 
 
-void* VMTManager::HookFunction(unsigned int iFuncIndex, void* pHookAddress)
-{
+void* VMTManager::HookFunction(unsigned int iFuncIndex, void* pHookAddress){
+	//Set protection on function pointer then replace and reset protection
 
 	DWORD old;
 	VirtualProtect(m_pTable + iFuncIndex, sizeof(void*), PAGE_EXECUTE_READWRITE, &old);
@@ -70,6 +72,7 @@ bool VMTManager::IsPopulated() {
 }
 
 unsigned int VMTManager::GetTableSize(void** pVMT) {
+	//Traverse table until it ends (page protection will be different
 	unsigned int iSize = 0;
 	MEMORY_BASIC_INFORMATION memInfo = { 0 };
 	while (VirtualQuery(pVMT[iSize], &memInfo, sizeof(memInfo)) && memInfo.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY)) iSize++;

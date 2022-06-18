@@ -13,6 +13,7 @@ std::unordered_map<int, std::vector<SkinChanger::GameSkin>> g_mWeapSkins; // I v
 //Reqork to use entire list of changed skins
 //Changes models and item index before frame stage notify call
 void SkinChanger::PreTick() {
+	if (!g_pLocalPlayer) return;
 	for (int i = 1; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
 		CBaseCombatWeapon* pWeapon = (CBaseCombatWeapon*)g_pClientEntityList->GetClientEntity(i);
 		if (!pWeapon) {
@@ -20,18 +21,12 @@ void SkinChanger::PreTick() {
 		}
 		//Set weapon model before skin or else skin wont properly apply
 
-		if (g_mOwnedWeapons[pWeapon]) {
-			if (Settings.SkinChanger.Skins[g_mOwnedWeapons[pWeapon]]) {
+		if (g_mOwnedWeapons[pWeapon] && Settings.SkinChanger.Skins[g_mOwnedWeapons[pWeapon]]) {
 
-				if (g_mNewModels.count(g_mOwnedWeapons[pWeapon])) *pWeapon->ModelIndex() = g_mNewModels.at(g_mOwnedWeapons[pWeapon]);
-				
-			}
-		}
-		if (!g_pClientEntityList->GetClientEntityFromHandle(pWeapon->GetOwner())) {
-			continue;
-		}
-		if (g_pClientEntityList->GetClientEntityFromHandle(pWeapon->GetOwner()) != g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer())) {
+			if (g_mNewModels.count(g_mOwnedWeapons[pWeapon])) *pWeapon->ModelIndex() = g_mNewModels.at(g_mOwnedWeapons[pWeapon]);
 
+		}
+		if (!g_pClientEntityList->GetClientEntityFromHandle(pWeapon->GetOwner()) || g_pClientEntityList->GetClientEntityFromHandle(pWeapon->GetOwner()) != g_pLocalPlayer) {
 			continue;
 		}
 
@@ -51,7 +46,7 @@ void SkinChanger::PreTick() {
 				pSkin = Settings.SkinChanger.Skins[nItemIndex];
 			}
 
-			if (pSkin != nullptr) {
+			if (pSkin) {
 
 				if (g_mNewModels.count(g_mOwnedWeapons[pWeapon])) *pWeapon->ModelIndex() = g_mNewModels.at(g_mOwnedWeapons[pWeapon]);
 				else if (g_mNewModels.count(pSkin->nItemDefIndex)) *pWeapon->ModelIndex() = g_mNewModels.at(pSkin->nItemDefIndex);
@@ -65,17 +60,15 @@ void SkinChanger::PreTick() {
 }
 //Changes model and skin after frame stage notifyu
 void SkinChanger::PostTick() {
+
+	if (!g_pLocalPlayer) return;
 	for (int i = 1; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
 		CBaseCombatWeapon* pWeapon = (CBaseCombatWeapon*)g_pClientEntityList->GetClientEntity(i);
 		if (!pWeapon) {
 			continue;
 		}
 		
-		if (!g_pClientEntityList->GetClientEntityFromHandle(pWeapon->GetOwner())) {
-			continue;
-		}
-		if (g_pClientEntityList->GetClientEntityFromHandle(pWeapon->GetOwner()) != g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer())) {
-
+		if (!g_pClientEntityList->GetClientEntityFromHandle(pWeapon->GetOwner()) || g_pClientEntityList->GetClientEntityFromHandle(pWeapon->GetOwner()) != g_pLocalPlayer) {
 			continue;
 		}
 		
@@ -87,7 +80,7 @@ void SkinChanger::PostTick() {
 			
 			SkinStruct* pSkin = Settings.SkinChanger.Skins[g_mOwnedWeapons[pWeapon]];
 			
-			if (pSkin != nullptr) {
+			if (pSkin) {
 
 				if (g_mNewModels.count(g_mOwnedWeapons[pWeapon])) *pWeapon->ModelIndex() = g_mNewModels.at(g_mOwnedWeapons[pWeapon]);
 				else if (g_mNewModels.count(pSkin->nItemDefIndex)) *pWeapon->ModelIndex() = g_mNewModels.at(pSkin->nItemDefIndex);
@@ -108,6 +101,7 @@ void SkinChanger::OverrideSkin(CBaseCombatWeapon* pWeapon, SkinStruct* pSkinInfo
 		return;
 	}
 	if (!pSkinInfo->nItemDefIndex || pWeapon->GetWeaponId() == pSkinInfo->nItemDefIndex) {
+		//Update skin info
 		*pWeapon->EntityQuality() = pSkinInfo->iQuality;
 		*pWeapon->FallbackPaintKit() = pSkinInfo->iPaintKit;
 		*pWeapon->FallbackWear() = pSkinInfo->flWear;
@@ -150,10 +144,12 @@ void SkinChanger::ChangeItemIndex(CBaseCombatWeapon* pWeapon, int nItemDefIndex)
 void SkinChanger::OverrideModel(CBaseCombatWeapon* pWeapon, int nItemDefinitionIndex){
 	if (!g_mNewModels.count(nItemDefinitionIndex) || !g_pLocalPlayer) return;
 
+	//Get players view model 
 	CBaseViewModel* pViewModel = (CBaseViewModel*)g_pClientEntityList->GetClientEntityFromHandle(g_pLocalPlayer->GetViewModelHandle());
 
 	if (!pViewModel) return;
 
+	//Make sure current weapon is the desired one
 	CBaseAttributableItem* pViewModelWeapon = (CBaseAttributableItem*)g_pClientEntityList->GetClientEntityFromHandle(pViewModel->GetWeapon());
 	if (pViewModelWeapon != pWeapon) return;
 
@@ -178,7 +174,8 @@ std::string ParseModelName(JsonObject* pItem, JsonObject* pPrefabs) {
 	return szModel.c_str();
 }
 
-
+//Parses game files to find weapon models backtracking through prefabs to find the root model - only does weapons and gloves
+//Places them in a hashmap for easy access later
 bool SkinChanger::InitializeModels(JsonObject* pItems) {
 	JsonObject* pPrefabs = pItems->GetJsonObject("prefabs");
 	JsonObject* pWeapons = pItems->GetJsonObject("items");
@@ -187,6 +184,7 @@ bool SkinChanger::InitializeModels(JsonObject* pItems) {
 		if (pWeapons->m_vValues[i].m_tType == VALUE_TYPE::OBJECT) {
 			JsonObject* pItem = pWeapons->m_vValues[i].m_pObject;
 			if (pItem->GetString("name").find("weapon") != -1 || pItem->GetString("prefab").find("hands") != -1) {
+
 				g_mModelNames[strtol(pItem->m_szName.c_str(), 0, 10)] = ParseModelName(pItem, pPrefabs);
 				g_mWeapNames[strtol(pItem->m_szName.c_str(), 0, 10)] = pItem->GetString("name");
 				g_mWeapIds[pItem->GetString("name")] = strtol(pItem->m_szName.c_str(), 0, 10);
@@ -196,19 +194,25 @@ bool SkinChanger::InitializeModels(JsonObject* pItems) {
 	}
 	return true;
 }
-
+//Parses game files to find weapon and glove skins 
+//Sorts them into an array based on their parent weapon
 bool SkinChanger::InitializeSkins(JsonObject* pItems, std::string szPath) {
 
 	std::unordered_map<std::string, int> mSkinIds;
+
 	JsonObject* pPaintKits = pItems->GetJsonObject("paint_kits");
+
 	for (size_t i = 0; i < pPaintKits->m_vValues.size(); i++) {
 		if (pPaintKits->m_vValues[i].m_tType == VALUE_TYPE::OBJECT) {
+
 			JsonObject* pKit = pPaintKits->m_vValues[i].m_pObject;
+
 			if (pKit->GetString("name") != "") {
 				std::string szKitName = pKit->GetString("name");
 				for (size_t i = 0; i < szKitName.length(); i++) {
 					szKitName[i] = std::tolower(szKitName[i]);
 				}
+				//Place all skins into a map
 				mSkinIds[szKitName] = strtol(pKit->m_szName.c_str(), 0, 10);
 			}
 		}
@@ -231,9 +235,10 @@ bool SkinChanger::InitializeSkins(JsonObject* pItems, std::string szPath) {
 				skinName[i] = std::tolower(skinName[i]);
 			}
 			int iStart = 0;
+			//Each line contains skins name formatted as follows - weapon_name_skin_name - previously parsed are just skin_name
 			while (skinName.find('_', iStart) != -1) {
 				if (mSkinIds.count(skinName.substr(iStart, skinName.length() - iStart))) {
-
+					//Suse weapon_name to get id and assign the skin to it
 					g_mWeapSkins[g_mWeapIds[skinName.substr(0, iStart - 1)]].push_back({ skinName.substr(iStart, skinName.length() - iStart), mSkinIds[skinName.substr(iStart, skinName.length() - iStart)] });
 					break;
 				}
@@ -253,6 +258,7 @@ bool SkinChanger::InitializeSkinChanger() {
 
 	GetModuleFileName(NULL, name, MAX_PATH);
 
+	//Locate game files containing model and skin info
 	std::string szItemsName = name;
 	std::string szCDNName;
 	szItemsName = szItemsName.substr(0, szItemsName.find_last_of('\\'));
