@@ -23,6 +23,9 @@ void Panel::OnClick(GUIEventHandler* pEventHandler, POINT ptLocation) {
 		m_ptMoveOrigin = ptLocation;
 		m_bMoving = m_bMoveable;
 	}
+	else if (m_pParent) {
+		m_pParent->OnClick(pEventHandler, ptLocation);
+	}
 		
 }
 
@@ -34,6 +37,9 @@ void Panel::OnDrag(GUIEventHandler*, POINT ptLocation) {
 
 		MoveDelta(ptMoveDelta);
 	}
+	else if (m_pParent) {
+		m_pParent->OnDrag(nullptr, ptLocation);
+	}
 }
 
 void Panel::OnRelease(GUIEventHandler* pEventHandler, POINT) {
@@ -41,6 +47,9 @@ void Panel::OnRelease(GUIEventHandler* pEventHandler, POINT) {
 	if (m_bMoving) {
 		pEventHandler->ReleaseFocus();
 		pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::RELEASE, pEventHandler->BuildFunction(&GUIContainer::GenerateMap, pEventHandler->GetContainer()));
+	}
+	else if (m_pParent) {
+		m_pParent->OnDrag(pEventHandler, { 0, 0 });
 	}
 	m_bMoving = false;
 }

@@ -122,7 +122,7 @@ void StoreValues() {
 void UpdateValues() {
     JsonObject* pAimbot = g_pParsedConfig->GetJsonObject("aimbot");
 
-    pAimbot->SetBoolean ("enabled"       , Settings.Aimbot.Active);
+    pAimbot->SetBoolean ("enabled"      , Settings.Aimbot.Active);
     pAimbot->SetBoolean ("silent"       , Settings.Aimbot.Silent);
     pAimbot->SetBoolean ("target_all"   , Settings.Aimbot.TargetAll);
     pAimbot->SetBoolean ("overaim"      , Settings.Aimbot.Overaim);

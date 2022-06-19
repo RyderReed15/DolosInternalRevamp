@@ -11,7 +11,7 @@
 		"overaim_factor": 1,
 		"curve": true,
 		"range_dec_multiplier": 1,
-		"time_to_aim": 0.75000,
+		"time_to_aim": 0.50000,
 		"wait_time": 1,
 		"antilock_factor": 0.50000,
 		"targets": [
@@ -33,13 +33,13 @@
 			"draw_health": true,
 			"draw_armor": true,
 			"draw_name": true,
-			"enemy_color": "0xffff0000",
-			"team_color": "0xff00ff00"
+			"enemy_color": "4294901760",
+			"team_color": "4278255360"
 		},
 		"weapons": {
 			"enabled": true,
 			"draw_name": true,
-			"color": "0x33333333"
+			"color": "858993459"
 		}
 	},
 	"misc": {

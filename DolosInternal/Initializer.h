@@ -15,8 +15,9 @@
 #define INIT_MESSAGE    0x9999
 #define EJECT_HOTKEY    0x1000
 
+inline bool g_bClosed = false;
 
-bool UninitializeCheat  (void);
+void UninitializeCheat  (void);
 bool ExitCheat          (void);
 void CloseCheat         (HMODULE hMod);
 bool StartCheat         (HMODULE hMod);
