@@ -88,3 +88,22 @@ char* ResolveOffsets(char* pAddress, unsigned int iOffsets[], unsigned int iOffs
 }
 
 
+bool AddressToPattern(void* pAddress, char* pPattern, unsigned int iPatternSize) {
+	unsigned int iPointerSize = sizeof(void*);
+	if (iPatternSize < iPointerSize * 3) return false;
+	memset(pPattern, 0, iPatternSize);
+	bool bLoop = false;
+	while (iPointerSize > 0) {
+		iPointerSize --;
+
+		uint8_t byte = ((uintptr_t)pAddress >> iPointerSize * 8);
+		_ltoa_s(byte, pPattern + (iPointerSize * 3), 3, 16);
+
+		if (bLoop) pPattern[iPointerSize * 3 + 2] = ' ';
+
+		bLoop = true;
+	}
+	return true;
+}
+
+

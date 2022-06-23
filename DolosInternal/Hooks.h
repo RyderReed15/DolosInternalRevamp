@@ -29,6 +29,9 @@
 #define RESET_INDEX                 16
 
 
+
+
+
 inline VMTManager* g_vD3D;
 inline VMTManager* g_vClient;
 inline VMTManager* g_vModelRender;
@@ -40,6 +43,7 @@ inline HWND hValveWnd;
 typedef bool(__fastcall* fnCreateMove)              (void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd);
 typedef void(__thiscall* fnDrawModelExecute)        (void* _this, void* edx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, void* pCustomBoneToWorld);
 typedef void(__fastcall* fnFrameStageNotify)        (void* _this, void* edx, ClientFrameStage_t stage);
+typedef bool(__fastcall* fnVerifyReturn)            (void* _this, void* edx, const char* szModuleName);
 
 
 typedef HRESULT(__stdcall* fnEndScene)              (IDirect3DDevice9* pDevice);
@@ -69,11 +73,14 @@ LRESULT             hkWndProc                   (HWND hWnd, UINT uMsg, WPARAM wP
 void __fastcall     hkFrameStageNotify          (void* _this, void* edx, ClientFrameStage_t stage);
 void __fastcall     hkDrawModelExecute          (void* _this, void* edx, void* pCtx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, void* pCustomBoneToWorld);
 bool __fastcall     hkCreateMove                (void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd);
+char __fastcall     hkVerifyReturn              (void* _this, void* edx, const char* szModuleName);
 
 HRESULT APIENTRY    hkBeginScene                (IDirect3DDevice9* pDevice);
 HRESULT APIENTRY    hkDrawIndexedPrimitive      (IDirect3DDevice9* pDevice, D3DPRIMITIVETYPE tPrimitiveType, int iBaseVertexIndex, int iMinVertexIndex, int iNumVertices, int iStartIndex, int iPrimCount);
 HRESULT APIENTRY    hkPresent                   (IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST RECT* pDestRect, HWND hDestWindowOverride, CONST RGNDATA* pDirtyRegion);
 HRESULT APIENTRY    hkEndscene                  (IDirect3DDevice9* pDevice);
 HRESULT APIENTRY    hkReset                     (IDirect3DDevice9* pDevice, D3DPRESENT_PARAMETERS* pPresentationParameters);
+
+
 
 #endif // !HOOKS_H

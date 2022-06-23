@@ -1,8 +1,18 @@
 #include "Hooks.h"
 
+std::vector<DetourManager*> g_vDetours;
 
 bool InitializeHooks() {
 
+
+	//Verify hook below inspired by https://www.unknowncheats.me/forum/3360552-post12.html
+
+	const char* aDLLNames[] = { "client.dll", "engine.dll", "studiorender.dll", "materialsystem.dll" };
+	for (const char* szDLL : aDLLNames) {
+
+		void* pPattern  = FindPattern(GetModuleHandle(szDLL), "55 8B EC 56 8B F1 33 C0 57 8B 7D 08");
+		g_vDetours.push_back(new DetourManager(pPattern, hkVerifyReturn));
+	}
 	
 	g_vClient				= new VMTManager((void***)g_pClientMode);
 	g_vClientBase			= new VMTManager((void***)g_pBaseClient);
@@ -28,6 +38,10 @@ bool InitializeHooks() {
 }
 
 bool UninitializeHooks() {
+	for (size_t i = 0; i < g_vDetours.size(); i++) {
+		delete g_vDetours[i];
+	}
+
 	g_vClient->FreeFunction			(CREATE_MOVE_INDEX);
 
 	g_vClientBase->FreeFunction		(FRAME_STAGE_INDEX);
@@ -47,6 +61,7 @@ bool UninitializeHooks() {
 	SetWindowLongPtrW(hValveWnd, GWLP_WNDPROC, oWndProc);
 	return true;
 }
+
 
 
 LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -110,7 +125,7 @@ bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CU
 	g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer());
 	bool bReturn = oCreateMove(_this, edx, flInputSampleTime, pCmd);
 	bool bAimbot = true;
-	if (pCmd->iTickCount != 0) {
+	if (pCmd->iTickCount != 0 && g_pEngineClient->IsInGame()) {
 
 		ESP::GetData();
 
@@ -124,10 +139,19 @@ bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CU
 
 		EnginePrediction::End(g_pLocalPlayer);
 
-		g_pLocalPlayer->SetFlags(iFlags); //Return flags to before prediction to preserve state
+		g_pLocalPlayer->SetFlags(iFlags);
+
+		 //Return flags to before prediction to preserve state
 
 	}
 	return bReturn && bAimbot;
+}
+
+char __fastcall hkVerifyReturn(void* _this, void* edx, const char* szModuleName) {
+
+	//((fnVerifyReturn)g_vDetours[0]->GetOriginal())(_this, edx, szModuleName); //Error for now
+	//hopefully can just reconstruct in the future or spoof return addresses
+	return 1;
 }
 
 
@@ -151,8 +175,7 @@ HRESULT APIENTRY hkPresent(IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST R
 
 	if (g_pGUIContainer && g_pRender) {
 
-
-		ESP::Tick();
+		if (g_pEngineClient->IsInGame()) ESP::Tick();
 
 		if (g_bMenuOpen) {
 			g_pGUIContainer->GetEventHandler()->ProccessEvents();

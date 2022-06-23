@@ -34,11 +34,8 @@ VMTManager::~VMTManager() {
 		}
 	}
 	
-	delete[] m_pOldTable;
-	
-	
+	delete[] m_pOldTable;	
 }
-
 
 void* VMTManager::HookFunction(unsigned int iFuncIndex, void* pHookAddress){
 	//Set protection on function pointer then replace and reset protection
@@ -47,7 +44,7 @@ void* VMTManager::HookFunction(unsigned int iFuncIndex, void* pHookAddress){
 	VirtualProtect(m_pTable + iFuncIndex, sizeof(void*), PAGE_EXECUTE_READWRITE, &old);
 	m_pTable[iFuncIndex] = pHookAddress;
 	if (m_pTable[iFuncIndex] != pHookAddress) {
-		return 0;
+		return nullptr;
 	}
 
 	VirtualProtect(m_pTable + iFuncIndex, sizeof(void*), old, &old);
@@ -79,4 +76,54 @@ unsigned int VMTManager::GetTableSize(void** pVMT) {
 		
 	
 	return iSize;
+}
+
+DetourManager::DetourManager(void* pDetourAddress, void* pHookAddress, unsigned int iOpSize){
+
+	unsigned char aBytes[] = { 0xE9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	*(uintptr_t*)(aBytes + 1) = ((uintptr_t)pHookAddress - (uintptr_t)pDetourAddress) - JMP_SIZE; //  == JMP pHookAddress
+
+	m_pTrampoline = VirtualAlloc(0, iOpSize + JMP_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+
+	if (m_pTrampoline) {
+		memcpy(m_pTrampoline, pDetourAddress, iOpSize);
+		*(unsigned char*)((uintptr_t)m_pTrampoline + iOpSize) = 0xE9;
+		*(uintptr_t*)((uintptr_t)m_pTrampoline + iOpSize + 1) = ((uintptr_t)pDetourAddress - (uintptr_t)m_pTrampoline) - iOpSize; // Quite possibly wrong but cant see why
+	}
+	else {
+		std::cout << "Unable to trampoline - perform only detour" << std::endl;
+		memcpy(m_aOriginalBytes, pDetourAddress, iOpSize);
+		m_pTrampoline = m_aOriginalBytes;
+	}
+
+	DWORD dwOld;
+	VirtualProtect(pDetourAddress, iOpSize, PAGE_EXECUTE_READWRITE, &dwOld);
+
+	memcpy(pDetourAddress, aBytes, iOpSize);
+
+	VirtualProtect(pDetourAddress, iOpSize, dwOld, &dwOld);
+
+	m_pOriginalFunc = pDetourAddress;
+	m_iOpSize = iOpSize;
+
+	
+	
+
+}
+
+DetourManager::~DetourManager(void){
+
+	DWORD dwOld;
+	VirtualProtect(m_pOriginalFunc, m_iOpSize, PAGE_EXECUTE_READWRITE, &dwOld);
+
+	memcpy(m_pOriginalFunc, m_pTrampoline, m_iOpSize);
+
+	VirtualProtect(m_pOriginalFunc, m_iOpSize, dwOld, &dwOld);
+
+	VirtualFree(m_pTrampoline, 0, MEM_RELEASE);
+}
+
+void* DetourManager::GetOriginal(void)
+{
+	return m_pTrampoline;
 }

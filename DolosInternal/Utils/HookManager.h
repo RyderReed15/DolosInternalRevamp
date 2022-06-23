@@ -8,6 +8,12 @@
 #include <memoryapi.h>
 #include <iostream>
 
+#ifdef _WIN32
+#define JMP_SIZE                    5
+#else
+#define JMP_SIZE                    9
+#endif 
+
 class VMTManager {
 public:
             VMTManager              (void);
@@ -24,6 +30,23 @@ private:
     void**          m_pTable;
     void**          m_pOldTable;
     unsigned int    m_iSize;
+};
+
+class DetourManager {
+public:
+            DetourManager   (void* pDetourAddress, void* pHookAddress, unsigned int iOpSize = JMP_SIZE);
+            ~DetourManager  (void);
+    
+    void*   GetOriginal     (void);
+
+private:
+
+    unsigned int    m_iOpSize = 5;
+    void*           m_pOriginalFunc;
+    unsigned char   m_aOriginalBytes[16];
+    void*           m_pTrampoline;
+
+
 };
 
 
