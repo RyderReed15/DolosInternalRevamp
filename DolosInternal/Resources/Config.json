@@ -1,8 +1,8 @@
 {
 	"config_name": "default",
 	"author": "Vasagle",
-	"version": "beta-1.0",
-	"data_created": "10-14-2021",
+	"version": "beta-1.1",
+	"data_created": "06-23-20221",
 
 	"aimbot": {
 		"enabled": true,
@@ -28,15 +28,21 @@
 		]
 	},
 	"visuals": {
-		"players": {
+		"friendly": {
 			"show_team": true,
-			"show_enemy": true,
 			"draw_bones": true,
 			"draw_health": true,
 			"draw_armor": true,
-			"draw_name":  true,
-			"enemy_color": "0xffff0000",
+			"draw_name": true,
 			"team_color": "0xff00ff00"
+		},
+		"enemy": {
+			"show_team": true,
+			"draw_bones": true,
+			"draw_health": true,
+			"draw_armor": true,
+			"draw_name": true,
+			"team_color": "0xffff0000"
 		},
 		"weapons": {
 			"enabled": true,

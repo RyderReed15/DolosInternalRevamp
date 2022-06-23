@@ -3,7 +3,9 @@
 #ifndef GUI_ELEMENT_H
 #define GUI_ELEMENT_H
 
-#define FADE_LENGTH	.5
+#define FADE_LENGTH			.5f
+#define TEXT_FEATURE_OFFSET 2
+#define ROUND_CORNER_SIZE	2
 
 #include "../Render.h"
 #include "../GUIEventHandler.h"

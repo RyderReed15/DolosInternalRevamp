@@ -7,6 +7,7 @@
 
 
 class GUIText : public IGUIElement {
+public:
 
 			GUIText	(const char* szText, D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent = nullptr);
 

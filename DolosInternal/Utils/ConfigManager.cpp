@@ -73,17 +73,25 @@ void StoreValues() {
         Settings.Aimbot.Targets[i].Bone     = pTargets->GetJsonObject(i)->GetNumber<int>    ("bone");
     }
 
-    JsonObject* pPlayers = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("players");
+    JsonObject* pFriendly = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("friendly");
 
-    Settings.Visuals.Players.ShowTeam   = pPlayers->GetBoolean("show_team");
-    Settings.Visuals.Players.ShowEnemy  = pPlayers->GetBoolean("show_enemy");
-    Settings.Visuals.Players.DrawBones  = pPlayers->GetBoolean("draw_bones");
-    Settings.Visuals.Players.DrawHealth = pPlayers->GetBoolean("draw_health");
-    Settings.Visuals.Players.DrawArmor  = pPlayers->GetBoolean("draw_armor");
-    Settings.Visuals.Players.DrawName   = pPlayers->GetBoolean("draw_name");
+    Settings.Visuals.Friendly.ShowTeam   = pFriendly->GetBoolean("show_team");
+    Settings.Visuals.Friendly.DrawBones  = pFriendly->GetBoolean("draw_bones");
+    Settings.Visuals.Friendly.DrawHealth = pFriendly->GetBoolean("draw_health");
+    Settings.Visuals.Friendly.DrawArmor  = pFriendly->GetBoolean("draw_armor");
+    Settings.Visuals.Friendly.DrawName   = pFriendly->GetBoolean("draw_name");
 
-    Settings.Visuals.Players.EnemyColor = ParseColor(pPlayers->GetString("enemy_color"));
-    Settings.Visuals.Players.TeamColor  = ParseColor(pPlayers->GetString("team_color"));
+    Settings.Visuals.Friendly.TeamColor = ParseColor(pFriendly->GetString("team_color"));
+
+    JsonObject* pEnemy = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("enemy");
+
+    Settings.Visuals.Enemy.ShowTeam     = pEnemy->GetBoolean("show_team");
+    Settings.Visuals.Enemy.DrawBones    = pEnemy->GetBoolean("draw_bones");
+    Settings.Visuals.Enemy.DrawHealth   = pEnemy->GetBoolean("draw_health");
+    Settings.Visuals.Enemy.DrawArmor    = pEnemy->GetBoolean("draw_armor");
+    Settings.Visuals.Enemy.DrawName     = pEnemy->GetBoolean("draw_name");
+
+    Settings.Visuals.Enemy.TeamColor    = ParseColor(pEnemy->GetString("team_color"));
 
     JsonObject* pWeapons = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("weapons");
 
@@ -147,16 +155,23 @@ void UpdateValues() {
         pTargets->AddJsonObject(pTarget);
     }
 
-    JsonObject* pPlayers = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("players");
+    JsonObject* pFriendly = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("friendly");
 
-    pPlayers->SetBoolean("show_team"     , Settings.Visuals.Players.ShowTeam);
-    pPlayers->SetBoolean("show_enemy"    , Settings.Visuals.Players.ShowEnemy);
-    pPlayers->SetBoolean("draw_bones"    , Settings.Visuals.Players.DrawBones);
-    pPlayers->SetBoolean("draw_health"   , Settings.Visuals.Players.DrawHealth);
-    pPlayers->SetBoolean("draw_armor"    , Settings.Visuals.Players.DrawArmor);
+    pFriendly->SetBoolean("show_team"     , Settings.Visuals.Friendly.ShowTeam);
+    pFriendly->SetBoolean("draw_bones"    , Settings.Visuals.Friendly.DrawBones);
+    pFriendly->SetBoolean("draw_health"   , Settings.Visuals.Friendly.DrawHealth);
+    pFriendly->SetBoolean("draw_armor"    , Settings.Visuals.Friendly.DrawArmor);
 
-    pPlayers->SetString("enemy_color"    , std::to_string(Settings.Visuals.Players.EnemyColor));
-    pPlayers->SetString("team_color"     , std::to_string(Settings.Visuals.Players.TeamColor));
+    pFriendly->SetString("team_color"     , WriteColor(Settings.Visuals.Friendly.TeamColor));
+
+    JsonObject* pEnemy = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("enemy");
+
+    pEnemy->SetBoolean("show_team"  , Settings.Visuals.Enemy.ShowTeam);
+    pEnemy->SetBoolean("draw_bones" , Settings.Visuals.Enemy.DrawBones);
+    pEnemy->SetBoolean("draw_health", Settings.Visuals.Enemy.DrawHealth);
+    pEnemy->SetBoolean("draw_armor" , Settings.Visuals.Enemy.DrawArmor);
+
+    pEnemy->SetString("team_color"  , WriteColor(Settings.Visuals.Enemy.TeamColor));
 
     JsonObject* pWeapons = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("weapons");
 
@@ -215,6 +230,13 @@ D3DCOLOR ParseColor(const std::string& szColor) {
     return strtoul(szColor.c_str(), 0, 16);
 }
 
+std::string WriteColor(const D3DCOLOR cColor)
+{
+    char szBuffer[16];
+    _itoa_s(cColor, szBuffer, 16, 16);
+    return std::string(szBuffer);
+}
+
 
 SkinChanger::SkinStruct* ParseSkin(JsonObject* pSkinObject) {
     if (!pSkinObject) return nullptr;
@@ -233,7 +255,7 @@ SkinChanger::SkinStruct* ParseSkin(JsonObject* pSkinObject) {
 
 
 
-JsonObject* WriteSkin(SkinChanger::SkinStruct* pSkin) {
+JsonObject* WriteSkin(const SkinChanger::SkinStruct* pSkin) {
     if (!pSkin) return nullptr;
 
     JsonObject* pObject = new JsonObject();

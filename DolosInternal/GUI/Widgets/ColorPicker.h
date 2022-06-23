@@ -17,7 +17,7 @@ public:
 	friend HueBox;
 	friend ColorButton;
 
-					ColorPicker		(const char* szName, D3DXVECTOR4 vBounds, D3DCOLOR cBackground, D3DCOLOR* pColor, IGUIElement* pParent = nullptr);
+					ColorPicker		(const char* szName, D3DCOLOR* pColor, D3DXVECTOR4 vBounds, D3DCOLOR cBackground, IGUIElement* pParent = nullptr);
 					~ColorPicker	(void);
 	HRESULT			Draw			(ID3DXFont* pFont, Render* pRender);
 

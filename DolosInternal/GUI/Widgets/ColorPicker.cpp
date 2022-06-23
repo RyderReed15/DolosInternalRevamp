@@ -1,21 +1,23 @@
 #include "ColorPicker.h"
 
-ColorPicker::ColorPicker(const char* szName, D3DXVECTOR4 vBounds, D3DCOLOR cBackground, D3DCOLOR* pColor, IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
-	m_pColor = pColor;
-	m_cBackground = cBackground;
-	m_cOrignalColor = *m_pColor;
-	m_szName = szName;
+ColorPicker::ColorPicker(const char* szName, D3DCOLOR* pColor, D3DXVECTOR4 vBounds, D3DCOLOR cBackground,  IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
+	m_pColor			= pColor;
+	m_cBackground		= cBackground;
+	m_cOrignalColor		= *m_pColor;
+	m_szName			= szName;
 
-	m_pActiveSlider = nullptr;
-	m_pTarget = nullptr;
+	m_pActiveSlider		= nullptr;
+	m_pTarget			= nullptr;
 	
 	UpdateColor(*pColor);
-	m_pColorBox = new ColorBox({ 10, 30, 200, 200 }, this);
-	m_pHueBox = new HueBox({ 220, 30 ,20, 200 }, *pColor, this);
-	m_pRedSlider = new Slider("Red: ", &m_flRed, 255, 0, { 10, 240, 260, 8 }, 150, BLACK, WHITE, RED, false, this);
-	m_pGreenSlider = new Slider("Green: ", &m_flGreen, 255, 0, { 10, 260, 260, 8 }, 150, BLACK, WHITE, GREEN, false, this);
-	m_pBlueSlider = new Slider("Blue: ", &m_flBlue, 255, 0, { 10, 280, 260, 8 }, 150, BLACK, WHITE, BLUE, false, this);
-	m_pAlphaSlider = new Slider("Alpha: ", &m_flAlpha, 255, 0, { 10, 300, 260, 8 }, 150, BLACK, WHITE, BLACK, false, this);
+
+
+	m_pColorBox		= new ColorBox	({ 20, 30, 200, 200 }, this);
+	m_pHueBox		= new HueBox	({ 230, 30 ,20, 200 }, *pColor, this);
+	m_pRedSlider	= new Slider	("Red: "	, &m_flRed	, 255, 0, { 20, 240, 260, 8 }, 150, BLACK, WHITE, RED, false, this);
+	m_pGreenSlider	= new Slider	("Green: "	, &m_flGreen, 255, 0, { 20, 260, 260, 8 }, 150, BLACK, WHITE, GREEN, false, this);
+	m_pBlueSlider	= new Slider	("Blue: "	, &m_flBlue	, 255, 0, { 20, 280, 260, 8 }, 150, BLACK, WHITE, BLUE, false, this);
+	m_pAlphaSlider	= new Slider	("Alpha: "	, &m_flAlpha, 255, 0, { 20, 300, 260, 8 }, 150, BLACK, WHITE, BLACK, false, this);
 	m_pColorBox->m_pHueBox = m_pHueBox;
 	m_pHueBox->m_pColorBox = m_pColorBox;
 	m_pColorBox->UpdatePosition();
@@ -47,7 +49,7 @@ HRESULT ColorPicker::Draw(ID3DXFont* pFont, Render* pRender) {
 	//pRender->DrawSprite({ 320,0,32,32 }, { m_vBounds.x + m_vBounds.z - 20, m_vBounds.y }, WHITE, .66f);
 
 
-	pRender->DrawRoundedRectangle(m_vBounds, 3, m_cBackground); // Background
+	pRender->DrawRoundedRectangle(m_vBounds, ROUND_CORNER_SIZE, m_cBackground); // Background
 
 	pRender->DrawRectangle({ m_pHueBox->m_vBounds.x + 30, m_vBounds.y + 30, 20, 200 }, *m_pColor); //Current Color
 
@@ -63,13 +65,16 @@ HRESULT ColorPicker::Draw(ID3DXFont* pFont, Render* pRender) {
 
 void ColorPicker::UpdateTarget(ColorButton* pColorButton) {
 	//Updates color picker to match selected option
-	m_pTarget = pColorButton;
-	m_szName = pColorButton->GetName();
-	m_pColor = pColorButton->GetColorPtr();
+	m_pTarget	= pColorButton;
+	m_szName	= pColorButton->GetName();
+	m_pColor	= pColorButton->GetColorPtr();
+
 	UpdateColor(*m_pColor);
+
 	m_pHueBox->UpdatePosition();
 	m_pHueBox->UpdateHue();
 	m_pColorBox->UpdatePosition();
+
 	UpdateSliders();
 }
 
@@ -82,11 +87,11 @@ void ColorPicker::WriteColor() {
 }
 
 void ColorPicker::UpdateColor(D3DCOLOR cColor) {
-	*m_pColor = cColor;
-	m_flAlpha = (float)(byte)(cColor >> 24);
-	m_flRed = (float)(byte)(cColor >> 16);
-	m_flGreen = (float)(byte)(cColor >> 8);
-	m_flBlue = (float)(byte)(cColor);
+	*m_pColor	= cColor;
+	m_flAlpha	= (float)(byte)(cColor >> 24);
+	m_flRed		= (float)(byte)(cColor >> 16);
+	m_flGreen	= (float)(byte)(cColor >> 8);
+	m_flBlue	= (float)(byte)(cColor);
 }
 
 void ColorPicker::UpdateSliders(void) {
@@ -138,9 +143,9 @@ void ColorPicker::OnRelease(GUIEventHandler* pEventHandler, POINT) {
 
 
 ColorBox::ColorBox(D3DXVECTOR4 vBounds, IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
-	m_pColorPicker = (ColorPicker*)pParent;
-	m_vSelectionLocation = { 0,0 };
-	m_pHueBox = m_pColorPicker->m_pHueBox;
+	m_pColorPicker			= (ColorPicker*)pParent;
+	m_vSelectionLocation	= { 0,0 };
+	m_pHueBox				= m_pColorPicker->m_pHueBox;
 }
 
 void ColorBox::UpdateColor() {
@@ -339,14 +344,14 @@ void HueBox::OnRelease(GUIEventHandler* pEventHandler, POINT) {
 
 
 ColorButton::ColorButton(const char* szName, D3DCOLOR* pColor, D3DXVECTOR4 vBounds, ColorPicker* pPicker, IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
-	m_szName = szName;
-	m_pColor = pColor;
-	m_pColorPicker = pPicker;
+	m_szName		= szName;
+	m_pColor		= pColor;
+	m_pColorPicker	= pPicker;
 	m_pColorPicker->SetDrawState(false);
 }
 HRESULT ColorButton::Draw(ID3DXFont* pFont, Render* pRender) {
-	pRender->DrawString({ m_vBounds.x, m_vBounds.y - 2 }, (m_bEnabled) ? WHITE : GRAY, pFont, m_szName);
-	return pRender->DrawSprite({ 96, 672, 32, 32 }, { m_vBounds.x + m_vBounds.z - m_vBounds.w, m_vBounds.y }, *m_pColor, m_vBounds.w / 32.f);
+	pRender->DrawString({ m_vBounds.x, m_vBounds.y - TEXT_FEATURE_OFFSET }, (m_bEnabled) ? WHITE : GRAY, pFont, m_szName);
+	return pRender->DrawSprite({ 96, 672, 32, 32 }, { m_vBounds.x + m_vBounds.z - m_vBounds.w + TEXT_FEATURE_OFFSET, m_vBounds.y - TEXT_FEATURE_OFFSET }, *m_pColor, m_vBounds.w / 32.f);
 }
 
 

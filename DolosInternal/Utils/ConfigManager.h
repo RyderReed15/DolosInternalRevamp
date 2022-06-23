@@ -10,7 +10,7 @@
 #include <string>
 #include <map>
 
-inline const char* version = "beta-1.0";
+inline const char* version = "beta-1.1";
 
 
 
@@ -40,14 +40,12 @@ struct Config {
     struct VisualsConfig {
         struct PlayerViz {
             bool ShowTeam;
-            bool ShowEnemy;
             bool DrawBones;
             bool DrawHealth;
             bool DrawArmor;
             bool DrawName;
             D3DCOLOR TeamColor;
-            D3DCOLOR EnemyColor;
-        } Players;
+        } Friendly, Enemy;
         struct WeaponViz {
             bool Enabled;
             bool DrawName;
@@ -86,8 +84,9 @@ void UpdateValues       (void);
 void UnloadSkins        (void);
 
 D3DCOLOR                    ParseColor  (const std::string& szColor);
+std::string                 WriteColor  (const D3DCOLOR cColor);
 SkinChanger::SkinStruct*    ParseSkin   (JsonObject* pSkinObject);
-JsonObject*                 WriteSkin   (SkinChanger::SkinStruct* pSkin);
+JsonObject*                 WriteSkin   (const SkinChanger::SkinStruct* pSkin);
 
 
 #endif // !CONFIG_MANAGER_H

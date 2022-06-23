@@ -20,13 +20,13 @@ void ESP::GetData() {
        else if (pEntity->SanityCheck() && pEntity != g_pLocalPlayer) {
             bool bSameTeam = pEntity->GetTeam() == g_pLocalPlayer->GetTeam();
 
-            if (!bSameTeam && Settings.Visuals.Players.ShowEnemy) {
+            if (!bSameTeam && Settings.Visuals.Enemy.ShowTeam) {
 
-                GetEntityInfo(pEntity, Settings.Visuals.Players.EnemyColor, true, i);
+                GetEntityInfo(pEntity, Settings.Visuals.Enemy.TeamColor, true, i);
             }
-            else if (bSameTeam && Settings.Visuals.Players.ShowTeam) {
+            else if (bSameTeam && Settings.Visuals.Friendly.ShowTeam) {
 
-                GetEntityInfo(pEntity, Settings.Visuals.Players.TeamColor, true, i);
+                GetEntityInfo(pEntity, Settings.Visuals.Friendly.TeamColor, true, i);
             }
         }
     }
@@ -106,6 +106,7 @@ void ESP::GetEntityInfo(CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int
     g_mEntityData[iIndex].bPlayer      = bPlayer;
     if (bPlayer) {
 
+        g_mEntityData[iIndex].bEnemy   = pEntity->GetTeam() != g_pLocalPlayer->GetTeam();
         g_mEntityData[iIndex].iHealth  = pEntity->GetHealth();
         g_mEntityData[iIndex].iArmor   = pEntity->GetArmor();
 
@@ -220,10 +221,11 @@ void ESP::DrawElements(){
                     DrawDistance    (it->second.vSize, it->second.iDistance);
 
         if (it->second.bPlayer) {
-            if (Settings.Visuals.Players.DrawHealth)    DrawHealth      (it->second.iHealth, it->second.vSize);
-            if (Settings.Visuals.Players.DrawArmor)     DrawArmor       (it->second.iArmor, it->second.vSize);
-            if (Settings.Visuals.Players.DrawName)      DrawPlayerName  (it->second.vSize, it->second.szName);
-            if (Settings.Visuals.Players.DrawBones)     DrawBones       (it->second.vBones, WHITE);
+            Config::VisualsConfig::PlayerViz* pInfo = it->second.bEnemy ? &Settings.Visuals.Enemy : &Settings.Visuals.Friendly;
+            if (pInfo->DrawHealth)    DrawHealth      (it->second.iHealth, it->second.vSize);
+            if (pInfo->DrawArmor)     DrawArmor       (it->second.iArmor, it->second.vSize);
+            if (pInfo->DrawName)      DrawPlayerName  (it->second.vSize, it->second.szName);
+            if (pInfo->DrawBones)     DrawBones       (it->second.vBones, WHITE);
         }
         else {
             if (Settings.Visuals.Weapons.Enabled)       DrawWeaponName  (it->second.vSize, it->second.szName);

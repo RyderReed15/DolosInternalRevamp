@@ -20,6 +20,12 @@
 #include "Widgets/Text.h"
 #include "../SDK/SDK.h"
 
+#define COLUMN_WIDTH        300
+#define ROW_HEIGHT          20
+#define ROW_FEATURE_HEIGHT  12
+#define PANEL_WIDTH         750
+#define PANEL_HEIGHT        600
+
 inline GUIContainer*    g_pGUIContainer;
 inline Render*          g_pRender;
 inline bool             g_bMenuOpen = true;

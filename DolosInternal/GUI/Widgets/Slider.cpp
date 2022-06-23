@@ -29,8 +29,8 @@ HRESULT Slider::Draw(ID3DXFont* pFont, Render* pRender) {
 	Vector2D vSize	= pRender->GetStringSize(pFont, m_szName);
 	Vector2D vSize2	= pRender->GetStringSize(pFont, szValue);
 
-	pRender->DrawString({ m_vBounds.x, m_vBounds.y - 2 }				, (m_bEnabled) ? WHITE : GRAY, pFont, m_szName);
-	pRender->DrawString({ flBarStart - vSize2.x - 10, m_vBounds.y - 2 }	, (m_bEnabled) ? WHITE : GRAY, pFont, szValue);
+	pRender->DrawString({ m_vBounds.x, m_vBounds.y - TEXT_FEATURE_OFFSET }					, (m_bEnabled) ? WHITE : GRAY, pFont, m_szName);
+	pRender->DrawString({ flBarStart - vSize2.x - 10, m_vBounds.y - TEXT_FEATURE_OFFSET }	, (m_bEnabled) ? WHITE : GRAY, pFont, szValue);
 
 	pRender->DrawRoundedRectangle({ flBarStart, m_vBounds.y, m_flBarSize, m_vBounds.w }				, m_vBounds.w / 2, m_cBackground);
 	return pRender->DrawRoundedRectangle({ flBarStart, m_vBounds.y, flBarSizeAdj, m_vBounds.w }		, m_vBounds.w / 2, m_cFillOne, LerpColor(m_cFillOne, m_cFillTwo, m_flBarPercent), false);

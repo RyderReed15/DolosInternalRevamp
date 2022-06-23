@@ -5,6 +5,8 @@
 
 #include "IGUIElement.h"
 
+#define BOX_TEXT_RATIO 1.3f
+
 class DropDownElement;
 class DropDownContainer;
 

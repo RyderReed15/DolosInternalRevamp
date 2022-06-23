@@ -27,8 +27,8 @@ HotKey::~HotKey() {
 HRESULT HotKey::Draw(ID3DXFont* pFont, Render* pRender) {
     float flLength = pRender->GetStringSize(pFont, m_szDisplay.c_str()).x;
     pRender->DrawString({ m_vBounds.x, m_vBounds.y }, (m_bEnabled) ? WHITE : GRAY, pFont, m_szName);
-    pRender->DrawRoundedRectangle({ m_vBounds.x + m_vBounds.z - m_flContainerSize, m_vBounds.y, m_flContainerSize, m_vBounds.w }, 2, BLACK);
-    pRender->DrawRoundedRectangle({ m_vBounds.x + m_vBounds.z - m_flContainerSize, m_vBounds.y, m_flContainerSize, m_vBounds.w }, 2, m_cContainerColor);
+    pRender->DrawRoundedRectangle({ m_vBounds.x + m_vBounds.z - m_flContainerSize, m_vBounds.y, m_flContainerSize, m_vBounds.w }, ROUND_CORNER_SIZE, BLACK);
+    pRender->DrawRoundedRectangle({ m_vBounds.x + m_vBounds.z - m_flContainerSize, m_vBounds.y, m_flContainerSize, m_vBounds.w }, ROUND_CORNER_SIZE, m_cContainerColor);
     return pRender->DrawString({ m_vBounds.x + m_vBounds.z - m_flContainerSize/2 - flLength/2, m_vBounds.y + 1 }, (m_bEnabled) ? WHITE : GRAY, pFont, m_szDisplay.c_str());
 }
 

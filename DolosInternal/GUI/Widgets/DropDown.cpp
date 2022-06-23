@@ -12,7 +12,7 @@ DropDown::DropDown(const char* szName, unsigned int iDefaultIndex, int* pValue, 
 
 
 
-	D3DXVECTOR4 vContainerBounds(m_vBounds.z - flContainerSize, -2, flContainerSize, m_vBounds.w);
+	D3DXVECTOR4 vContainerBounds(m_vBounds.z - flContainerSize, -TEXT_FEATURE_OFFSET, flContainerSize, m_vBounds.w);
 	m_pContainer	= new DropDownContainer(pElemementArray, iNumElements, vContainerBounds, iNumElements, iDefaultIndex, cColor, this);
 	
 }
@@ -71,17 +71,17 @@ HRESULT DropDownContainer::Draw(ID3DXFont* pFont, Render* pRender) {
 
 	pRender->DrawSprite({ 0,0,32,32 }, { m_vBounds.x + m_vBounds.z - m_vBounds.w, m_vBounds.y }, WHITE, m_vBounds.w / 32.f, GetAnimLerp(FADE_LENGTH) * PI * m_bOpen);
 
-	pRender->DrawRoundedRectangle(m_vBounds, 2, m_cColor);
+	pRender->DrawRoundedRectangle(m_vBounds, ROUND_CORNER_SIZE, m_cColor);
 
-	pRender->DrawString({ m_vBounds.x + 5, m_vBounds.y + 2 }, (m_iIndex) ? WHITE : GRAY, pFont, m_pElementArray[m_iIndex].GetName());
+	pRender->DrawString({ m_vBounds.x + 5, m_vBounds.y + TEXT_FEATURE_OFFSET }, (m_iIndex) ? WHITE : GRAY, pFont, m_pElementArray[m_iIndex].GetName());
 
 	if (m_bOpen) {
 		// Draw current selection
-		pRender->DrawRoundedRectangle({ m_vBounds.x, m_vBounds.y + m_vBounds.w + 2, m_vBounds.z, m_vBounds.w * (m_iNumDisplayElements * 1.3f + .25f) }, 2, LerpAlpha(m_cColor, GetAnimLerp(FADE_LENGTH)));
+		pRender->DrawRoundedRectangle({ m_vBounds.x, m_vBounds.y + m_vBounds.w + TEXT_FEATURE_OFFSET, m_vBounds.z, m_vBounds.w * (m_iNumDisplayElements * BOX_TEXT_RATIO + .25f) }, ROUND_CORNER_SIZE, LerpAlpha(m_cColor, GetAnimLerp(FADE_LENGTH)));
 			
 		for (unsigned int i = m_iTopIndex; i < m_iTopIndex + m_iNumDisplayElements && i < m_iNumElements; i++) {
 			// Draw drop down menu
-			m_pElementArray[i].SetBounds({ m_vBounds.x, m_vBounds.w * .25f + m_vBounds.y + (i + 1) * m_vBounds.w * 1.3f - 3, m_vBounds.z, m_vBounds.w * 1.3f });
+			m_pElementArray[i].SetBounds({ m_vBounds.x, m_vBounds.w * .25f + m_vBounds.y + (i + 1) * m_vBounds.w * BOX_TEXT_RATIO - 3, m_vBounds.z, m_vBounds.w * BOX_TEXT_RATIO });
 			m_pElementArray[i].Draw(pFont, pRender);
 		}
 	}

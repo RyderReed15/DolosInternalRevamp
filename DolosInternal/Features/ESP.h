@@ -30,6 +30,7 @@ struct EntityData {
     int iDistance = 0;
     char szName[128];
     bool bPlayer = false;
+    bool bEnemy = false;
     bool bDeleted = true;
     std::vector<Vector4D> vBones;
 
