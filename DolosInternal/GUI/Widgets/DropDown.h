@@ -4,38 +4,44 @@
 #define GUI_DROP_DOWN_H
 
 #include "IGUIElement.h"
+#include "IValueElement.h"
 
 #define BOX_TEXT_RATIO 1.3f
 
 class DropDownElement;
 class DropDownContainer;
 
-class DropDown : public IGUIElement {
+class DropDown : public IValueElement {
 public:
 
 
-			DropDown	(const char* szName, unsigned int iDefaultIndex, int* pValue, DropDownElement* pElemementArray, unsigned int iNumElements, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cColor, IGUIElement* pParent = nullptr);
+			DropDown	(const char* szName, int* pValue, std::unordered_map<int, const char*>* pElements, unsigned int iNumDisplayElements, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cColor, IGUIElement* pParent = nullptr);
 			~DropDown	(void);
 	HRESULT Draw		(ID3DXFont* pFont, Render* pRender);
 
-	void	SetIndex	(unsigned  int iIndex);
 	void	SetValue	(int iValue);
 
 	void	OnRelease	(GUIEventHandler* pEventHandler, POINT ptLocation);
+
+	void	SetValuePointer(void* pValue);
+	void*	GetValuePointer(void);
+	void	SetHover(int iHover);
+	int		GetHover(void);
+
 private:
 	D3DCOLOR			m_cColor;
-	unsigned int		m_iIndex;
 	int*				m_pValue;
+	int					m_iHover;
 	const char*			m_szName;
-	unsigned int		m_iArraySize;
 	DropDownContainer*	m_pContainer;
+	unsigned int		m_iNumDisplayElements;
 
 
 };
 
 class DropDownContainer : public IGUIElement {
 public:
-			DropDownContainer	(DropDownElement* m_pElementArray, unsigned int iNumElements, D3DXVECTOR4 vBounds, unsigned int iNumDisplayElements, unsigned int iStartIndex, D3DCOLOR cColor, IGUIElement* pParent);
+			DropDownContainer	(std::unordered_map<int, const char*>* pElements, unsigned int iNumDisplayElements, D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent);
 	HRESULT Draw				(ID3DXFont* pFont, Render* pRender);
 
 	void	SetOpen				(bool bOpen);
@@ -46,12 +52,11 @@ public:
 	void	OnHover				(GUIEventHandler* pEventHandler, POINT ptLocation);
 private:
 
-	DropDownElement*	m_pElementArray;
-	unsigned int		m_iNumElements;
-	unsigned int		m_iNumDisplayElements;
-	unsigned int		m_iTopIndex, m_iIndex;
-	D3DCOLOR			m_cColor;
-	bool				m_bOpen;
+	std::unordered_map<int, const char*>*	m_pElements;
+	unsigned int							m_iNumDisplayElements;
+	unsigned int							m_iTopIndex;
+	D3DCOLOR								m_cColor;
+	bool									m_bOpen;
 };
 
 class DropDownElement : public IGUIElement {

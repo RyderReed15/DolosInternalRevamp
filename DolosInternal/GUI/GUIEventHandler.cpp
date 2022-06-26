@@ -40,8 +40,14 @@ void GUIEventHandler::HandleRelease(POINT ptLocation) {
     
 }
 void GUIEventHandler::HandleHover(POINT ptLocation) {
-    IGUIElement* pWidget = m_pGUI->GetWidgetAt(ptLocation);
-    if (pWidget && pWidget->GetEnabled()) pWidget->OnHover(this, ptLocation);
+    if (m_pFocus) {
+        m_pFocus->OnHover(this, ptLocation);
+    }
+    else {
+        IGUIElement* pWidget = m_pGUI->GetWidgetAt(ptLocation);
+        if (pWidget && pWidget->GetEnabled()) pWidget->OnHover(this, ptLocation);
+    }
+    
 }
 //Pushes an event to the queue
 bool GUIEventHandler::CreateGUIEvent(GUI_EVENT_TYPE tEventType, std::function<void()> pFunc){
