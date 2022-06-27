@@ -49,7 +49,7 @@ void Panel::OnRelease(GUIEventHandler* pEventHandler, POINT) {
 		pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::RELEASE, pEventHandler->BuildFunction(&GUIContainer::GenerateMap, pEventHandler->GetContainer()));
 	}
 	else if (m_pParent) {
-		m_pParent->OnDrag(pEventHandler, { 0, 0 });
+		m_pParent->OnRelease(pEventHandler, { 0, 0 });
 	}
 	m_bMoving = false;
 }

@@ -15,7 +15,7 @@ class IGUIElement {
 public:
 
 					IGUIElement		(D3DXVECTOR4 vBounds, IGUIElement* pParent = nullptr);
-	virtual			~IGUIElement(void);
+	virtual			~IGUIElement	(void);
 
 	virtual HRESULT Draw			(ID3DXFont* pFont, Render* pRender) = 0;
 
@@ -40,6 +40,7 @@ public:
 	void			MoveDelta		(POINT ptLocation);
 
 	void			AddChild		(IGUIElement* pElement);
+	void			RemoveChild		(IGUIElement* pElement);
 	IGUIElement*	GetFirstChild	(void);
 	void			SetSibling		(IGUIElement* pElement);
 	IGUIElement*	GetSibling		(void);

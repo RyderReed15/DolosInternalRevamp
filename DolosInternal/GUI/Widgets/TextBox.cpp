@@ -1,6 +1,6 @@
 #include "TextBox.h"
 
-TextBox::TextBox(const char* szName, char* aText, unsigned short iMaxCharacters, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cContainerColor, IGUIElement* pParent) :IGUIElement(vBounds, pParent) {
+TextBox::TextBox(const char* szName, char* aText, unsigned short iMaxCharacters, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cContainerColor, IGUIElement* pParent) :IValueElement(vBounds, pParent) {
     m_szName = szName;
     m_aText = aText;
     m_flContainerSize = flContainerSize;
@@ -66,4 +66,12 @@ void TextBox::OnType(GUIEventHandler* pEventHandler, char chKey) {
        
         break;
     }
+}
+
+void TextBox::SetValuePointer(void* pValue) {
+    m_aText = static_cast<char*>(pValue);
+}
+
+void* TextBox::GetValuePointer() {
+    return m_aText;
 }

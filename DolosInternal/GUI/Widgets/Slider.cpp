@@ -1,6 +1,6 @@
 #include "Slider.h"
 
-Slider::Slider(const char* szName, float* pValue, float flMaxValue, float flMinValue, D3DXVECTOR4 vBounds, float flBarSize, D3DCOLOR cBackground, D3DCOLOR cFillOne, D3DCOLOR cFillTwo, bool bExponential, IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
+Slider::Slider(const char* szName, float* pValue, float flMaxValue, float flMinValue, D3DXVECTOR4 vBounds, float flBarSize, D3DCOLOR cBackground, D3DCOLOR cFillOne, D3DCOLOR cFillTwo, bool bExponential, IGUIElement* pParent) : IValueElement(vBounds, pParent) {
 	m_flMaxValue	= flMaxValue;
 	m_flMinValue	= flMinValue;
 	m_flRange		= flMaxValue - flMinValue;
@@ -61,4 +61,13 @@ void Slider::OnDrag(GUIEventHandler*, POINT ptLocation) {
 void Slider::OnRelease(GUIEventHandler* pEventHandler, POINT) {
 	pEventHandler->ReleaseFocus();
 	
+}
+
+void Slider::SetValuePointer(void* pValue) {
+	m_pValue = static_cast<float*>(pValue);
+	UpdateSlider();
+}
+
+void* Slider::GetValuePointer() {
+	return m_pValue;
 }

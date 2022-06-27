@@ -4,10 +4,11 @@
 #define GUI_TEXT_BOX_H
 
 #include "IGUIElement.h"
+#include "IValueElement.h"
 
 class GUIEventHanlder;
 
-class TextBox : public IGUIElement{
+class TextBox : public IValueElement {
 public:
 
 
@@ -19,6 +20,9 @@ public:
 	void	OnRelease	(GUIEventHandler* pEventHandler, POINT ptLocation);
 
 	void	OnType		(GUIEventHandler* pEventHandler, char chKey);
+
+	void	SetValuePointer(void* pValue);
+	void*	GetValuePointer(void);
 private:
 	const char*			m_szName;
 	char*				m_aText;

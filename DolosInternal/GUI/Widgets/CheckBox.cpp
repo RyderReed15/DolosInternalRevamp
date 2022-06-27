@@ -1,6 +1,6 @@
 #include "CheckBox.h"
 
-CheckBox::CheckBox(const char* szName, bool* pBool, D3DXVECTOR4 vBounds, D3DCOLOR cDisabled, D3DCOLOR cActivated, IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
+CheckBox::CheckBox(const char* szName, bool* pBool, D3DXVECTOR4 vBounds, D3DCOLOR cDisabled, D3DCOLOR cActivated, IGUIElement* pParent) : IValueElement(vBounds, pParent) {
     m_cActivated = cActivated;
     m_cDisabled = cDisabled;
 
@@ -31,4 +31,12 @@ void CheckBox::OnRelease(GUIEventHandler*, POINT) {
 	}
 	
 		
+}
+
+void CheckBox::SetValuePointer(void* pValue) {
+	m_pBool = static_cast<bool*>(pValue);
+}
+
+void* CheckBox::GetValuePointer() {
+	return m_pBool;
 }

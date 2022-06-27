@@ -13,9 +13,6 @@ public:
 
 	virtual void	SetValuePointer(void* pValue);
 	virtual void *	GetValuePointer(void);
-	
-
-
 
 };
 

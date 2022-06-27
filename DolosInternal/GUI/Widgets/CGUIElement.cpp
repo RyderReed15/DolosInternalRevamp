@@ -111,6 +111,26 @@ void IGUIElement::AddChild(IGUIElement* pElement) {
 	m_iChildCount++;
 	pElement->SetParent(this);
 }
+
+void IGUIElement::RemoveChild(IGUIElement* pElement) {
+	if (m_pFirstChild) {
+		IGUIElement* pCurr = m_pFirstChild;
+		IGUIElement* pPrev = nullptr;
+		while (pCurr->GetSibling() && pCurr != pElement) {
+			pPrev = pCurr;
+			pCurr = pCurr->GetSibling();
+		}
+		if (pCurr == pElement) {
+			if (pPrev) pPrev->SetSibling(pCurr->GetSibling());
+			else if (pCurr->GetSibling()) m_pFirstChild = pCurr->GetSibling();
+			else m_pFirstChild = nullptr;
+			
+		}
+		else return;
+
+		m_iChildCount--;
+	}
+}
 IGUIElement* IGUIElement::GetFirstChild(void) {
 	return m_pFirstChild;
 }
