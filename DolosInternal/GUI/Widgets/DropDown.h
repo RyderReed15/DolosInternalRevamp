@@ -5,6 +5,7 @@
 
 #include "IGUIElement.h"
 #include "IValueElement.h"
+#include <map>
 
 #define BOX_TEXT_RATIO 1.3f
 
@@ -15,18 +16,18 @@ class DropDown : public IValueElement {
 public:
 
 
-			DropDown	(const char* szName, int* pValue, std::unordered_map<int, const char*>* pElements, unsigned int iNumDisplayElements, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cColor, IGUIElement* pParent = nullptr);
-			~DropDown	(void);
-	HRESULT Draw		(ID3DXFont* pFont, Render* pRender);
+			DropDown		(const char* szName, int* pValue, std::map<int, const char*>* pElements, unsigned int iNumDisplayElements, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cColor, IGUIElement* pParent = nullptr);
+			~DropDown		(void);
+	HRESULT Draw			(ID3DXFont* pFont, Render* pRender);
 
-	void	SetValue	(int iValue);
+	void	SetValue		(int iValue);
 
-	void	OnRelease	(GUIEventHandler* pEventHandler, POINT ptLocation);
+	void	OnRelease		(GUIEventHandler* pEventHandler, POINT ptLocation);
 
-	void	SetValuePointer(void* pValue);
-	void*	GetValuePointer(void);
-	void	SetHover(int iHover);
-	int		GetHover(void);
+	void	SetValuePointer	(void* pValue);
+	void*	GetValuePointer	(void);
+	void	SetHover		(int iHover);
+	int		GetHover		(void);
 
 private:
 	D3DCOLOR			m_cColor;
@@ -41,7 +42,7 @@ private:
 
 class DropDownContainer : public IGUIElement {
 public:
-			DropDownContainer	(std::unordered_map<int, const char*>* pElements, unsigned int iNumDisplayElements, D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent);
+			DropDownContainer	(std::map<int, const char*>* pElements, unsigned int iNumDisplayElements, D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent);
 	HRESULT Draw				(ID3DXFont* pFont, Render* pRender);
 
 	void	SetOpen				(bool bOpen);
@@ -52,7 +53,7 @@ public:
 	void	OnHover				(GUIEventHandler* pEventHandler, POINT ptLocation);
 private:
 
-	std::unordered_map<int, const char*>*	m_pElements;
+	std::map<int, const char*>*				m_pElements;
 	unsigned int							m_iNumDisplayElements;
 	unsigned int							m_iTopIndex;
 	D3DCOLOR								m_cColor;

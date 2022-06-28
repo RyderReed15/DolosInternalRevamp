@@ -18,6 +18,7 @@
 #include "Widgets/TextBox.h"
 #include "Widgets/HotKey.h"
 #include "Widgets/Text.h"
+#include "Widgets/List.h"
 #include "../SDK/SDK.h"
 
 #define COLUMN_WIDTH        300
@@ -32,7 +33,14 @@ inline bool             g_bMenuOpen = true;
 
 bool InitializeGUI      (HMODULE hMod);
 bool UninitializeGUI    ();
-void ShowMenu();
+
+
+
+ElementEditor<AimTarget>*   CreateAimEditor (void);
+void                        ChangeChildren  (IGUIElement* pElement, bool bShow);
+void                        ShowPanel       (Panel* pPanel);
+void                        ShowMenu        (void);
+
 
 
 #endif // !GUI_H

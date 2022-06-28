@@ -70,6 +70,9 @@ void TextBox::OnType(GUIEventHandler* pEventHandler, char chKey) {
 
 void TextBox::SetValuePointer(void* pValue) {
     m_aText = static_cast<char*>(pValue);
+    m_iCurrentChar = 0;
+    m_iTextSize = 0;
+    m_iStartChar = 0;
 }
 
 void* TextBox::GetValuePointer() {

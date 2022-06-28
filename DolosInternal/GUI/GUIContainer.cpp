@@ -63,15 +63,17 @@ void GUIContainer::GenerateMap() {
     for (size_t i = 0; i < m_vElements.size(); i++) {
         if (m_vElements[i]->GetDrawState()) {
             D3DXVECTOR4 vBounds = m_vElements[i]->GetBounds();
-            RECT rBounds = { vBounds.x, vBounds.y, vBounds.z, vBounds.w };
+            RECT rBounds = { static_cast<long>(vBounds.x), static_cast<long>(vBounds.y), static_cast<long>(vBounds.z), static_cast<long>(vBounds.w) };
 
 
             long iXSize = min(rBounds.left + rBounds.right, m_ptScreenSize.x);
             long iYSize = min(rBounds.top + rBounds.bottom, m_ptScreenSize.y);
 
-            for (long x = rBounds.left >= 0 ? rBounds.left : 0; x < iXSize; x++)
+            rBounds.top = (rBounds.top >= 0 ? rBounds.top : 0);
+
+            for (long x = rBounds.left >= 0 ? rBounds.left : 0; x < iXSize && rBounds.top < m_ptScreenSize.y; x++)
             {
-                wmemset((wchar_t*)(m_aMap[x] + (rBounds.top >= 0 ? rBounds.top : 0)), i, (iYSize - rBounds.top));
+                wmemset((wchar_t*)(m_aMap[x] + rBounds.top), i, (iYSize - rBounds.top));
                
             }
         }

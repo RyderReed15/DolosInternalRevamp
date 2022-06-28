@@ -19,6 +19,8 @@ inline JsonObject*  g_pParsedConfig;
 struct AimTarget {
     float FOV;
     int Bone;
+    char Name[128];
+    bool Enabled;
 };
 
 
@@ -34,8 +36,7 @@ struct Config {
         float WaitTime;
         float AntilockFactor;
         float OveraimFactor;
-        AimTarget* Targets;
-        unsigned int TargetCount;
+        std::vector<AimTarget> Targets;
     } Aimbot;
     struct VisualsConfig {
         struct PlayerViz {

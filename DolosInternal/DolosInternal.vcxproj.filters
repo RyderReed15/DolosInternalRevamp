@@ -151,6 +151,13 @@
     <ClCompile Include="Features\Misc.cpp">
       <Filter>Features</Filter>
     </ClCompile>
+    <ClCompile Include="GUI\Widgets\List.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Widgets\IValueElement.cpp" />
+    <ClCompile Include="GUI\Widgets\CValueElement.cpp">
+      <Filter>GUI\Widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Initializer.h">
@@ -359,6 +366,12 @@
     </ClInclude>
     <ClInclude Include="SDK\Interfaces\CBaseViewModel.h">
       <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Widgets\List.h">
+      <Filter>GUI\Widgets\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Widgets\IValueElement.h">
+      <Filter>GUI\Widgets\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

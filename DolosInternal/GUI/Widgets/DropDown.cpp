@@ -1,7 +1,7 @@
 #include "DropDown.h"
 #include <iostream>
 
-DropDown::DropDown(const char* szName, int* pValue, std::unordered_map<int, const char*>* pElements, unsigned int iNumDisplayElements, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cColor, IGUIElement* pParent) : IValueElement(vBounds, pParent) {
+DropDown::DropDown(const char* szName, int* pValue, std::map<int, const char*>* pElements, unsigned int iNumDisplayElements, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cColor, IGUIElement* pParent) : IValueElement(vBounds, pParent) {
 
 	
 	m_cColor				= cColor;
@@ -69,7 +69,7 @@ void DropDown::SetHover(int iHover) {
 	m_iHover = iHover;
 }
 
-DropDownContainer::DropDownContainer(std::unordered_map<int, const char*>* pElements, unsigned int iNumDisplayElements, D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
+DropDownContainer::DropDownContainer(std::map<int, const char*>* pElements, unsigned int iNumDisplayElements, D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent) : IGUIElement(vBounds, pParent) {
 	
 	m_iTopIndex				= 0;
 	m_iNumDisplayElements	= iNumDisplayElements;
@@ -97,7 +97,7 @@ HRESULT DropDownContainer::Draw(ID3DXFont* pFont, Render* pRender) {
 		pRender->DrawRoundedRectangle({ m_vBounds.x, m_vBounds.y + m_vBounds.w + TEXT_FEATURE_OFFSET, m_vBounds.z, m_vBounds.w * (m_pElements->size() * BOX_TEXT_RATIO + .25f) }, ROUND_CORNER_SIZE, LerpAlpha(m_cColor, GetAnimLerp(FADE_LENGTH)));
 		
 		int i = 0;
-		for (std::unordered_map<int, const char*>::iterator it = m_pElements->begin(); it != m_pElements->end(); it++) {
+		for (std::map<int, const char*>::iterator it = m_pElements->begin(); it != m_pElements->end(); it++) {
 			// Draw drop down menu - Increments with every item
 			pRender->DrawString({ m_vBounds.x + 15, m_vBounds.w * .25f + m_vBounds.y + (i + 1) * m_vBounds.w * BOX_TEXT_RATIO - 3, }, (pHover == it->first) ? WHITE : GRAY, pFont, it->second);
 			i++;
@@ -122,7 +122,7 @@ void DropDownContainer::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocati
 	
 	//only ever called when bOpen is true because this element isn't indexed
 	int i = 0;
-	for (std::unordered_map<int, const char*>::iterator it = m_pElements->begin(); it != m_pElements->end(); it++) {
+	for (std::map<int, const char*>::iterator it = m_pElements->begin(); it != m_pElements->end(); it++) {
 		//Check if the mouse is over this element
 		D3DXVECTOR4 vBounds = { m_vBounds.x, m_vBounds.w * .25f + m_vBounds.y + (i + 1) * m_vBounds.w * BOX_TEXT_RATIO - 3, m_vBounds.z, m_vBounds.w * BOX_TEXT_RATIO };
 		if (ptLocation.x >= vBounds.x && ptLocation.x <= vBounds.x + vBounds.z && ptLocation.y >= vBounds.y && ptLocation.y <= vBounds.y + vBounds.w) {
@@ -142,7 +142,7 @@ void DropDownContainer::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocati
 void DropDownContainer::OnHover(GUIEventHandler* pEventHandler, POINT ptLocation) {
 	if (m_bOpen) {
 		int i = 0;
-		for (std::unordered_map<int, const char*>::iterator it = m_pElements->begin(); it != m_pElements->end(); it++) {
+		for (std::map<int, const char*>::iterator it = m_pElements->begin(); it != m_pElements->end(); it++) {
 
 			//Check if the mouse is over this element
 			D3DXVECTOR4 vBounds = { m_vBounds.x, m_vBounds.w * .25f + m_vBounds.y + (i + 1) * m_vBounds.w * BOX_TEXT_RATIO - 3, m_vBounds.z, m_vBounds.w * BOX_TEXT_RATIO };

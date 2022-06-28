@@ -17,11 +17,15 @@
 		"targets": [
 			{
 				"fov": 5,
-				"bone": 8
+				"bone": 8,
+				"name": "Head",
+				"enabled": true
 			},
 			{
 				"fov": 5,
-				"bone": 6
+				"bone": 6,
+				"name": "Chest",
+				"enabled": true
 			}
 		]
 	},

@@ -21,8 +21,8 @@ public:
 	void	OnRelease		(GUIEventHandler* pEventHandler, POINT ptLocation);
 	void	UpdateSlider	(void);
 
-	void	SetValuePointer(void* pValue);
-	void*	GetValuePointer(void);
+	void	SetValuePointer	(void* pValue);
+	void*	GetValuePointer	(void);
 private:
 	D3DCOLOR		m_cBackground, m_cFillOne, m_cFillTwo;
 	float			m_flBarPercent, m_flBarSize;

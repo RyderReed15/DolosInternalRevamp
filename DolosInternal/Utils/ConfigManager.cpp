@@ -10,7 +10,6 @@ bool UninitializeConfig() {
     
     bool bReturn = SaveConfig("F:\\Coding Projects\\VS\\DolosInternal\\DolosInternal\\Resources\\Save.json");
     UnloadSkins();
-    if (Settings.Aimbot.Targets) delete Settings.Aimbot.Targets;
     delete g_pParsedConfig;
     return bReturn;
     
@@ -64,13 +63,15 @@ void StoreValues() {
 
     JsonArray* pTargets = pAimbot->GetJsonArray("targets");
 
-    Settings.Aimbot.TargetCount = pTargets->GetSize();
-    if (Settings.Aimbot.Targets) delete Settings.Aimbot.Targets;
-    Settings.Aimbot.Targets = new AimTarget[Settings.Aimbot.TargetCount];
+    for (size_t i = 0; i < pTargets->GetSize(); i++) {
+        Settings.Aimbot.Targets.push_back({
+            pTargets->GetJsonObject(i)->GetNumber<float>("fov"),
+            pTargets->GetJsonObject(i)->GetNumber<int>("bone"),
+            "",
+            pTargets->GetJsonObject(i)->GetBoolean("enabled")
 
-    for (unsigned int i = 0; i < Settings.Aimbot.TargetCount; i++) {
-        Settings.Aimbot.Targets[i].FOV      = pTargets->GetJsonObject(i)->GetNumber<float>  ("fov");
-        Settings.Aimbot.Targets[i].Bone     = pTargets->GetJsonObject(i)->GetNumber<int>    ("bone");
+            });
+        strcpy_s(Settings.Aimbot.Targets[i].Name, 128, pTargets->GetJsonObject(i)->GetString("name").c_str());
     }
 
     JsonObject* pFriendly = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("friendly");
@@ -148,10 +149,12 @@ void UpdateValues() {
         pTargets->RemoveValue(0);
     }
 
-    for (unsigned int i = 0; i < Settings.Aimbot.TargetCount; i++) {
+    for (size_t i = 0; i < Settings.Aimbot.Targets.size(); i++) {
         JsonObject* pTarget = new JsonObject();
         pTarget->AddNumber("fov", Settings.Aimbot.Targets[i].FOV);
         pTarget->AddNumber("bone", Settings.Aimbot.Targets[i].Bone);
+        pTarget->AddString("name", Settings.Aimbot.Targets[i].Name);
+        pTarget->AddBoolean("enabled", Settings.Aimbot.Targets[i].Enabled);
         pTargets->AddJsonObject(pTarget);
     }
 

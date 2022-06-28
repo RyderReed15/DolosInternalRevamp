@@ -1,10 +1,7 @@
 #include "GUI.h"
 
 
-
-
-
-DropDownElement pElements[] = { {"None", -1}, {"Head", BONES::HEAD}, {"Neck", BONES::NECK}, { "Chest", BONES::CHEST }, { "Pelvis", BONES::PELVIS } };
+std::map<int, const char*> mAimOptions = { { -1 , "None"}, { BONES::HEAD, "Head" }, { BONES::NECK, "Neck" }, { BONES::CHEST, "Chest" }, { BONES::PELVIS, "Pelvis" }, { BONES::SPINE1, "Spine" } };
 D3DCOLOR cDummy;
 
 HotKeyStruct OpenMenu = { ShowMenu, VK_DELETE, false, false, false, false };
@@ -12,36 +9,12 @@ Panel* pMain = nullptr;
 Panel* pAimbot, *pESP, *pChams, *pSkinChanger, *pSettings = nullptr;
 CheckBox* pAimCheck , *pFriendlyESP, *pEnemyESP = nullptr;
 ColorPicker* pColorPicker = nullptr;
-char test[64] = "";
+GUIList<AimTarget>* pTargetsList = nullptr;
+
+AimTarget* pDefaultTarget = nullptr;
 
 
-void ShowMenu() {
-	g_bMenuOpen = !g_bMenuOpen;
-}
 
-void ChangeChildren(IGUIElement* pElement, bool bShow) {
-	if (!pElement) return;
-
-	IGUIElement* pCurr = pElement->GetFirstChild();
-	while (pCurr) {
-		ChangeChildren(pCurr, bShow);
-		pCurr = pCurr->GetSibling();
-	}
-	pElement->SetDrawState(bShow);
-
-}
-
-void ShowPanel(Panel* pPanel) {
-	ChangeChildren(pAimbot		, false);
-	ChangeChildren(pESP			, false);
-	ChangeChildren(pChams		, false);
-	ChangeChildren(pSkinChanger	, false);
-	ChangeChildren(pSettings	, false);
-
-	ChangeChildren(pPanel		, true);
-
-	g_pGUIContainer->GenerateMap();
-}
 
 
 bool InitializeGUI(HMODULE hMod) {
@@ -60,7 +33,20 @@ bool InitializeGUI(HMODULE hMod) {
 	g_pGUIContainer->AddElement(new CheckBox(" - Overaim"	, &Settings.Aimbot.Overaim	, { 0, ROW_HEIGHT * 2, COLUMN_WIDTH, ROW_FEATURE_HEIGHT }, OFFWHITE, LIGHTBLUE, pAimCheck));
 	g_pGUIContainer->AddElement(new CheckBox(" - Target All", &Settings.Aimbot.TargetAll, { 0, ROW_HEIGHT * 3, COLUMN_WIDTH, ROW_FEATURE_HEIGHT }, OFFWHITE, LIGHTBLUE, pAimCheck));
 
-	g_pGUIContainer->AddElement(new GUIText ("Targets", { 400, 0, COLUMN_WIDTH, 0 }, WHITE, pAimCheck));
+	ElementEditor<AimTarget>* pEditor = CreateAimEditor();
+
+	g_pGUIContainer->AddElement(pTargetsList = new GUIList<AimTarget> ("Targets", ROW_HEIGHT, &Settings.Aimbot.Targets, pEditor, { 400, 50, COLUMN_WIDTH, 400 }, LIGHTGRAY, pAimbot));
+	
+	pDefaultTarget = new AimTarget({ 0, -1, "Target", false });
+
+	pTargetsList->CreateDefault(pDefaultTarget->Name, pDefaultTarget);
+
+
+	for (size_t i = 0; i < Settings.Aimbot.Targets.size(); i++) {
+		
+		ListElement<AimTarget>* pElem = pTargetsList->AddElement(Settings.Aimbot.Targets[i].Name, &Settings.Aimbot.Targets[i], pEditor);
+		
+	}
 
 
 	g_pGUIContainer->AddElement(pESP = new Panel({ 250, 0, PANEL_WIDTH, PANEL_HEIGHT }, false, DARKGRAY, DARKGRAY, pMain));
@@ -97,7 +83,57 @@ bool InitializeGUI(HMODULE hMod) {
 
 bool UninitializeGUI() {
 	
+	delete pDefaultTarget;
 	delete g_pRender;
 	delete g_pGUIContainer;
 	return true;
+}
+
+ElementEditor<AimTarget>* CreateAimEditor() {
+
+	AimTarget* pDummy = new AimTarget({ 0, 0 });
+	Panel* pEditorPanel;
+
+	pEditorPanel = new Panel({ 1000, 0, COLUMN_WIDTH, 150 }, false, DARKGRAY, DARKGRAY, pMain); // dont set parent here, it will be set in pEditor
+
+	TextBox*	pName		= new TextBox	("Name: ", pDummy->Name, 128, { 20, 20, 260, 20 }, 150, LIGHTGRAY, pEditorPanel);
+	DropDown*	pTarget		= new DropDown	("Target: ", &pDummy->Bone, &mAimOptions, 5, { 20, 60, 260, 20 }, 150, LIGHTGRAY, pEditorPanel);
+	Slider*		pFOV		= new Slider	("FOV: ", &pDummy->FOV, 120, 0, { 20, 80, 260, 12 }, 150, BLACK, LIGHTBLUE, PINK, true, pEditorPanel);
+	CheckBox*	pCheckBox	= new CheckBox	("Enabled: ", &pDummy->Enabled, { 20, 100, 260, 12 }, OFFWHITE, LIGHTBLUE, pEditorPanel);
+
+	ElementEditor<AimTarget>* pEditor = new ElementEditor<AimTarget>(pDummy, pEditorPanel);
+
+	g_pGUIContainer->AddElement(pEditor);
+
+	pEditor->SetDrawState(false);
+
+	return pEditor;
+}
+
+void ShowMenu() {
+	g_bMenuOpen = !g_bMenuOpen;
+}
+
+void ChangeChildren(IGUIElement* pElement, bool bShow) {
+	if (!pElement) return;
+
+	IGUIElement* pCurr = pElement->GetFirstChild();
+	while (pCurr) {
+		ChangeChildren(pCurr, bShow);
+		pCurr = pCurr->GetSibling();
+	}
+	pElement->SetDrawState(bShow);
+
+}
+
+void ShowPanel(Panel* pPanel) {
+	ChangeChildren(pAimbot, false);
+	ChangeChildren(pESP, false);
+	ChangeChildren(pChams, false);
+	ChangeChildren(pSkinChanger, false);
+	ChangeChildren(pSettings, false);
+
+	ChangeChildren(pPanel, true);
+
+	g_pGUIContainer->GenerateMap();
 }
