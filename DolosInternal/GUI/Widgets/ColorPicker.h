@@ -64,7 +64,7 @@ class ColorBox : public IGUIElement {
 	
 	HueBox*			m_pHueBox;
 	ColorPicker*	m_pColorPicker;
-	Vector2D		m_vSelectionLocation;
+	D3DXVECTOR2		m_vSelectionLocation;
 
 };
 

@@ -33,7 +33,7 @@ void DropDown::SetValue(int iValue) {
 
 HRESULT DropDown::Draw(ID3DXFont* pFont, Render* pRender) {
 	
-	Vector2D vSize = pRender->GetStringSize(pFont, m_szName);
+	D3DXVECTOR2 vSize = pRender->GetStringSize(pFont, m_szName);
 	pRender->DrawString({ m_vBounds.x, m_vBounds.y }, (m_bEnabled) ? WHITE : GRAY, pFont, m_szName);
 
 	m_pContainer->SetEnabled(m_bEnabled);

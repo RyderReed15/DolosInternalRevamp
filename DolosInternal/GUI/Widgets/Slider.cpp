@@ -26,8 +26,8 @@ HRESULT Slider::Draw(ID3DXFont* pFont, Render* pRender) {
 	float flBarStart = m_vBounds.x + m_vBounds.z - m_flBarSize;
 	char szValue[33]; _itoa_s((int)*m_pValue, szValue, 10);
 
-	Vector2D vSize	= pRender->GetStringSize(pFont, m_szName);
-	Vector2D vSize2	= pRender->GetStringSize(pFont, szValue);
+	D3DXVECTOR2 vSize	= pRender->GetStringSize(pFont, m_szName);
+	D3DXVECTOR2 vSize2	= pRender->GetStringSize(pFont, szValue);
 
 	pRender->DrawString({ m_vBounds.x, m_vBounds.y - TEXT_FEATURE_OFFSET }					, (m_bEnabled) ? WHITE : GRAY, pFont, m_szName);
 	pRender->DrawString({ flBarStart - vSize2.x - 10, m_vBounds.y - TEXT_FEATURE_OFFSET }	, (m_bEnabled) ? WHITE : GRAY, pFont, szValue);

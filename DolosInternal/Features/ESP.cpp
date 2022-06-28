@@ -184,7 +184,7 @@ void ESP::GetBones(IClientEntity* pEntity, EntityData* pEntityData) {
 void ESP::DrawPlayerName(Vector4D vBounds, const char* szPlayerName){
  
 
-    Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, szPlayerName);
+    D3DXVECTOR2 vSize = g_pRender->GetStringSize(g_pWeaponFont, szPlayerName);
     g_pRender->DrawString({ (vBounds.x + vBounds.z - vSize.x) / 2 , vBounds.y - vSize.y }, WHITE, g_pWeaponFont, szPlayerName);
     
 }
@@ -192,7 +192,7 @@ void ESP::DrawPlayerName(Vector4D vBounds, const char* szPlayerName){
 void ESP::DrawWeaponName(Vector4D vBounds, const char* szWeaponName){
    
     if (szWeaponName) {
-        Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, szWeaponName);
+        D3DXVECTOR2 vSize = g_pRender->GetStringSize(g_pWeaponFont, szWeaponName);
         g_pRender->DrawString({ (vBounds.x + vBounds.z - vSize.x) / 2 , vBounds.y - vSize.y }, WHITE, g_pWeaponFont, szWeaponName);
 
     } 
@@ -203,7 +203,7 @@ void ESP::DrawDistance(Vector4D vBounds, int iDistance){
    
 
     char szDistance[33];  _itoa_s(iDistance, szDistance, 10);
-    Vector2D vSize = g_pRender->GetStringSize(g_pWeaponFont, szDistance);
+    D3DXVECTOR2 vSize = g_pRender->GetStringSize(g_pWeaponFont, szDistance);
     g_pRender->DrawString({ (vBounds.x + vBounds.z - vSize.x) / 2 , vBounds.w  }, WHITE, g_pWeaponFont, szDistance);
 }
 
