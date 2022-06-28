@@ -118,7 +118,7 @@ void ESP::GetEntityInfo(CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int
 
     }
     else {
-        strcpy_s(g_mEntityData[iIndex].szName, 128, pEntity->GetWeaponData()->szHudName + NAME_PREFIX_LEN);
+        strcpy_s(g_mEntityData[iIndex].szName, 128, GetLocalizedString(pEntity->GetWeaponData()->szHudName).c_str());
     } 
 
     

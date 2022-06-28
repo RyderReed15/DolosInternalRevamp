@@ -29,6 +29,12 @@ bool InitializeCheat(HMODULE hMod) {
 		return false;
 	}
 	std::cout << "Netvars Initialized" << std::endl;
+	char lang[128];
+	g_pEngineClient->GetUILanguage(lang, 128);
+	if (!InitializeLocalization(lang)) {
+		return false;
+	}
+	std::cout << "Localization Initialized" << std::endl;
 	if (!InitializeConfig()) {
 		return false;
 	}
@@ -109,7 +115,11 @@ void CloseCheat(HMODULE hMod) {
 LRESULT hkInitWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 	if (uMsg == INIT_MESSAGE) {
-		InitializeCheat((HMODULE)lParam);
+		if (!InitializeCheat((HMODULE)lParam)) {
+			std::cout << "Error Initializing Cheat" << std::endl;
+			Sleep(5000);
+			ExitCheat();
+		}
 		MakeHotKey(EJECT_HOTKEY, &EndThread);
 		// Pass hook along to main hook function
 

@@ -11,6 +11,7 @@
 #include "GUI/FontManager.h"
 #include "GUI/GUI.h"
 #include "Utils/ConfigManager.h"
+#include "Utils/LocalizationManager.h"
 
 #define INIT_MESSAGE    0x9999
 #define EJECT_HOTKEY    0x1000

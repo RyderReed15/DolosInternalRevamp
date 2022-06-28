@@ -154,9 +154,11 @@
     <ClCompile Include="GUI\Widgets\List.cpp">
       <Filter>GUI\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="GUI\Widgets\IValueElement.cpp" />
     <ClCompile Include="GUI\Widgets\CValueElement.cpp">
       <Filter>GUI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\LocalizationManager.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -372,6 +374,9 @@
     </ClInclude>
     <ClInclude Include="GUI\Widgets\IValueElement.h">
       <Filter>GUI\Widgets\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\LocalizationManager.h">
+      <Filter>Utils\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

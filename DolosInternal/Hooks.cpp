@@ -70,7 +70,7 @@ LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	if (uMsg == WM_HOTKEY) {
 		CallHotKey(wParam);
 	}
-	if (g_bMenuOpen) {
+	if (g_bMenuOpen && g_pGUIContainer) {
 		POINTS ptLoc = *(POINTS*)&lParam;
 		POINT ptLocation = { ptLoc.x, ptLoc.y };
 

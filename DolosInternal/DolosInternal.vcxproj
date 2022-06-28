@@ -55,6 +55,7 @@
     <ClCompile Include="Utils\HotKeyManager.cpp" />
     <ClCompile Include="Utils\NetvarManager.cpp" />
     <ClCompile Include="Utils\PatternScanner.cpp" />
+    <ClCompile Include="Utils\LocalizationManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Features\Aimbot.h" />
@@ -128,6 +129,7 @@
     <ClInclude Include="Utils\Macros.h" />
     <ClInclude Include="Utils\NetvarManager.h" />
     <ClInclude Include="Utils\PatternScanner.h" />
+    <ClInclude Include="Utils\LocalizationManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\TextureAtlas.png" />
