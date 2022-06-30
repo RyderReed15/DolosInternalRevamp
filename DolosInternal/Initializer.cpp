@@ -29,17 +29,25 @@ bool InitializeCheat(HMODULE hMod) {
 		return false;
 	}
 	std::cout << "Netvars Initialized" << std::endl;
+
 	char lang[128];
 	g_pEngineClient->GetUILanguage(lang, 128);
 	if (!InitializeLocalization(lang)) {
 		return false;
 	}
 	std::cout << "Localization Initialized" << std::endl;
+
 	if (!InitializeConfig()) {
 		return false;
 	}
 	std::cout << "Config Initialized" << std::endl;
-	
+
+	if (!SkinChanger::InitializeSkinChanger()) {
+
+		return false;
+	}
+
+	std::cout << "SkinChanger Initialized" << std::endl;
 	if (!InitializeFonts(hMod)) {
 
 		UninitializeFonts();
@@ -63,15 +71,7 @@ bool InitializeCheat(HMODULE hMod) {
 
 	std::cout << "Hooks Initialized" << std::endl;
 
-	if (!SkinChanger::InitializeSkinChanger()) {
-
-		UninitializeGUI();
-		UninitializeFonts();
-		UninitializeHooks();
-		return false;
-	}
-
-	std::cout << "SkinChanger Initialized" << std::endl;
+	
 
 	return true;
 }

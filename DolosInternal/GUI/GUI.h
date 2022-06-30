@@ -20,6 +20,7 @@
 #include "Widgets/Text.h"
 #include "Widgets/List.h"
 #include "../SDK/SDK.h"
+#include "../Features/SkinChanger.h"
 
 #define COLUMN_WIDTH        300
 #define ROW_HEIGHT          20
@@ -40,7 +41,7 @@ ElementEditor<AimTarget>*   CreateAimEditor (void);
 void                        ChangeChildren  (IGUIElement* pElement, bool bShow);
 void                        ShowPanel       (Panel* pPanel);
 void                        ShowMenu        (void);
-
+void                        SetSkinList     (void);
 
 
 #endif // !GUI_H

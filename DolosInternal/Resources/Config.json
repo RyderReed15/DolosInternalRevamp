@@ -51,7 +51,7 @@
 		"weapons": {
 			"enabled": true,
 			"draw_name": true,
-			"color": "0x33333333"
+			"color": "0xff00ff00"
 		}
 			
 		},

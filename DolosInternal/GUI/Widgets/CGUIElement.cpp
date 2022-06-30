@@ -47,6 +47,60 @@ void IGUIElement::OnKey(GUIEventHandler* pEventHandler, char chKey, long keyInfo
 	return;
 }
 
+void IGUIElement::SetCallback(GUI_EVENT_TYPE tEvent, std::function<void()> pCallback){
+	switch (tEvent)
+	{
+	case GUI_EVENT_TYPE::CLICK:
+		m_pClickCallback = pCallback;
+		break;
+	case GUI_EVENT_TYPE::DRAG:
+		m_pDragCallback = pCallback;
+		break;
+	case GUI_EVENT_TYPE::RELEASE:
+		m_pReleaseCallback = pCallback;
+		break;
+	case GUI_EVENT_TYPE::HOVER:
+		m_pHoverCallback = pCallback;
+		break;
+	case GUI_EVENT_TYPE::KEYDOWN:
+		m_pTypeCallback = pCallback;
+		break;
+	case GUI_EVENT_TYPE::BUTTON:
+	default:
+		break;
+	}
+}
+
+std::function<void()> IGUIElement::GetCallback(GUI_EVENT_TYPE tEvent){
+	switch (tEvent)
+	{
+	case GUI_EVENT_TYPE::CLICK:		return m_pClickCallback;
+	case GUI_EVENT_TYPE::DRAG:		return m_pDragCallback;
+	case GUI_EVENT_TYPE::RELEASE:	return m_pReleaseCallback;
+	case GUI_EVENT_TYPE::HOVER:		return m_pHoverCallback;
+	case GUI_EVENT_TYPE::KEYDOWN:	return m_pTypeCallback;
+	case GUI_EVENT_TYPE::BUTTON:
+	default:
+		return nullptr;
+	}
+
+}
+
+void IGUIElement::RunCallback(GUI_EVENT_TYPE tEvent){
+
+	switch (tEvent)
+	{
+	case GUI_EVENT_TYPE::CLICK:		{if (m_pClickCallback)	m_pClickCallback(); break; }
+	case GUI_EVENT_TYPE::DRAG:		{if (m_pDragCallback)	m_pDragCallback(); break; }
+	case GUI_EVENT_TYPE::RELEASE:	{if (m_pReleaseCallback) m_pReleaseCallback(); break; }
+	case GUI_EVENT_TYPE::HOVER:		{if (m_pHoverCallback)	m_pHoverCallback(); break; }
+	case GUI_EVENT_TYPE::KEYDOWN:	{if (m_pTypeCallback)	m_pTypeCallback(); break; }
+	case GUI_EVENT_TYPE::BUTTON:
+	default:
+		break;
+	}
+}
+
 void IGUIElement::SetAnimStartTick(void) {
 	m_iAnimStartTick = GetTickCount();
 }

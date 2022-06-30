@@ -1,7 +1,7 @@
 #include "GUI.h"
 
 
-std::map<int, const char*> mAimOptions = { { -1 , "None"}, { BONES::HEAD, "Head" }, { BONES::NECK, "Neck" }, { BONES::CHEST, "Chest" }, { BONES::PELVIS, "Pelvis" }, { BONES::SPINE1, "Spine" } };
+std::map<int, std::string> mAimOptions = { { -1 , "None"}, { BONES::HEAD, "Head" }, { BONES::NECK, "Neck" }, { BONES::CHEST, "Chest" }, { BONES::PELVIS, "Pelvis" }, { BONES::SPINE1, "Spine" } };
 D3DCOLOR cDummy;
 
 HotKeyStruct OpenMenu = { ShowMenu, VK_DELETE, false, false, false, false };
@@ -13,7 +13,9 @@ GUIList<AimTarget>* pTargetsList = nullptr;
 
 AimTarget* pDefaultTarget = nullptr;
 
+int skin, weap;
 
+DropDown* pWeapon, *pSkinList = nullptr;
 
 
 
@@ -70,6 +72,10 @@ bool InitializeGUI(HMODULE hMod) {
 
 	g_pGUIContainer->AddElement(pSkinChanger = new Panel({ 250, 0, PANEL_WIDTH, PANEL_HEIGHT }, false, DARKGRAY, DARKGRAY, pMain));
 	g_pGUIContainer->AddElement(new Button("SKIN CHANGER", std::bind(ShowPanel, pSkinChanger), { 0, 225, 250, 75 }, DARKGRAY, pMain));
+
+	g_pGUIContainer->AddElement(pWeapon		= new DropDown("Weapon: ", &weap, &SkinChanger::g_mWeapNames, 5, { 50, 50, 300, 20 }, 200, LIGHTGRAY, pSkinChanger));
+	g_pGUIContainer->AddElement(pSkinList	= new DropDown("Skin: ", &skin, &(SkinChanger::g_mWeapSkins[0]), 5, { 400, 50, 300, 20 }, 200, LIGHTGRAY, pSkinChanger));
+	pWeapon->GetContainer()->SetCallback(GUI_EVENT_TYPE::RELEASE, SetSkinList);
 
 	g_pGUIContainer->AddElement(pSettings = new Panel({ 250, 0, PANEL_WIDTH, PANEL_HEIGHT }, false, DARKGRAY, DARKGRAY, pMain));
 	g_pGUIContainer->AddElement(new Button("SETTINGS", std::bind(ShowPanel, pSettings), { 0, 300, 250, 75 }, DARKGRAY, pMain));
@@ -136,4 +142,8 @@ void ShowPanel(Panel* pPanel) {
 	ChangeChildren(pPanel, true);
 
 	g_pGUIContainer->GenerateMap();
+}
+
+void SetSkinList() {
+	pSkinList->SetMapPointer(&(SkinChanger::g_mWeapSkins[*(int*)pWeapon->GetValuePointer()]));
 }

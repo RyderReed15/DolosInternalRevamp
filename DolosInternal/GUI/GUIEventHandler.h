@@ -7,11 +7,12 @@
 #include "GUIContainer.h"
 #include <queue>
 #include <functional>
+#include <map>
 
 class GUIContainer;
 class IGUIElement;
 
-enum class GUI_EVENT_TYPE {
+enum class GUI_EVENT_TYPE{
     CLICK = 0,
     DRAG,
     RELEASE,
@@ -20,9 +21,7 @@ enum class GUI_EVENT_TYPE {
     BUTTON
 };
 
-class GUIEvent {
-public:
-    GUIEvent(GUI_EVENT_TYPE tType, std::function<void()> pFunc) { m_tType = tType; m_pFunc = pFunc; };
+struct GUIEvent {
     GUI_EVENT_TYPE m_tType; 
     std::function<void()> m_pFunc;
 };
@@ -54,9 +53,9 @@ public:
 
 private:
 
-    std::queue<GUIEvent>    m_qEvents;
-    GUIContainer*           m_pGUI;
-    IGUIElement*            m_pFocus;
+    std::queue<GUIEvent>        m_qEvents;
+    GUIContainer*               m_pGUI;
+    IGUIElement*                m_pFocus;
 };
 
 template <typename Callable, typename ...Args>

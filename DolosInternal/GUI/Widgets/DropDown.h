@@ -16,7 +16,7 @@ class DropDown : public IValueElement {
 public:
 
 
-			DropDown		(const char* szName, int* pValue, std::map<int, const char*>* pElements, unsigned int iNumDisplayElements, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cColor, IGUIElement* pParent = nullptr);
+			DropDown		(const char* szName, int* pValue, std::map<int, std::string>* pElements, unsigned int iNumDisplayElements, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cColor, IGUIElement* pParent = nullptr);
 			~DropDown		(void);
 	HRESULT Draw			(ID3DXFont* pFont, Render* pRender);
 
@@ -28,6 +28,11 @@ public:
 	void*	GetValuePointer	(void);
 	void	SetHover		(int iHover);
 	int		GetHover		(void);
+
+	void						SetMapPointer(std::map<int, std::string>* pMap);
+	std::map<int, std::string>* GetMapPointer(void);
+
+	DropDownContainer*			GetContainer(void);
 
 private:
 	D3DCOLOR			m_cColor;
@@ -42,7 +47,7 @@ private:
 
 class DropDownContainer : public IGUIElement {
 public:
-			DropDownContainer	(std::map<int, const char*>* pElements, unsigned int iNumDisplayElements, D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent);
+			DropDownContainer	(std::map<int, std::string>* pElements, unsigned int iNumDisplayElements, D3DXVECTOR4 vBounds, D3DCOLOR cColor, IGUIElement* pParent);
 	HRESULT Draw				(ID3DXFont* pFont, Render* pRender);
 
 	void	SetOpen				(bool bOpen);
@@ -51,30 +56,17 @@ public:
 
 	void	OnRelease			(GUIEventHandler* pEventHandler, POINT ptLocation);
 	void	OnHover				(GUIEventHandler* pEventHandler, POINT ptLocation);
+
+	void						SetMapPointer(std::map<int, std::string>* pMap);
+	std::map<int, std::string>* GetMapPointer(void);
 private:
 
-	std::map<int, const char*>*				m_pElements;
+	std::map<int, std::string>*				m_pElements;
 	unsigned int							m_iNumDisplayElements;
 	unsigned int							m_iTopIndex;
 	D3DCOLOR								m_cColor;
 	bool									m_bOpen;
 };
 
-class DropDownElement : public IGUIElement {
-public:
-				DropDownElement	(const char* szName, int iValue);
-	HRESULT		Draw			(ID3DXFont* pFont, Render* pRender);
 
-	void		SetBounds		(D3DXVECTOR4 vBounds);
-
-	int			GetValue		(void);
-	const char* GetName			(void);
-
-	void		OnHover			(GUIEventHandler* pEventHandler, POINT ptLocation);
-
-private:
-	const char* m_szName;
-	int			m_iValue;
-
-};
 #endif // !GUI_DROP_DOWN_H

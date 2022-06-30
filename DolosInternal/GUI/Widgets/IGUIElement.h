@@ -9,7 +9,11 @@
 
 #include "../Render.h"
 #include "../GUIEventHandler.h"
+#include <functional>
+
+
 class GUIEventHandler;
+enum class GUI_EVENT_TYPE;
 
 class IGUIElement {
 public:
@@ -26,6 +30,11 @@ public:
 
 	virtual void	OnType			(GUIEventHandler* pEventHandler, char chKey);
 	virtual void	OnKey			(GUIEventHandler* pEventHandler, char chKey, long keyInfo);
+
+
+	void					SetCallback(GUI_EVENT_TYPE tEvent, std::function<void()> pCallback);
+	std::function<void()>	GetCallback(GUI_EVENT_TYPE tEvent);
+	void					RunCallback(GUI_EVENT_TYPE tEvent);
 
 	void			SetAnimStartTick(void);
 	float			GetAnimLerp		(float flAnimLength);
@@ -60,6 +69,11 @@ protected:
 	unsigned int	m_iAnimStartTick;
 private:
 
+	std::function<void()> m_pTypeCallback		= nullptr;
+	std::function<void()> m_pClickCallback		= nullptr;
+	std::function<void()> m_pDragCallback		= nullptr;
+	std::function<void()> m_pReleaseCallback	= nullptr;
+	std::function<void()> m_pHoverCallback		= nullptr;
 
 };
 

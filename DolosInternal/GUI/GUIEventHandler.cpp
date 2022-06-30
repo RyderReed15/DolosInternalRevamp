@@ -9,50 +9,80 @@ GUIEventHandler::~GUIEventHandler() {
 }
 
 void GUIEventHandler::HandleType(char chKey) {
-    if (m_pFocus) m_pFocus->OnType(this, chKey);
+    if (m_pFocus) {
+        IGUIElement* pOldFocus = m_pFocus;
+        m_pFocus->OnType(this, chKey);
+        pOldFocus->RunCallback(GUI_EVENT_TYPE::KEYDOWN);
+    }
 }
 void GUIEventHandler::HandleKeyDown(char chKey, long keyInfo) {
-    if (m_pFocus) m_pFocus->OnKey(this, chKey, keyInfo);
+   
+    if (m_pFocus) {
+        IGUIElement* pOldFocus = m_pFocus;
+        m_pFocus->OnKey(this, chKey, keyInfo);
+        pOldFocus->RunCallback(GUI_EVENT_TYPE::KEYDOWN);
+    }
 }
 void GUIEventHandler::HandleClick(POINT ptLocation) {
 
     if (m_pFocus) {
+
+        IGUIElement* pOldFocus = m_pFocus;
         m_pFocus->OnClick(this, ptLocation);
+        pOldFocus->RunCallback(GUI_EVENT_TYPE::CLICK);
     }
     else {
         IGUIElement* pWidget = m_pGUI->GetWidgetAt(ptLocation);
-        if (pWidget && pWidget->GetEnabled()) pWidget->OnClick(this, ptLocation);
+        if (pWidget && pWidget->GetEnabled()) {
+            pWidget->OnClick(this, ptLocation);
+            pWidget->RunCallback(GUI_EVENT_TYPE::CLICK);
+        }
     }
 
     
 }
 void GUIEventHandler::HandleDrag(POINT ptLocation) {
     
-    if (m_pFocus) m_pFocus->OnDrag(this, ptLocation);
+    if (m_pFocus) {
+        IGUIElement* pOldFocus = m_pFocus;
+        m_pFocus->OnDrag(this, ptLocation);
+        pOldFocus->RunCallback(GUI_EVENT_TYPE::DRAG);
+    }
 }
 void GUIEventHandler::HandleRelease(POINT ptLocation) {
     if (m_pFocus) {
+        IGUIElement* pOldFocus = m_pFocus;
         m_pFocus->OnRelease(this, ptLocation);
+        pOldFocus->RunCallback(GUI_EVENT_TYPE::RELEASE);
+
     }else{
         IGUIElement* pWidget = m_pGUI->GetWidgetAt(ptLocation);
-        if (pWidget && pWidget->GetEnabled()) pWidget->OnRelease(this, ptLocation);
+        if (pWidget && pWidget->GetEnabled()) {
+            pWidget->OnRelease(this, ptLocation);
+            pWidget->RunCallback(GUI_EVENT_TYPE::RELEASE);
+        }
     }
     
 }
 void GUIEventHandler::HandleHover(POINT ptLocation) {
     if (m_pFocus) {
+        IGUIElement* pOldFocus = m_pFocus;
         m_pFocus->OnHover(this, ptLocation);
+        pOldFocus->RunCallback(GUI_EVENT_TYPE::HOVER);
     }
     else {
         IGUIElement* pWidget = m_pGUI->GetWidgetAt(ptLocation);
-        if (pWidget && pWidget->GetEnabled()) pWidget->OnHover(this, ptLocation);
+        if (pWidget && pWidget->GetEnabled()) {
+            pWidget->OnHover(this, ptLocation);
+            pWidget->RunCallback(GUI_EVENT_TYPE::HOVER);
+        }
     }
     
 }
 //Pushes an event to the queue
 bool GUIEventHandler::CreateGUIEvent(GUI_EVENT_TYPE tEventType, std::function<void()> pFunc){
     if (pFunc) {
-        GUIEvent eEvent = GUIEvent(tEventType, pFunc);
+        GUIEvent eEvent = { tEventType, pFunc };
         m_qEvents.push(eEvent);
         return true;
     }
@@ -67,6 +97,7 @@ void GUIEventHandler::ProccessEvents() {
         m_qEvents.pop();
     }
 }
+
 
 GUIContainer* GUIEventHandler::GetContainer(void)
 {
