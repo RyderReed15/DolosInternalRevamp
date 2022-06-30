@@ -1,11 +1,9 @@
 #include "SkinChanger.h"
 
 std::map<CBaseCombatWeapon*, int> g_mOwnedWeapons; // this will hoepfully go when implementing an event listener
-std::unordered_map<int, int> g_mNewModels;
-std::unordered_map<int, std::string> g_mModelNames;
-std::unordered_map<int, std::string> g_mWeapNames;
-std::unordered_map<std::string, int> g_mWeapIds;
-std::unordered_map<int, std::vector<SkinChanger::GameSkin>> g_mWeapSkins; // I very much dislike this but have no better ideas right now
+std::map<int, int> g_mNewModels;
+std::map<int, std::string> g_mModelNames;
+std::map<std::string, int> g_mWeapIds;
 
 //Counter-Strike Global Offensive\csgo\scripts\items\items_game_cdn.txt contains links to pictures for all skins for use in gui
 // //Counter-Strike Global Offensive\csgo\scripts\items\items_game.txt contains all skin ids paired with their names under paint_kits 
@@ -174,6 +172,18 @@ std::string ParseModelName(JsonObject* pItem, JsonObject* pPrefabs) {
 	return szModel.c_str();
 }
 
+std::string ParseItemName(JsonObject* pItem, JsonObject* pPrefabs) {
+	std::string szItemName = pItem->GetString("item_name");
+	if (szItemName == "") {
+		JsonObject* pPrefab = pPrefabs->GetJsonObject(pItem->GetString("prefab"));
+		if (pPrefab) {
+			szItemName = pPrefab->GetString("item_name");
+		}
+	}
+
+	return szItemName.c_str();
+}
+
 //Parses game files to find weapon models backtracking through prefabs to find the root model - only does weapons and gloves
 //Places them in a hashmap for easy access later
 bool SkinChanger::InitializeModels(JsonObject* pItems) {
@@ -186,7 +196,7 @@ bool SkinChanger::InitializeModels(JsonObject* pItems) {
 			if (pItem->GetString("name").find("weapon") != -1 || pItem->GetString("prefab").find("hands") != -1) {
 
 				g_mModelNames[strtol(pItem->m_szName.c_str(), 0, 10)] = ParseModelName(pItem, pPrefabs);
-				g_mWeapNames[strtol(pItem->m_szName.c_str(), 0, 10)] = pItem->GetString("name");
+				g_mWeapNames[strtol(pItem->m_szName.c_str(), 0, 10)] = GetLocalizedString(ParseItemName(pItem, pPrefabs).c_str());
 				g_mWeapIds[pItem->GetString("name")] = strtol(pItem->m_szName.c_str(), 0, 10);
 
 			}
@@ -199,6 +209,8 @@ bool SkinChanger::InitializeModels(JsonObject* pItems) {
 bool SkinChanger::InitializeSkins(JsonObject* pItems, std::string szPath) {
 
 	std::unordered_map<std::string, int> mSkinIds;
+	std::unordered_map<int, std::string> mSkinNames;
+
 
 	JsonObject* pPaintKits = pItems->GetJsonObject("paint_kits");
 
@@ -214,6 +226,7 @@ bool SkinChanger::InitializeSkins(JsonObject* pItems, std::string szPath) {
 				}
 				//Place all skins into a map
 				mSkinIds[szKitName] = strtol(pKit->m_szName.c_str(), 0, 10);
+				mSkinNames[strtol(pKit->m_szName.c_str(), 0, 10)] = GetLocalizedString(pKit->GetString("description_tag").c_str());
 			}
 		}
 	}
@@ -238,13 +251,16 @@ bool SkinChanger::InitializeSkins(JsonObject* pItems, std::string szPath) {
 			//Each line contains skins name formatted as follows - weapon_name_skin_name - previously parsed are just skin_name
 			while (skinName.find('_', iStart) != -1) {
 				if (mSkinIds.count(skinName.substr(iStart, skinName.length() - iStart))) {
-					//Suse weapon_name to get id and assign the skin to it
-					g_mWeapSkins[g_mWeapIds[skinName.substr(0, iStart - 1)]].push_back({ skinName.substr(iStart, skinName.length() - iStart), mSkinIds[skinName.substr(iStart, skinName.length() - iStart)] });
+					//use weapon_name to get id and assign the skin to it
+					int iWeaponId = g_mWeapIds[skinName.substr(0, iStart - 1)];
+					int iSkinId = mSkinIds[skinName.substr(iStart, skinName.length() - iStart)];
+					g_mWeapSkins[iWeaponId][iSkinId] = mSkinNames[iSkinId];
 					break;
 				}
 				iStart = skinName.find('_', iStart) + 1;
 			}
 		}
+		g_mWeapIds.clear();
 		fCDN.close();
 		return true;
 	}

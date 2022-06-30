@@ -5,9 +5,12 @@
 
 #include "../SDK/SDK.h"
 #include "Json--/JsonParser.h"
+#include "../Utils/LocalizationManager.h"
+#include <map>
 
 #define ITEMS_PATH  "\\csgo\\scripts\\items\\items_game.txt"
 #define CDN_PATH    "\\csgo\\scripts\\items\\items_game_cdn.txt"
+
 
 namespace SkinChanger {
 
@@ -40,6 +43,10 @@ namespace SkinChanger {
     bool InitializeSkins        (JsonObject* pItems, std::string szPath);
 
     bool InitializeSkinChanger  (void);
+
+
+    inline std::map<int, std::map<int, std::string>> g_mWeapSkins;
+    inline std::map<int, std::string> g_mWeapNames;
 }
 
 

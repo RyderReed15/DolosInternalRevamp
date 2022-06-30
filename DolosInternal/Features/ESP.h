@@ -7,7 +7,7 @@
 #include "../Utils/LocalizationManager.h"
 #include "../GUI/GUI.h"
 
-//#define NAME_PREFIX_LEN     1
+#define NAME_PREFIX_LEN     1
 
 #define INCH_TO_METER       0.0254f
 

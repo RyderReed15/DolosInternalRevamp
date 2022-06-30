@@ -37,12 +37,17 @@ bool UpdateLocalization(const char* szLanguage) {
 }
 
 std::wstring GetLocalizedString(const wchar_t* szName){
-    return mStrings[localeHash(szName+1)];
+	if(szName[0] == '#')
+		return mStrings[localeHash(szName + 1)];
+	else
+		return mStrings[localeHash(szName)];
 }
 
 std::string GetLocalizedString(const char* szName) {
-	return string_cast(mStrings[localeHash(wstring_cast(szName+1))]);
-
+	if (szName[0] == '#')
+		return string_cast(mStrings[localeHash(wstring_cast(szName + 1))]);
+	else 
+		return string_cast(mStrings[localeHash(wstring_cast(szName))]);
 }
 std::wstring wstring_cast(std::string szString){
 	int iSize = MultiByteToWideChar(CP_ACP, 0, szString.c_str(), szString.length() + 1, 0, 0);

@@ -46,7 +46,6 @@ void ESP::GetEntityInfo(CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int
     Vector vMax, vMin;
     if (!pEntity) return;
 
-
     //Find bounding boxes for weapons and model dimensions for players
     if (!bPlayer) {
         ICollideable* pCollide = pEntity->GetCollideable();
