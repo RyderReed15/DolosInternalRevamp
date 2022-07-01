@@ -39,7 +39,9 @@ void IGUIElement::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
 void IGUIElement::OnHover(GUIEventHandler* pEventHandler, POINT ptLocation) {
 	return;
 }
-
+void IGUIElement::OnScroll(GUIEventHandler* pEventHandler, POINT ptLocation, short zDelta) {
+	return;
+}
 void IGUIElement::OnType(GUIEventHandler* pEventHandler, char chKey) {
 	return;
 }
@@ -65,6 +67,9 @@ void IGUIElement::SetCallback(GUI_EVENT_TYPE tEvent, std::function<void()> pCall
 	case GUI_EVENT_TYPE::KEYDOWN:
 		m_pTypeCallback = pCallback;
 		break;
+	case GUI_EVENT_TYPE::SCROLL:
+		m_pScrollCallback = pCallback;
+		break;
 	case GUI_EVENT_TYPE::BUTTON:
 	default:
 		break;
@@ -79,6 +84,7 @@ std::function<void()> IGUIElement::GetCallback(GUI_EVENT_TYPE tEvent){
 	case GUI_EVENT_TYPE::RELEASE:	return m_pReleaseCallback;
 	case GUI_EVENT_TYPE::HOVER:		return m_pHoverCallback;
 	case GUI_EVENT_TYPE::KEYDOWN:	return m_pTypeCallback;
+	case GUI_EVENT_TYPE::SCROLL:	return m_pScrollCallback;
 	case GUI_EVENT_TYPE::BUTTON:
 	default:
 		return nullptr;
@@ -92,9 +98,10 @@ void IGUIElement::RunCallback(GUI_EVENT_TYPE tEvent){
 	{
 	case GUI_EVENT_TYPE::CLICK:		{if (m_pClickCallback)	m_pClickCallback(); break; }
 	case GUI_EVENT_TYPE::DRAG:		{if (m_pDragCallback)	m_pDragCallback(); break; }
-	case GUI_EVENT_TYPE::RELEASE:	{if (m_pReleaseCallback) m_pReleaseCallback(); break; }
+	case GUI_EVENT_TYPE::RELEASE:	{if (m_pReleaseCallback)m_pReleaseCallback(); break; }
 	case GUI_EVENT_TYPE::HOVER:		{if (m_pHoverCallback)	m_pHoverCallback(); break; }
 	case GUI_EVENT_TYPE::KEYDOWN:	{if (m_pTypeCallback)	m_pTypeCallback(); break; }
+	case GUI_EVENT_TYPE::SCROLL:	{if (m_pScrollCallback)	m_pScrollCallback(); break; }
 	case GUI_EVENT_TYPE::BUTTON:
 	default:
 		break;

@@ -56,6 +56,7 @@ public:
 
 	void	OnRelease			(GUIEventHandler* pEventHandler, POINT ptLocation);
 	void	OnHover				(GUIEventHandler* pEventHandler, POINT ptLocation);
+	void	OnScroll			(GUIEventHandler* pEventHandler, POINT ptLocation, short zDelta);
 
 	void						SetMapPointer(std::map<int, std::string>* pMap);
 	std::map<int, std::string>* GetMapPointer(void);

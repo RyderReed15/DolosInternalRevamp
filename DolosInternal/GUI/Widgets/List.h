@@ -29,6 +29,7 @@ public:
 	void			CreateDefault	(const char* szName, T* pStruct);
 
 	void			OnRelease		(GUIEventHandler* pEventHandler, POINT ptLocation);
+	void			OnScroll		(GUIEventHandler* pEventHandler, POINT ptLocation, short zDelta);
 private:
 	D3DCOLOR					m_cColor;
 	const char*					m_szName;
@@ -38,6 +39,8 @@ private:
 	std::vector<T>*				m_pArray;
 	ElementEditor<T>*			m_pEditor;
 	ListElement<T>*				m_pDefault;
+	unsigned int				m_iTopIndex;
+	unsigned int				m_iNumDisplayElements;
 
 
 };
@@ -112,6 +115,8 @@ GUIList<T>::GUIList(const char* szName, float flElementSize, std::vector<T>* pAr
 	m_pEditor		= pEditor;
 	m_pDefault		= nullptr;
 	m_vBounds.w		= m_flElementSize;
+	m_iTopIndex		= 0;
+	m_iNumDisplayElements = static_cast<int>((vBounds.w - m_flElementSize) / m_flTotalSize);
 
 }
 template <class T>
@@ -129,7 +134,7 @@ HRESULT GUIList<T>::Draw(ID3DXFont* pFont, Render* pRender) {
 	pRender->DrawSprite({ 288,0,32,32 }, { m_vBounds.x + m_vBounds.z - 20, m_vBounds.y - TEXT_FEATURE_OFFSET }, WHITE, .66f);
 	//pRender->DrawRectangle(m_vBounds, LerpAlpha(m_cColor, GetAnimLerp(FADE_LENGTH)), LerpAlpha(m_cColor, GetAnimLerp(FADE_LENGTH)), true);
 
-	for (size_t i = 0; i < m_vElements.size(); i++) {
+	for (size_t i = m_iTopIndex; (i - m_iTopIndex) < m_iNumDisplayElements && i < m_vElements.size(); i++) {
 		m_vElements[i]->Draw(pFont, pRender);
 	}
 
@@ -146,7 +151,7 @@ ListElement<T>* GUIList<T>::AddElement(const char* szName, T* pStruct, ElementEd
 		m_vElements[i]->UpdateStruct(&(m_pArray->at(i)));
 	}
 
-	m_vBounds.w = m_vElements.size() * m_flTotalSize + m_flElementSize;
+	m_vBounds.w = min(m_iNumDisplayElements, m_vElements.size()) * m_flTotalSize + m_flElementSize;
 	return pElem;
 }
 
@@ -179,11 +184,11 @@ void GUIList<T>::RemoveElement(unsigned int iIndex) {
 	delete m_vElements[iIndex];
 	m_pArray->erase(m_pArray->begin() + iIndex);
 	m_vElements.erase(m_vElements.begin() + iIndex);
-
+	if (m_iTopIndex != 0) m_iTopIndex--;
 	for (size_t i = 0; i < m_vElements.size(); i++) {
 		//Pointers need to be update everytime and element is added because the position in the vector could change
 		//Bounds need to be updated to fill gap
-		m_vElements[i]->m_vBounds.y = m_vBounds.y + i * m_flTotalSize + m_flElementSize;
+		m_vElements[i]->m_vBounds.y = m_vBounds.y + (i - m_iTopIndex) * m_flTotalSize + m_flElementSize;
 		m_vElements[i]->UpdateStruct(&(m_pArray->at(i)));
 	}
 
@@ -223,13 +228,31 @@ void GUIList<T>::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
 
 	}
 	else if (ptLocation.y - m_vBounds.y < m_vElements.size() * m_flTotalSize + m_flElementSize - 5 && !m_vElements.empty()) {
-		m_vElements[static_cast<int>((ptLocation.y - m_vBounds.y - (m_flTotalSize + 5)) / m_flTotalSize + .5f)]->OnRelease(pEventHandler, ptLocation);
+		m_vElements[m_iTopIndex + static_cast<int>((ptLocation.y - m_vBounds.y - (m_flTotalSize + 5)) / m_flTotalSize + .5f)]->OnRelease(pEventHandler, ptLocation);
 		//Select element based on the position fo the mouse and math using the size of each element
 	}
 	else if (m_pParent) {
 		m_pParent->OnRelease(pEventHandler, { 0, 0 });
 	}
 
+}
+
+template <class T>
+void GUIList<T>::OnScroll(GUIEventHandler* pEventHandler, POINT ptLocation, short zDelta) {
+	if (m_pArray->size() < m_iNumDisplayElements) {
+		m_iTopIndex = 0;
+		return;
+	}
+
+	m_iTopIndex -= zDelta / 120;
+	if (m_iTopIndex > m_pArray->size() + 10) m_iTopIndex = 0;
+	else m_iTopIndex = min(m_pArray->size() - m_iNumDisplayElements, m_iTopIndex);
+
+	for (size_t i = m_iTopIndex; (i - m_iTopIndex) < m_iNumDisplayElements && i < m_vElements.size(); i++) {
+		m_vElements[i]->m_vBounds.y = m_vBounds.y + (i - m_iTopIndex) * m_flTotalSize + m_flElementSize;
+	}
+
+	
 }
 
 

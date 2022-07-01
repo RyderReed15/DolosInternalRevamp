@@ -13,7 +13,7 @@ DropDown::DropDown(const char* szName, int* pValue, std::map<int, std::string>* 
 
 
 	D3DXVECTOR4 vContainerBounds(m_vBounds.z - flContainerSize, -TEXT_FEATURE_OFFSET, flContainerSize, m_vBounds.w);
-	m_pContainer	= new DropDownContainer(pElements, pElements->size(), vContainerBounds, cColor, this);
+	m_pContainer	= new DropDownContainer(pElements, iNumDisplayElements, vContainerBounds, cColor, this);
 	
 }
 
@@ -106,13 +106,14 @@ HRESULT DropDownContainer::Draw(ID3DXFont* pFont, Render* pRender) {
 
 	if (m_bOpen) {
 		// Draw current selection
-		pRender->DrawRoundedRectangle({ m_vBounds.x, m_vBounds.y + m_vBounds.w + TEXT_FEATURE_OFFSET, m_vBounds.z, m_vBounds.w * (m_pElements->size() * BOX_TEXT_RATIO + .25f) }, ROUND_CORNER_SIZE, LerpAlpha(m_cColor, GetAnimLerp(FADE_LENGTH)));
+		pRender->DrawRoundedRectangle({ m_vBounds.x, m_vBounds.y + m_vBounds.w + TEXT_FEATURE_OFFSET, m_vBounds.z, m_vBounds.w * (m_iNumDisplayElements * BOX_TEXT_RATIO + .25f) }, ROUND_CORNER_SIZE, LerpAlpha(m_cColor, GetAnimLerp(FADE_LENGTH)));
 		
-		int i = 0;
-		for (std::map<int, std::string>::iterator it = m_pElements->begin(); it != m_pElements->end(); it++) {
+
+		std::map<int, std::string>::iterator it = m_pElements->begin();
+		std::advance(it, m_iTopIndex);
+		for (unsigned int i = 0; i < m_iNumDisplayElements && it != m_pElements->end(); it++, i++) {
 			// Draw drop down menu - Increments with every item
 			pRender->DrawString({ m_vBounds.x + 15, m_vBounds.w * .25f + m_vBounds.y + (i + 1) * m_vBounds.w * BOX_TEXT_RATIO - 3, }, (pHover == it->first) ? WHITE : GRAY, pFont, it->second.c_str());
-			i++;
 		}
 	}
 
@@ -131,10 +132,13 @@ bool DropDownContainer::GetOpen() {
 
 
 void DropDownContainer::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
-	
+	//The element slecected can be done with math instead of loops
+
+
 	//only ever called when bOpen is true because this element isn't indexed
-	int i = 0;
-	for (std::map<int, std::string>::iterator it = m_pElements->begin(); it != m_pElements->end(); it++) {
+	std::map<int, std::string>::iterator it = m_pElements->begin();
+	std::advance(it, m_iTopIndex);
+	for (unsigned int i = 0; i < m_iNumDisplayElements && it != m_pElements->end(); it++, i++) {
 		//Check if the mouse is over this element
 		D3DXVECTOR4 vBounds = { m_vBounds.x, m_vBounds.w * .25f + m_vBounds.y + (i + 1) * m_vBounds.w * BOX_TEXT_RATIO - 3, m_vBounds.z, m_vBounds.w * BOX_TEXT_RATIO };
 		if (ptLocation.x >= vBounds.x && ptLocation.x <= vBounds.x + vBounds.z && ptLocation.y >= vBounds.y && ptLocation.y <= vBounds.y + vBounds.w) {
@@ -142,7 +146,6 @@ void DropDownContainer::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocati
 			((DropDown*)m_pParent)->SetValue(it->first); // Update value if it is
 			break;
 		}
-		i++;
 		
 	}
 	
@@ -153,8 +156,9 @@ void DropDownContainer::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocati
 }
 void DropDownContainer::OnHover(GUIEventHandler* pEventHandler, POINT ptLocation) {
 	if (m_bOpen) {
-		int i = 0;
-		for (std::map<int, std::string>::iterator it = m_pElements->begin(); it != m_pElements->end(); it++) {
+		std::map<int, std::string>::iterator it = m_pElements->begin();
+		std::advance(it, m_iTopIndex);
+		for (unsigned int i = 0; i < m_iNumDisplayElements && it != m_pElements->end(); it++, i++) {
 
 			//Check if the mouse is over this element
 			D3DXVECTOR4 vBounds = { m_vBounds.x, m_vBounds.w * .25f + m_vBounds.y + (i + 1) * m_vBounds.w * BOX_TEXT_RATIO - 3, m_vBounds.z, m_vBounds.w * BOX_TEXT_RATIO };
@@ -162,13 +166,26 @@ void DropDownContainer::OnHover(GUIEventHandler* pEventHandler, POINT ptLocation
 
 				((DropDown*)m_pParent)->SetHover(it->first); // Set hover value for use in draw
 			}
-			i++;
 		}
+	}
+}
+
+void DropDownContainer::OnScroll(GUIEventHandler* pEventHandler, POINT ptLocation, short zDelta){
+	if (m_bOpen) {
+		if (m_pElements->size() < m_iNumDisplayElements) {
+			m_iTopIndex = 0;
+			return;
+		}
+		m_iTopIndex -= zDelta /120;
+		if (m_iTopIndex > m_pElements->size() + 10) m_iTopIndex = 0;
+		else m_iTopIndex = min(m_pElements->size() - m_iNumDisplayElements, m_iTopIndex);
+		
 	}
 }
 
 void DropDownContainer::SetMapPointer(std::map<int, std::string>* pMap) {
 	m_pElements = pMap;
+	m_iTopIndex = 0;
 }
 
 std::map<int, std::string>* DropDownContainer::GetMapPointer(void) {

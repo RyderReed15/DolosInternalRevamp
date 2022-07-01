@@ -79,6 +79,21 @@ void GUIEventHandler::HandleHover(POINT ptLocation) {
     }
     
 }
+void GUIEventHandler::HandleScroll(POINT ptLocation, short zDelta){
+    if (m_pFocus) {
+        IGUIElement* pOldFocus = m_pFocus;
+        m_pFocus->OnScroll(this, ptLocation, zDelta);
+        pOldFocus->RunCallback(GUI_EVENT_TYPE::SCROLL);
+    }
+    else {
+        IGUIElement* pWidget = m_pGUI->GetWidgetAt(ptLocation);
+        if (pWidget && pWidget->GetEnabled()) {
+            pWidget->OnScroll(this, ptLocation, zDelta);
+            pWidget->RunCallback(GUI_EVENT_TYPE::SCROLL);
+        }
+    }
+
+}
 //Pushes an event to the queue
 bool GUIEventHandler::CreateGUIEvent(GUI_EVENT_TYPE tEventType, std::function<void()> pFunc){
     if (pFunc) {

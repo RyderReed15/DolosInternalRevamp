@@ -99,7 +99,11 @@ LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 				pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::HOVER, pEventHandler->BuildFunction(&GUIEventHandler::HandleHover, pEventHandler, ptLocation));
 			}
 			break;
+		case WM_MOUSEWHEEL:
+			pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::SCROLL, pEventHandler->BuildFunction(&GUIEventHandler::HandleScroll, pEventHandler, ptLocation, GET_WHEEL_DELTA_WPARAM(wParam)));
+			break;
 		}
+		
 		
 	}
 	

@@ -16,16 +16,10 @@
 		"antilock_factor": 0.50000,
 		"targets": [
 			{
-				"fov": 5,
-				"bone": 8,
-				"name": "Head",
-				"enabled": true
-			},
-			{
-				"fov": 5,
-				"bone": 6,
-				"name": "Chest",
-				"enabled": true
+				"fov": 0,
+				"bone": -1,
+				"name": "Target",
+				"enabled": false
 			}
 		]
 	},

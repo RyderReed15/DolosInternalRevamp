@@ -8,7 +8,7 @@ Slider::Slider(const char* szName, float* pValue, float flMaxValue, float flMinV
 
 	m_bExponential	= bExponential;
 
-	m_flBarPercent	= max(min(powf(((*pValue) - flMinValue) / m_flRange, 1 + bExponential * .5f), 1.f), 0.f);
+	m_flBarPercent	= max(min(powf(((*pValue) - flMinValue) / m_flRange, 1.f / (1 + m_bExponential * .5f)), 1.f), 0.f);
 	m_flBarSize		= flBarSize;
 
 	m_szName		= szName;
@@ -40,7 +40,7 @@ HRESULT Slider::Draw(ID3DXFont* pFont, Render* pRender) {
 }
 
 void Slider::UpdateSlider() {
-	m_flBarPercent = max(min(powf(((*m_pValue) - m_flMinValue) / m_flRange, 1 + m_bExponential * .5f), 1.f), 0.f);
+	m_flBarPercent = max(min(powf(((*m_pValue) - m_flMinValue) / m_flRange, 1.f / (1 + m_bExponential * .5f)), 1.f), 0.f);
 }
 
 void Slider::OnClick(GUIEventHandler* pEventHandler, POINT) {

@@ -12,13 +12,14 @@
 class GUIContainer;
 class IGUIElement;
 
-enum class GUI_EVENT_TYPE{
+enum class GUI_EVENT_TYPE {
     CLICK = 0,
     DRAG,
     RELEASE,
     HOVER,
     KEYDOWN,
-    BUTTON
+    BUTTON,
+    SCROLL
 };
 
 struct GUIEvent {
@@ -37,6 +38,7 @@ public:
     void            HandleDrag          (POINT ptLocation);
     void            HandleRelease       (POINT ptLocation);
     void            HandleHover         (POINT ptLocation);
+    void            HandleScroll        (POINT ptLocation, short zDelta);
     void            HandleType          (char chKey);
     void            HandleKeyDown       (char chKey, long keyInfo);
 

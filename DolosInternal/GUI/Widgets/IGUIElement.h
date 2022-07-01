@@ -27,6 +27,7 @@ public:
 	virtual void	OnDrag			(GUIEventHandler* pEventHandler, POINT ptLocation);
 	virtual void	OnRelease		(GUIEventHandler* pEventHandler, POINT ptLocation);
 	virtual void	OnHover			(GUIEventHandler* pEventHandler, POINT ptLocation);
+	virtual void	OnScroll		(GUIEventHandler* pEventHandler, POINT ptLocation, short zDelta);
 
 	virtual void	OnType			(GUIEventHandler* pEventHandler, char chKey);
 	virtual void	OnKey			(GUIEventHandler* pEventHandler, char chKey, long keyInfo);
@@ -74,6 +75,7 @@ private:
 	std::function<void()> m_pDragCallback		= nullptr;
 	std::function<void()> m_pReleaseCallback	= nullptr;
 	std::function<void()> m_pHoverCallback		= nullptr;
+	std::function<void()> m_pScrollCallback		= nullptr;
 
 };
 
