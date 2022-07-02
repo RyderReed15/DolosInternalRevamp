@@ -59,7 +59,7 @@ struct Config {
     } Misc;
     struct SkinConfig {
         bool TrackKills;
-        std::map<int, SkinChanger::SkinStruct*> Skins;
+        std::vector<SkinChanger::SkinStruct> Skins;
     } SkinChanger;
     struct TriggerConfig {
         bool    Enabled;
@@ -82,11 +82,10 @@ bool LoadConfig         (const char* szPath);
 bool SaveConfig         (const char* szPath);
 void StoreValues        (void);
 void UpdateValues       (void);
-void UnloadSkins        (void);
 
 D3DCOLOR                    ParseColor  (const std::string& szColor);
 std::string                 WriteColor  (const D3DCOLOR cColor);
-SkinChanger::SkinStruct*    ParseSkin   (JsonObject* pSkinObject);
+SkinChanger::SkinStruct     ParseSkin   (JsonObject* pSkinObject);
 JsonObject*                 WriteSkin   (const SkinChanger::SkinStruct* pSkin);
 
 

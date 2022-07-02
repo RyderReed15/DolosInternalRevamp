@@ -15,6 +15,7 @@
 namespace SkinChanger {
 
     struct SkinStruct {
+        int     nItemId;
         int     nItemDefIndex;
         int     iPaintKit;
         float   flWear;
@@ -24,12 +25,6 @@ namespace SkinChanger {
         char    szCustomName[32];
     };
 
-    struct GameSkin {
-        std::string szName;
-        int         iIndex;
-    };
-    
-
     //void Tick();
     void PreTick();
     void PostTick();
@@ -37,6 +32,8 @@ namespace SkinChanger {
     void ChangeItemIndex        (CBaseCombatWeapon* pWeapon, int nItemDefIndex);
     void OverrideSkin           (CBaseCombatWeapon* pWeapon, SkinStruct* pSkinInfo);
     void OverrideModel          (CBaseCombatWeapon* pWeapon, int nItemDefinitionIndex);
+
+    void UpdateIndices          (void);
 
     bool InitializeModels       (JsonObject* pItems);
 
