@@ -37,11 +37,13 @@ bool UninitializeGUI    ();
 
 
 
-ElementEditor<AimTarget>*   CreateAimEditor (void);
+ElementEditor<AimTarget>*               CreateAimEditor (void);
+ElementEditor<SkinChanger::SkinInfo>*   CreateSkinEditor(void);
+
 void                        ChangeChildren  (IGUIElement* pElement, bool bShow);
 void                        ShowPanel       (Panel* pPanel);
 void                        ShowMenu        (void);
-void                        SetSkinList     (void);
+void                        SetSkinList     (DropDown* pWeaponPicker, DropDown* pSkinPicker);
 
 
 #endif // !GUI_H

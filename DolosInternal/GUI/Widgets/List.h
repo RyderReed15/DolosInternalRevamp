@@ -215,7 +215,7 @@ void GUIList<T>::RemoveElement(ListElement<T>* pElement) {
 template <class T>
 void GUIList<T>::CreateDefault(const char* szName, T* pStruct) {
 	if (m_pDefault) delete m_pDefault;
-	ListElement<AimTarget>* pDefault = new ListElement<AimTarget>(szName, pStruct, nullptr, {}, 0);
+	ListElement<T>* pDefault = new ListElement<T>(szName, pStruct, nullptr, {}, 0);
 	m_pDefault = pDefault;
 }
 

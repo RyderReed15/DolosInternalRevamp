@@ -121,7 +121,7 @@ void StoreValues() {
     JsonArray* pSkins = pSkinChanger->GetJsonArray("skins");
 
     for (size_t i = 0; i < pSkins->GetSize(); i++) {
-        SkinChanger::SkinStruct pSkin = ParseSkin(pSkins->GetJsonObject(i));
+        SkinChanger::SkinInfo pSkin = ParseSkin(pSkins->GetJsonObject(i));
         Settings.SkinChanger.Skins.push_back(pSkin);
     }
 }
@@ -206,7 +206,7 @@ void UpdateValues() {
     }
 
     
-    for (std::vector<SkinChanger::SkinStruct>::iterator it = Settings.SkinChanger.Skins.begin(); it != Settings.SkinChanger.Skins.end(); it++) {
+    for (std::vector<SkinChanger::SkinInfo>::iterator it = Settings.SkinChanger.Skins.begin(); it != Settings.SkinChanger.Skins.end(); it++) {
         JsonObject* pSkin = WriteSkin(&*it);
         if (!pSkin) continue;
         pSkins->AddJsonObject(pSkin);
@@ -228,9 +228,9 @@ std::string WriteColor(const D3DCOLOR cColor)
 }
 
 
-SkinChanger::SkinStruct ParseSkin(JsonObject* pSkinObject) {
+SkinChanger::SkinInfo ParseSkin(JsonObject* pSkinObject) {
     if (!pSkinObject) return {};
-    SkinChanger::SkinStruct pSkinInfo = SkinChanger::SkinStruct();
+    SkinChanger::SkinInfo pSkinInfo = SkinChanger::SkinInfo();
 
     pSkinInfo.nItemId               = pSkinObject->GetNumber<int>   ("weapon_id");
     pSkinInfo.nItemDefIndex         = pSkinObject->GetNumber<int>   ("new_index");
@@ -246,7 +246,7 @@ SkinChanger::SkinStruct ParseSkin(JsonObject* pSkinObject) {
 
 
 
-JsonObject* WriteSkin(const SkinChanger::SkinStruct* pSkin) {
+JsonObject* WriteSkin(const SkinChanger::SkinInfo* pSkin) {
     if (!pSkin) return nullptr;
 
     JsonObject* pObject = new JsonObject();

@@ -97,11 +97,20 @@ IGUIElement* GUIContainer::GetWidgetById(int iElement) {
 
 
 void GUIContainer::DrawElements(Render* pRender, ID3DXFont* pFont) {
+    IGUIElement* pFocus = m_pEventHandler->GetFocus();
+
     pRender->Begin();
     for (size_t i = 0; i < m_vElements.size(); i++) {
-        if (m_vElements[i]->GetDrawState()) {
+        if (m_vElements[i]->GetDrawState() && (m_vElements[i] != pFocus || !pFocus->GetDrawOnTop())) {
             m_vElements[i]->Draw(pFont, pRender);
         }
     }
     pRender->End();
+
+    if (pFocus && pFocus->GetDrawState() && pFocus->GetDrawOnTop()) {
+        //Draw focused object on top - usually drop downs, etc
+        pRender->Begin();
+        pFocus->Draw(pFont, pRender);
+        pRender->End();
+    }
 }

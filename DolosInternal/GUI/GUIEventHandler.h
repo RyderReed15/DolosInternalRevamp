@@ -48,6 +48,7 @@ public:
     GUIContainer*   GetContainer        (void);
 
     void            SetFocus            (IGUIElement* pFocus);
+    IGUIElement*    GetFocus            (void);
     void            ReleaseFocus        (void);
 
     template <typename Callable, typename ...Args>

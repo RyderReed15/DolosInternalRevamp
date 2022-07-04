@@ -114,16 +114,18 @@ void GUIEventHandler::ProccessEvents() {
 }
 
 
-GUIContainer* GUIEventHandler::GetContainer(void)
-{
+GUIContainer* GUIEventHandler::GetContainer(void){
     return m_pGUI;
 }
 void GUIEventHandler::SetFocus(IGUIElement* pFocus) {
     m_pFocus = pFocus;
 }
 
-void GUIEventHandler::ReleaseFocus(void)
-{
+IGUIElement* GUIEventHandler::GetFocus(void){
+    return m_pFocus;
+}
+
+void GUIEventHandler::ReleaseFocus(void){
     m_pFocus = nullptr;
 }
 

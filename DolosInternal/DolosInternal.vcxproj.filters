@@ -151,9 +151,6 @@
     <ClCompile Include="Features\Misc.cpp">
       <Filter>Features</Filter>
     </ClCompile>
-    <ClCompile Include="GUI\Widgets\List.cpp">
-      <Filter>GUI\Widgets</Filter>
-    </ClCompile>
     <ClCompile Include="GUI\Widgets\CValueElement.cpp">
       <Filter>GUI\Widgets</Filter>
     </ClCompile>

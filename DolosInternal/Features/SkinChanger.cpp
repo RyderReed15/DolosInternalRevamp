@@ -47,7 +47,7 @@ void SkinChanger::PostTick() {
 		int nItemIndex = pWeapon->GetWeaponId();
 
 		if (g_mSkinIndices.count(nItemIndex)) {
-			SkinStruct* pSkin = &Settings.SkinChanger.Skins[g_mSkinIndices[nItemIndex]];
+			SkinInfo* pSkin = &Settings.SkinChanger.Skins[g_mSkinIndices[nItemIndex]];
 
 			//Set weapon model before skin or else skin wont properly apply
 			OverrideModel(pWeapon, pSkin->nItemDefIndex);
@@ -57,7 +57,7 @@ void SkinChanger::PostTick() {
 	}
 }
 
-void SkinChanger::OverrideSkin(CBaseCombatWeapon* pWeapon, SkinStruct* pSkinInfo) {
+void SkinChanger::OverrideSkin(CBaseCombatWeapon* pWeapon, SkinInfo* pSkinInfo) {
 	int* pItemIdHigh = pWeapon->ItemIDHigh();
 	if (!pItemIdHigh) return;
 

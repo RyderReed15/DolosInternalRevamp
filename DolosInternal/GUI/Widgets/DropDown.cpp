@@ -8,8 +8,7 @@ DropDown::DropDown(const char* szName, int* pValue, std::map<int, std::string>* 
 	m_szName				= szName;
 	m_pValue				= pValue;
 	m_iHover				= *pValue;
-	m_iNumDisplayElements	= iNumDisplayElements;
-
+	m_iNumDisplayElements = iNumDisplayElements;
 
 
 	D3DXVECTOR4 vContainerBounds(m_vBounds.z - flContainerSize, -TEXT_FEATURE_OFFSET, flContainerSize, m_vBounds.w);
@@ -123,6 +122,7 @@ HRESULT DropDownContainer::Draw(ID3DXFont* pFont, Render* pRender) {
 
 void DropDownContainer::SetOpen(bool bOpen) {
 	m_bOpen = bOpen;
+	m_bDrawOnTop = bOpen;
 	SetAnimStartTick();
 }
 
@@ -152,6 +152,7 @@ void DropDownContainer::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocati
 	//for (unsigned int i = m_iTopIndex; i < m_iTopIndex + m_iNumDisplayElements && i < m_iNumElements; i++) {
 	
 	pEventHandler->ReleaseFocus();
+	m_bDrawOnTop = false;
 	m_bOpen = false;
 }
 void DropDownContainer::OnHover(GUIEventHandler* pEventHandler, POINT ptLocation) {

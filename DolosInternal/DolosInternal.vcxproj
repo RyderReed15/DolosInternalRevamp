@@ -39,7 +39,6 @@
     <ClCompile Include="GUI\Widgets\CValueElement.cpp" />
     <ClCompile Include="GUI\Widgets\DropDown.cpp" />
     <ClCompile Include="GUI\Widgets\HotKey.cpp" />
-    <ClCompile Include="GUI\Widgets\List.cpp" />
     <ClCompile Include="GUI\Widgets\Panel.cpp" />
     <ClCompile Include="GUI\Widgets\Slider.cpp" />
     <ClCompile Include="GUI\Widgets\Text.cpp" />

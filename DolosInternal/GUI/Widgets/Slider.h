@@ -6,6 +6,7 @@
 #include "IGUIElement.h"
 #include "IValueElement.h"
 #include "../GUIEventHandler.h"
+#include <string>
 
 
 class GUIEventHandler;

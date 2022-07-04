@@ -41,6 +41,8 @@ public:
 	float			GetAnimLerp		(float flAnimLength);
 	void			SetDrawState	(bool bDrawState);
 	bool			GetDrawState	(void);
+	void			SetDrawOnTop	(bool bDrawState);
+	bool			GetDrawOnTop	(void);
 	void			SetEnabled		(bool bEnabled);
 	bool			GetEnabled		(void);
 
@@ -60,6 +62,7 @@ public:
 
 protected:
 	bool			m_bShouldDraw;
+	bool			m_bDrawOnTop;
 	bool			m_bEnabled;
 	D3DXVECTOR4		m_vBounds;
 	unsigned int	m_iChildCount;

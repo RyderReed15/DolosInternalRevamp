@@ -4,6 +4,7 @@
 IGUIElement::IGUIElement(D3DXVECTOR4 vBounds, IGUIElement* pParent) {
 
 	m_bShouldDraw		= true;
+	m_bDrawOnTop		= false;
 	m_bEnabled			= true;
 	m_iChildCount		= 0;
 	m_pFirstChild		= nullptr;
@@ -124,11 +125,17 @@ float IGUIElement::GetAnimLerp(float flAnimLength) {
 }
 
 void IGUIElement::SetDrawState(bool bDrawState) {
-
 	m_bShouldDraw = bDrawState;
 }
 bool IGUIElement::GetDrawState(void) {
 	return m_bShouldDraw;
+}
+
+void IGUIElement::SetDrawOnTop(bool bDrawState) {
+	m_bDrawOnTop = bDrawState;
+}
+bool IGUIElement::GetDrawOnTop(void) {
+	return m_bDrawOnTop;
 }
 void IGUIElement::SetEnabled(bool bEnabled) {
 	m_bEnabled = bEnabled;

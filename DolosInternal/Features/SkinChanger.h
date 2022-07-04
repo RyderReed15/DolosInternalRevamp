@@ -14,7 +14,7 @@
 
 namespace SkinChanger {
 
-    struct SkinStruct {
+    struct SkinInfo {
         int     nItemId;
         int     nItemDefIndex;
         int     iPaintKit;
@@ -30,7 +30,7 @@ namespace SkinChanger {
     void PostTick();
 
     void ChangeItemIndex        (CBaseCombatWeapon* pWeapon, int nItemDefIndex);
-    void OverrideSkin           (CBaseCombatWeapon* pWeapon, SkinStruct* pSkinInfo);
+    void OverrideSkin           (CBaseCombatWeapon* pWeapon, SkinInfo* pSkinInfo);
     void OverrideModel          (CBaseCombatWeapon* pWeapon, int nItemDefinitionIndex);
 
     void UpdateIndices          (void);

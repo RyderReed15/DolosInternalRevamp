@@ -24,7 +24,7 @@ HRESULT Slider::Draw(ID3DXFont* pFont, Render* pRender) {
 	
 	float flBarSizeAdj = m_flBarPercent * (m_flBarSize - m_vBounds.w) + m_vBounds.w;
 	float flBarStart = m_vBounds.x + m_vBounds.z - m_flBarSize;
-	char szValue[33]; _itoa_s((int)*m_pValue, szValue, 10);
+	char szValue[33]; sprintf_s(szValue, 33, "%.2f", *m_pValue);
 
 	D3DXVECTOR2 vSize	= pRender->GetStringSize(pFont, m_szName);
 	D3DXVECTOR2 vSize2	= pRender->GetStringSize(pFont, szValue);
