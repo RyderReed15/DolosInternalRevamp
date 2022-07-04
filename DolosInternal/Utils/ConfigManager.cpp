@@ -2,7 +2,7 @@
 
 bool InitializeConfig() {
 
-    return LoadConfig("F:\\Coding Projects\\VS\\DolosInternal\\DolosInternal\\Resources\\Config.json");
+    return LoadConfig("F:\\Coding Projects\\VS\\DolosInternal\\DolosInternal\\Resources\\Save.json");
 
 }
 
@@ -223,7 +223,7 @@ D3DCOLOR ParseColor(const std::string& szColor) {
 std::string WriteColor(const D3DCOLOR cColor)
 {
     char szBuffer[16];
-    _itoa_s(cColor, szBuffer, 16, 16);
+    _ltoa_s(cColor, szBuffer, 16, 16);
     return std::string(szBuffer);
 }
 
@@ -240,7 +240,7 @@ SkinChanger::SkinInfo ParseSkin(JsonObject* pSkinObject) {
     pSkinInfo.iSeed                 = pSkinObject->GetNumber<int>   ("seed");
     pSkinInfo.iQuality              = pSkinObject->GetNumber<int>   ("quality");
 
-    sprintf_s(pSkinInfo.szCustomName, 32, "%s", pSkinObject->GetString("custom_name").c_str());
+    strcpy_s(pSkinInfo.szCustomName, 32, pSkinObject->GetString("custom_name").c_str());
     return pSkinInfo;
 }
 

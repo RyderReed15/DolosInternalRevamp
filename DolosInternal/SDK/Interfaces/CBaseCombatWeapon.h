@@ -11,35 +11,21 @@
 
 class CBaseAttributableItem : public CBaseEntity {
 public:
-    PNETVAR(int, FallbackPaintKit, "DT_BaseAttributableItem", "m_nFallbackPaintKit");
-    PNETVAR(float, FallbackWear, "DT_BaseAttributableItem", "m_flFallbackWear");
-    PNETVAR(int, FallbackStatTrak, "DT_BaseAttributableItem", "m_nFallbackStatTrak");
-    PNETVAR(int, FallbackSeed, "DT_BaseAttributableItem", "m_nFallbackSeed");
+    PNETVAR(int		, FallbackPaintKit	, "DT_BaseAttributableItem", "m_nFallbackPaintKit");
+    PNETVAR(float	, FallbackWear		, "DT_BaseAttributableItem", "m_flFallbackWear");
+    PNETVAR(int		, FallbackStatTrak	, "DT_BaseAttributableItem", "m_nFallbackStatTrak");
+    PNETVAR(int		, FallbackSeed		, "DT_BaseAttributableItem", "m_nFallbackSeed");
 
-    PNETVAR(__int32, OriginalOwnerLow, "DT_BaseAttributableItem", "m_OriginalOwnerXuidLow");
-    PNETVAR(__int32, OriginalOwnerHigh, "DT_BaseAttributableItem", "m_OriginalOwnerXuidHigh");
+    PNETVAR(__int32	, OriginalOwnerLow	, "DT_BaseAttributableItem", "m_OriginalOwnerXuidLow");
+    PNETVAR(__int32	, OriginalOwnerHigh	, "DT_BaseAttributableItem", "m_OriginalOwnerXuidHigh");
+
+	PNETVAR(int		, ItemIDHigh			, "DT_ScriptCreatedItem", "m_iItemIDHigh");
+	PNETVAR(int16_t	, ItemDefinitionIndex	, "DT_ScriptCreatedItem", "m_iItemDefinitionIndex");
+	PNETVAR(int		, AccountID				, "DT_ScriptCreatedItem", "m_iAccountID");
+	PNETVAR(char	, CustomName			, "DT_ScriptCreatedItem", "m_szCustomName");
+	PNETVAR(int		, EntityQuality			, "DT_ScriptCreatedItem", "m_iEntityQuality");
 
 
-    int* ItemIDHigh() {
-        return (int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iItemIDHigh"));
-
-    }
-	int16_t* ItemDefinitionIndex() {
-        return (int16_t*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iItemDefinitionIndex"));
-
-    }
-    int* AccountID() {
-        return (int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iAccountID"));
-
-    }
-
-    char* CustomName() {
-        return (char*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_szCustomName"));
-    }
-
-    int* EntityQuality() {
-        return (int*)((int)this + (int)GetNetvar("DT_AttributeContainer", "m_Item") + (int)GetNetvar("DT_BaseAttributableItem", "m_AttributeManager") + GetNetvar("DT_ScriptCreatedItem", "m_iEntityQuality"));
-    }
     int GetWeaponId() {
         return *ItemDefinitionIndex();
     }
@@ -49,18 +35,18 @@ public:
 class CBaseCombatWeapon : public CBaseAttributableItem
 {
 public:
-    NETVAR(float, m_flNextPrimaryAttack, "DT_LocalActiveWeaponData", "m_flNextPrimaryAttack");
-    NETVAR(float, m_flNextSecondaryAttack, "DT_LocalActiveWeaponData", "m_flNextSecondaryAttack");
-    NETVAR(int, m_iClip1, "DT_BaseCombatWeapon", "m_iClip1");
-    NETVAR(int, m_iClip2, "DT_BaseCombatWeapon", "m_iClip2");
-    NETVAR(float, m_flRecoilIndex, "DT_WeaponCSBase", "m_flRecoilIndex");
-	NETVAR(int, m_iViewModelIndex, "DT_BaseCombatWeapon", "m_iViewModelIndex");
-    NETVAR(int, m_iWorldModelIndex, "DT_BaseCombatWeapon", "m_iWorldModelIndex");
-    NETVAR(int, m_iWorldDroppedModelIndex, "DT_BaseCombatWeapon", "m_iWorldDroppedModelIndex");
-    NETVAR(bool, m_bPinPulled, "DT_BaseCSGrenade", "m_bPinPulled");
-    NETVAR(float, m_fThrowTime, "DT_BaseCSGrenade", "m_fThrowTime");
-    NETVAR(float, m_flPostponeFireReadyTime, "DT_BaseCombatWeapon", "m_flPostponeFireReadyTime");
-    NETVAR(EHANDLE, m_hWeaponWorldModel, "DT_BaseCombatWeapon", "m_hWeaponWorldModel");
+    NETVAR(float, m_flNextPrimaryAttack		, "DT_LocalActiveWeaponData", "m_flNextPrimaryAttack");
+    NETVAR(float, m_flNextSecondaryAttack	, "DT_LocalActiveWeaponData", "m_flNextSecondaryAttack");
+    NETVAR(int	, m_iClip1					, "DT_BaseCombatWeapon"	, "m_iClip1");
+    NETVAR(int	, m_iClip2					, "DT_BaseCombatWeapon"	, "m_iClip2");
+    NETVAR(float, m_flRecoilIndex			, "DT_WeaponCSBase"		, "m_flRecoilIndex");
+	NETVAR(int	, m_iViewModelIndex			, "DT_BaseCombatWeapon"	, "m_iViewModelIndex");
+    NETVAR(int	, m_iWorldModelIndex		, "DT_BaseCombatWeapon"	, "m_iWorldModelIndex");
+    NETVAR(int	, m_iWorldDroppedModelIndex	, "DT_BaseCombatWeapon"	, "m_iWorldDroppedModelIndex");
+    NETVAR(bool	, m_bPinPulled				, "DT_BaseCSGrenade"	, "m_bPinPulled");
+    NETVAR(float, m_fThrowTime				, "DT_BaseCSGrenade"	, "m_fThrowTime");
+    NETVAR(float, m_flPostponeFireReadyTime	, "DT_BaseCombatWeapon"	, "m_flPostponeFireReadyTime");
+    NETVAR(EHANDLE, m_hWeaponWorldModel		, "DT_BaseCombatWeapon"	, "m_hWeaponWorldModel");
 
 };
 

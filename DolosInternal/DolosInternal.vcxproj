@@ -143,7 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\Models.txt" />
-    <Text Include="Resources\Netvar.txt" />
+    <Text Include="Resources\Netvars.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Config.json" />

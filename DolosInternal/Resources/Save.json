@@ -49,7 +49,7 @@
 		"weapons": {
 			"enabled": true,
 			"draw_name": true,
-			"color": "4278255360"
+			"color": "4294967295"
 		}
 	},
 	"misc": {
@@ -96,6 +96,46 @@
 				"stattrak_kills": 20,
 				"seed": 1,
 				"quality": 3,
+				"custom_name": ""
+			},
+			{
+				"weapon_id": 1,
+				"new_index": 0,
+				"skin_id": 764,
+				"wear": 0,
+				"stattrak_kills": -1,
+				"seed": 0,
+				"quality": 0,
+				"custom_name": "UwU"
+			},
+			{
+				"weapon_id": 36,
+				"new_index": 0,
+				"skin_id": 551,
+				"wear": 0,
+				"stattrak_kills": -1,
+				"seed": 0,
+				"quality": 0,
+				"custom_name": ""
+			},
+			{
+				"weapon_id": 40,
+				"new_index": 0,
+				"skin_id": 624,
+				"wear": 0,
+				"stattrak_kills": -1,
+				"seed": 0,
+				"quality": 0,
+				"custom_name": ""
+			},
+			{
+				"weapon_id": 34,
+				"new_index": 0,
+				"skin_id": 910,
+				"wear": 0,
+				"stattrak_kills": -1,
+				"seed": 0,
+				"quality": 0,
 				"custom_name": ""
 			}
 		]

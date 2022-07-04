@@ -1,9 +1,9 @@
 #include "SkinChanger.h"
 
-std::map<int, unsigned int> g_mSkinIndices;
-std::map<int, int> g_mNewModels;
-std::map<int, std::string> g_mModelNames;
-std::map<std::string, int> g_mWeapIds;
+std::unordered_map<int, unsigned int> g_mSkinIndices;
+std::unordered_map<int, int> g_mNewModels;
+std::unordered_map<int, std::string> g_mModelNames;
+std::unordered_map<std::string, int> g_mWeapIds;
 
 unsigned int iLastSize = UINT_MAX;
 
@@ -19,7 +19,7 @@ void SkinChanger::PreTick() {
 	UpdateIndices();
 	
 	for (int i = 1; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
-		CBaseCombatWeapon* pWeapon = (CBaseCombatWeapon*)g_pClientEntityList->GetClientEntity(i);
+		CBaseCombatWeapon* pWeapon = reinterpret_cast<CBaseCombatWeapon*>(g_pClientEntityList->GetClientEntity(i));
 		
 		if (!pWeapon || !pWeapon->IsWeapon() || g_pClientEntityList->GetClientEntityFromHandle(pWeapon->GetOwner()) != g_pLocalPlayer) {
 			continue;
@@ -38,7 +38,7 @@ void SkinChanger::PostTick() {
 	if (!g_pLocalPlayer) return;
 
 	for (int i = 1; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
-		CBaseCombatWeapon* pWeapon = (CBaseCombatWeapon*)g_pClientEntityList->GetClientEntity(i);
+		CBaseCombatWeapon* pWeapon = reinterpret_cast<CBaseCombatWeapon*>(g_pClientEntityList->GetClientEntity(i));
 
 		if (!pWeapon || !pWeapon->IsWeapon() || g_pClientEntityList->GetClientEntityFromHandle(pWeapon->GetOwner()) != g_pLocalPlayer) {
 			continue;
@@ -69,8 +69,8 @@ void SkinChanger::OverrideSkin(CBaseCombatWeapon* pWeapon, SkinInfo* pSkinInfo) 
 		*pWeapon->FallbackStatTrak()	= pSkinInfo->iStatTrak;
 		*pWeapon->FallbackSeed()		= pSkinInfo->iSeed;
 
-		if (strcmp(pSkinInfo->szCustomName, "")) {
-			sprintf_s(pWeapon->CustomName(), 32, "%s", pSkinInfo->szCustomName);
+		if (strcmp(pSkinInfo->szCustomName, "") && !strcmp(pSkinInfo->szCustomName, pWeapon->CustomName())) {
+			strcpy_s(pWeapon->CustomName(), 32, pSkinInfo->szCustomName);
 		}
 
 		*pItemIdHigh = -1;
@@ -102,12 +102,12 @@ void SkinChanger::OverrideModel(CBaseCombatWeapon* pWeapon, int nItemDefinitionI
 	*pWeapon->ModelIndex() = g_mNewModels.at(nItemDefinitionIndex);
 
 	//Get players view model 
-	CBaseViewModel* pViewModel = (CBaseViewModel*)g_pClientEntityList->GetClientEntityFromHandle(g_pLocalPlayer->GetViewModelHandle());
+	CBaseViewModel* pViewModel = reinterpret_cast<CBaseViewModel*>(g_pClientEntityList->GetClientEntityFromHandle(g_pLocalPlayer->GetViewModelHandle()));
 
 	if (!pViewModel) return;
 
 	//Make sure current weapon is the desired one
-	CBaseAttributableItem* pViewModelWeapon = (CBaseAttributableItem*)g_pClientEntityList->GetClientEntityFromHandle(pViewModel->GetWeapon());
+	CBaseAttributableItem* pViewModelWeapon = reinterpret_cast<CBaseAttributableItem*>(g_pClientEntityList->GetClientEntityFromHandle(pViewModel->GetWeapon()));
 	if (pViewModelWeapon != pWeapon) return;
 
 	//Get model from item def index;

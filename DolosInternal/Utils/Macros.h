@@ -21,7 +21,7 @@ inline static T VFuncCall(void* _this, Args ... args) {
 
 #define NETVAR( type, func, table, var ) type& func() \
 {\
-	return *(type*)((unsigned int)(this) + GetNetvar(table, var));\
+	return *reinterpret_cast<type*>(reinterpret_cast<unsigned int>(this) + GetNetvar(table, var));\
 }
 
 
@@ -29,7 +29,7 @@ inline static T VFuncCall(void* _this, Args ... args) {
 
 #define ONETVAR( type, func, table, var, offset ) type& func() \
 {\
-	return *(type*)((unsigned int)(this) + GetNetvar(table, var) + offset);\
+	return *reinterpret_cast<type*>(reinterpret_cast<unsigned int>(this) + GetNetvar(table, var) + offset);\
 }
 
 
@@ -37,7 +37,7 @@ inline static T VFuncCall(void* _this, Args ... args) {
 
 #define PNETVAR( type, func, table, var ) type* func() \
 {\
-	return (type*)((unsigned int)(this) + GetNetvar(table, var));\
+	return reinterpret_cast<type*>(reinterpret_cast<unsigned int>(this) + GetNetvar(table, var));\
 }
 
 
@@ -45,7 +45,7 @@ inline static T VFuncCall(void* _this, Args ... args) {
 
 #define OPNETVAR( type, func, table, var, offset ) type* func() \
 {\
-	return (type*)((unsigned int)(this) + GetNetvar(table, var) + offset);\
+	return reinterpret_cast<type*>(reinterpret_cast<unsigned int>(this) + GetNetvar(table, var) + offset);\
 }
 
 

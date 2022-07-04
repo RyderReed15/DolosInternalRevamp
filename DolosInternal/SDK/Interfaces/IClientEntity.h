@@ -39,6 +39,8 @@ public:
     NETVAR  (float          , GetSimulationTime , "DT_BaseEntity", "m_flSimulationTime");
     NETVAR  (Vector         , GetVecOrigin      , "DT_BaseEntity", "m_vecOrigin");
 
+    NETVAR  (Vector         , GetAimPunch       , "DT_Local"     , "m_aimPunchAngle");
+
     PNETVAR (int            , GetFlagsPointer   , "DT_BasePlayer", "m_fFlags");
     NETVAR  (EHANDLE        , GetViewModelHandle, "DT_BasePlayer", "m_hViewModel[0]");
 
@@ -84,13 +86,9 @@ public:
     CBaseCombatWeapon* GetWeapon(void)
     {
 
-        return (CBaseCombatWeapon*)g_pClientEntityList->GetClientEntityFromHandle(GetActiveWeapon());
+        return reinterpret_cast<CBaseCombatWeapon*>(g_pClientEntityList->GetClientEntityFromHandle(GetActiveWeapon()));
     }
 
-    Vector GetAimPunch() {
-        return *(Vector*)((int)this + (int)GetNetvar("DT_LocalPlayerExclusive", "m_Local") + GetNetvar("DT_Local", "m_aimPunchAngle"));
-
-    }
     bool SanityCheck() {
         return IsPlayer() && IsAlive() && !IsDormant() && !GetImmunity();
     }

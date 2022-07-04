@@ -398,10 +398,10 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Resources\Netvar.txt">
+    <Text Include="Resources\Models.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="Resources\Models.txt">
+    <Text Include="Resources\Netvars.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
