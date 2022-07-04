@@ -77,9 +77,9 @@ bool InitializeGUI(HMODULE hMod) {
 	g_pGUIContainer->AddElement(pSkinChanger = new Panel({ 250, 0, PANEL_WIDTH, PANEL_HEIGHT }, false, DARKGRAY, DARKGRAY, pMain));
 	g_pGUIContainer->AddElement(new Button("SKIN CHANGER", std::bind(ShowPanel, pSkinChanger), { 0, 225, 250, 75 }, DARKGRAY, pMain));
 
-	g_pGUIContainer->AddElement(pSkinsList = new GUIList<SkinChanger::SkinInfo>("Skins", ROW_HEIGHT, &Settings.SkinChanger.Skins, pSkinEditor, { 50, 50, COLUMN_WIDTH, 400 }, LIGHTGRAY, pSkinChanger));
-
 	pSkinEditor = CreateSkinEditor();
+
+	
 
 	pDefaultSkin = new SkinChanger::SkinInfo({ 1, 0, 0, 0, -1, 0, 0, ""});
 
@@ -150,9 +150,11 @@ ElementEditor<SkinChanger::SkinInfo>* CreateSkinEditor() {
 
 	pEditor->SetCallback(GUI_EVENT_TYPE::RELEASE, std::bind(SetSkinList, pWeaponPicker, pSkinPicker));
 
-	pSkinsList->SetCallback(GUI_EVENT_TYPE::RELEASE, std::bind(SetSkinList, pWeaponPicker, pSkinPicker));
-
 	g_pGUIContainer->AddElement(pEditor);
+
+	g_pGUIContainer->AddElement(pSkinsList = new GUIList<SkinChanger::SkinInfo>("Skins", ROW_HEIGHT, &Settings.SkinChanger.Skins, pEditor, { 50, 50, COLUMN_WIDTH, 400 }, LIGHTGRAY, pSkinChanger));
+
+	pSkinsList->SetCallback(GUI_EVENT_TYPE::RELEASE, std::bind(SetSkinList, pWeaponPicker, pSkinPicker));
 
 	pEditor->SetDrawState(false);
 
