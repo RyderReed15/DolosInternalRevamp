@@ -29,7 +29,7 @@ struct EntityData {
     int iHealth = 0;
     int iArmor = 0;
     int iDistance = 0;
-    char szName[128];
+    char szName[256];
     bool bPlayer = false;
     bool bEnemy = false;
     bool bDeleted = true;
@@ -51,7 +51,7 @@ namespace ESP {
     void DrawArmor          (int iArmor, Vector4D vBounds);
     void DrawBones          (std::vector<Vector4D> vBones, D3DCOLOR cColor);
     void DrawPlayerName     (Vector4D vBounds, const char* szPlayerName);
-    void DrawWeaponName     (Vector4D vBounds, const char* szWeaponName);
+    void DrawWeaponName     (Vector4D vBounds, const wchar_t* szWeaponName);
     void DrawDistance       (Vector4D vBounds, int iDistance);
 
     void DrawElements       (void);

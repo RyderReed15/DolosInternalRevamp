@@ -117,7 +117,7 @@ void ESP::GetEntityInfo(CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int
 
     }
     else {
-        strcpy_s(g_mEntityData[iIndex].szName, 128, GetLocalizedString(pEntity->GetWeaponData()->szHudName).c_str());
+        wcscpy_s(reinterpret_cast<wchar_t*>(g_mEntityData[iIndex].szName), 128, GetLocalizedStringW(pEntity->GetWeaponData()->szHudName).c_str());
     } 
 
     
@@ -188,7 +188,7 @@ void ESP::DrawPlayerName(Vector4D vBounds, const char* szPlayerName){
     
 }
 
-void ESP::DrawWeaponName(Vector4D vBounds, const char* szWeaponName){
+void ESP::DrawWeaponName(Vector4D vBounds, const wchar_t* szWeaponName){
    
     if (szWeaponName) {
         D3DXVECTOR2 vSize = g_pRender->GetStringSize(g_pWeaponFont, szWeaponName);
@@ -227,7 +227,7 @@ void ESP::DrawElements(){
             if (pInfo->DrawBones)     DrawBones       (it->second.vBones, WHITE);
         }
         else {
-            if (Settings.Visuals.Weapons.Enabled)       DrawWeaponName  (it->second.vSize, it->second.szName);
+            if (Settings.Visuals.Weapons.Enabled)       DrawWeaponName  (it->second.vSize, reinterpret_cast<wchar_t*>(it->second.szName));
         }
     }
     

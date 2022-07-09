@@ -13,11 +13,13 @@
 
 
 inline std::unordered_map<unsigned int, std::wstring> mStrings;
-inline std::hash<std::wstring> localeHash;
+inline std::hash<std::string> localeHash;
 
 bool            InitializeLocalization  (const char* szLanguage = "english");
 bool            UpdateLocalization      (const char* szLanguage = "english");
-std::wstring    GetLocalizedString      (const wchar_t* szName);
+std::wstring    GetLocalizedStringW     (const wchar_t* wszName);
+std::wstring    GetLocalizedStringW     (const char* szName);
+std::string     GetLocalizedString      (const wchar_t* wszName);
 std::string     GetLocalizedString      (const char* szName);
 std::wstring    wstring_cast            (std::string szString);
 std::string     string_cast             (std::wstring wszString);

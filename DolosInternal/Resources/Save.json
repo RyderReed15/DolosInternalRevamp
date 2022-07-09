@@ -47,8 +47,8 @@
 			"team_color": "ffff0000"
 		},
 		"weapons": {
-			"enabled": false,
-			"draw_name": false,
+			"enabled": true,
+			"draw_name": true,
 			"color": "ff00ff00"
 		}
 	},
@@ -145,7 +145,7 @@
 		"range": 2000
 	},
 	"recoil": {
-		"enabled": false,
+		"enabled": true,
 		"factor": 1
 	},
 	"anti_aim": {
