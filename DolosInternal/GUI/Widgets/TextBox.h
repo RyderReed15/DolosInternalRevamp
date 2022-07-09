@@ -24,6 +24,9 @@ public:
 	void	SetValuePointer	(void* pValue);
 	void*	GetValuePointer	(void);
 private:
+
+	void	UpdateValues	(void);
+
 	const char*			m_szName;
 	char*				m_aText;
 	unsigned short		m_iTextSize;

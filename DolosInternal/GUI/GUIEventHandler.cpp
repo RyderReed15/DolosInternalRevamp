@@ -119,6 +119,7 @@ GUIContainer* GUIEventHandler::GetContainer(void){
 }
 void GUIEventHandler::SetFocus(IGUIElement* pFocus) {
     m_pFocus = pFocus;
+    if(m_pFocus) m_pFocus->RunCallback(GUI_EVENT_TYPE::FOCUS);
 }
 
 IGUIElement* GUIEventHandler::GetFocus(void){
@@ -126,6 +127,7 @@ IGUIElement* GUIEventHandler::GetFocus(void){
 }
 
 void GUIEventHandler::ReleaseFocus(void){
+    if(m_pFocus) m_pFocus->RunCallback(GUI_EVENT_TYPE::UNFOCUS);
     m_pFocus = nullptr;
 }
 

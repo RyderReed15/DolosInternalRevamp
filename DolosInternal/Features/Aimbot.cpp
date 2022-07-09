@@ -44,35 +44,35 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vViewAngles, Vector v
     float flClosest = INFINITY;
     IClientEntity* pNewTarget = nullptr;
 
-    if (pTarget) {
-        if (pTarget->SanityCheck() && pTarget->GetCollideable()){
+    if (pTarget && pTarget->SanityCheck() && pTarget->GetCollideable()) {
+       
             
-            for (size_t j = 0; j < Settings.Aimbot.Targets.size(); j++) {
-                if (!Settings.Aimbot.Targets[j].Enabled) continue;
-                Vector vEnemyPos = pTarget->GetBonePos(Settings.Aimbot.Targets[j].Bone);
-                bool bVisible = Trace(g_pEngineTrace, g_pLocalPlayer, pTarget, vPlayerPos, vEnemyPos);
+        for (size_t j = 0; j < Settings.Aimbot.Targets.size(); j++) {
+            if (!Settings.Aimbot.Targets[j].Enabled) continue;
+            Vector vEnemyPos = pTarget->GetBonePos(Settings.Aimbot.Targets[j].Bone);
+            bool bVisible = Trace(g_pEngineTrace, g_pLocalPlayer, pTarget, vPlayerPos, vEnemyPos);
 
-                if (bVisible) {
-                    float flDist = vPlayerPos.Distance(vEnemyPos);
+            if (bVisible) {
+                float flDist = vPlayerPos.Distance(vEnemyPos);
 
-                    Vector vRotateAngle = CalculateAngle(vPlayerPos, vEnemyPos);
+                Vector vRotateAngle = CalculateAngle(vPlayerPos, vEnemyPos);
 
-                    vRotateAngle = RecoilControl::RecoilControl(vRotateAngle, vAimPunch, true);
+                vRotateAngle = RecoilControl::RecoilControl(vRotateAngle, vAimPunch, true);
 
-                    float flRotateDistance = vRotateAngle.Lerp(vViewAngles, 1).Magnitude();
+                float flRotateDistance = vRotateAngle.Lerp(vViewAngles, 1).Magnitude();
 
-                    if (flRotateDistance <= FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist)) {
+                if (flRotateDistance <= FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist)) {
 
-                        float flWeight = WeightFormula(Settings.Aimbot.Targets[j].FOV, flDist, flRotateDistance);
+                    float flWeight = WeightFormula(Settings.Aimbot.Targets[j].FOV, flDist, flRotateDistance);
 
-                        if (flWeight < flClosest) {
-                            flClosest = flWeight;
-                            vClosest = vRotateAngle;
-                        }
+                    if (flWeight < flClosest) {
+                        flClosest = flWeight;
+                        vClosest = vRotateAngle;
                     }
                 }
             }
         }
+        
     }
     if (vClosest.IsValid()) {
         return vClosest;
@@ -83,9 +83,7 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vViewAngles, Vector v
 
         IClientEntity* pEntity = g_pClientEntityList->GetClientEntity(i);
 
-        if (!pEntity) continue;
-
-        if (pEntity->SanityCheck() && pEntity != g_pLocalPlayer) {
+        if (pEntity && pEntity->SanityCheck() && pEntity != g_pLocalPlayer) {
             if (Settings.Aimbot.TargetAll || pEntity->GetTeam() != g_pLocalPlayer->GetTeam()) {
                 if (pEntity->GetCollideable()) {
                     
@@ -149,9 +147,7 @@ Vector Aimbot::GetNewAngles(Vector vViewAngles, Vector vTargetAngles, int iTick)
     
     vViewAngles = vViewAngles.ToAngles();
 
-    if (Settings.Aimbot.Overaim) {
-        vViewAngles = CalculateOveraim(vViewAngles, vTargetAngles, iTick); 
-    }
+    if (Settings.Aimbot.Overaim) vViewAngles = CalculateOveraim(vViewAngles, vTargetAngles, iTick); 
 
     //Clamp flPercent - account for silent aim and antilocking
     float flPercent = (g_pGlobalVars->interval_per_tick * (iTick - iStartTick)) / Settings.Aimbot.AimTime;

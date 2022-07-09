@@ -36,12 +36,13 @@ void TextBox::OnRelease(GUIEventHandler* pEventHandler, POINT ptLocation) {
     pEventHandler->ReleaseFocus();
     if (CheckBounds(ptLocation)) {
         pEventHandler->SetFocus(this);
+        UpdateValues();
     }
     
 }
 
 void TextBox::OnType(GUIEventHandler* pEventHandler, char chKey) {
-    
+
     switch (chKey) {
     case VK_BACK:
         if (m_iTextSize > 0) {
@@ -51,8 +52,6 @@ void TextBox::OnType(GUIEventHandler* pEventHandler, char chKey) {
                 m_iStartChar--;
             }
         }
-        break;
-    case VK_DELETE:
         break;
     case VK_RETURN:
         pEventHandler->ReleaseFocus();
@@ -70,11 +69,19 @@ void TextBox::OnType(GUIEventHandler* pEventHandler, char chKey) {
 
 void TextBox::SetValuePointer(void* pValue) {
     m_aText = static_cast<char*>(pValue);
-    m_iCurrentChar = 0;
-    m_iTextSize = 0;
-    m_iStartChar = 0;
+    UpdateValues();
 }
 
 void* TextBox::GetValuePointer() {
     return m_aText;
+}
+
+void TextBox::UpdateValues(void) {
+    m_iStartChar = 0;
+    m_iCurrentChar = 0;
+    m_iTextSize = 0;
+    while (m_aText[m_iTextSize] != '\0') {
+        m_iTextSize++;
+    }
+    
 }

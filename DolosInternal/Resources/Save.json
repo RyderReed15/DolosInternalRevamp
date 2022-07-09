@@ -2,30 +2,30 @@
 	"config_name": "default",
 	"author": "Vasagle",
 	"version": "beta-1.1",
-	"data_created": "06-23-20221",
+	"data_created": "06-23-2021",
 	"aimbot": {
 		"enabled": true,
 		"silent": true,
 		"target_all": true,
 		"overaim": false,
 		"overaim_factor": 1,
-		"curve": true,
+		"curve": false,
 		"range_dec_multiplier": 1,
 		"time_to_aim": 0.50000,
 		"wait_time": 1,
 		"antilock_factor": 0.50000,
 		"targets": [
 			{
-				"fov": 5,
+				"fov": 10,
 				"bone": 8,
 				"name": "Head",
-				"enabled": true
+				"enabled": false
 			},
 			{
-				"fov": 5,
+				"fov": 0,
 				"bone": 6,
 				"name": "Chest",
-				"enabled": true
+				"enabled": false
 			}
 		]
 	},
@@ -47,16 +47,16 @@
 			"team_color": "ffff0000"
 		},
 		"weapons": {
-			"enabled": true,
-			"draw_name": true,
-			"color": "4294967295"
+			"enabled": false,
+			"draw_name": false,
+			"color": "ff00ff00"
 		}
 	},
 	"misc": {
-		"bhop": true
+		"bhop": false
 	},
 	"skin_changer": {
-		"track_kills": true,
+		"track_kills": false,
 		"skins": [
 			{
 				"weapon_id": 7,
@@ -145,12 +145,12 @@
 		"range": 2000
 	},
 	"recoil": {
-		"enabled": true,
+		"enabled": false,
 		"factor": 1
 	},
 	"anti_aim": {
-		"active": true,
-		"silent": true,
+		"active": false,
+		"silent": false,
 		"fov": 4
 	}
 }

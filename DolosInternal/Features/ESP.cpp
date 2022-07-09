@@ -7,7 +7,7 @@ void ESP::GetData() {
     if (g_pLocalPlayer == 0) return;
     for (int i = 0; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
 
-        if (g_mEntityData.count(i)) g_mEntityData[i].bDeleted = true;
+        g_mEntityData[i].bDeleted = true;
 
         CBaseEntity* pEntity = g_pClientEntityList->GetClientEntity(i);
 
@@ -101,9 +101,9 @@ void ESP::GetEntityInfo(CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int
     g_mEntityData[iIndex].bDeleted     = false;
     g_mEntityData[iIndex].vSize        = vSize;
     g_mEntityData[iIndex].cColor       = cColor;
-    g_mEntityData[iIndex].iDistance    = static_cast<int>((pEntity->GetVecOrigin() - g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer())->GetVecOrigin()).Magnitude() * INCH_TO_METER);
+    g_mEntityData[iIndex].iDistance    = static_cast<int>((pEntity->GetVecOrigin() -g_pLocalPlayer->GetVecOrigin()).Magnitude() * INCH_TO_METER);
     g_mEntityData[iIndex].bPlayer      = bPlayer;
-    if (bPlayer) {
+    if (bPlayer) { 
 
         g_mEntityData[iIndex].bEnemy   = pEntity->GetTeam() != g_pLocalPlayer->GetTeam();
         g_mEntityData[iIndex].iHealth  = pEntity->GetHealth();

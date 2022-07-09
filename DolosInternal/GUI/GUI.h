@@ -31,6 +31,7 @@
 inline GUIContainer*    g_pGUIContainer;
 inline Render*          g_pRender;
 inline bool             g_bMenuOpen = true;
+inline _locale_t        g_Locale;
 
 bool InitializeGUI      (HMODULE hMod);
 bool UninitializeGUI    ();

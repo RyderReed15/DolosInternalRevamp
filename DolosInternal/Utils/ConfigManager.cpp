@@ -98,6 +98,8 @@ void StoreValues() {
     Settings.Visuals.Weapons.Enabled    = pWeapons->GetBoolean("enabled");
     Settings.Visuals.Weapons.DrawName   = pWeapons->GetBoolean("draw_name");
 
+    Settings.Visuals.Weapons.Color      = ParseColor(pWeapons->GetString("color"));
+
     JsonObject* pRecoil = g_pParsedConfig->GetJsonObject("recoil");
 
     Settings.Recoil.Enabled         = pRecoil->GetBoolean       ("enabled");
@@ -162,6 +164,7 @@ void UpdateValues() {
     pFriendly->SetBoolean("draw_bones"    , Settings.Visuals.Friendly.DrawBones);
     pFriendly->SetBoolean("draw_health"   , Settings.Visuals.Friendly.DrawHealth);
     pFriendly->SetBoolean("draw_armor"    , Settings.Visuals.Friendly.DrawArmor);
+    pFriendly->SetBoolean("draw_name"     , Settings.Visuals.Friendly.DrawName);
 
     pFriendly->SetString("team_color"     , WriteColor(Settings.Visuals.Friendly.TeamColor));
 
@@ -171,6 +174,7 @@ void UpdateValues() {
     pEnemy->SetBoolean("draw_bones" , Settings.Visuals.Enemy.DrawBones);
     pEnemy->SetBoolean("draw_health", Settings.Visuals.Enemy.DrawHealth);
     pEnemy->SetBoolean("draw_armor" , Settings.Visuals.Enemy.DrawArmor);
+    pEnemy->SetBoolean("draw_name"  , Settings.Visuals.Enemy.DrawName);
 
     pEnemy->SetString("team_color"  , WriteColor(Settings.Visuals.Enemy.TeamColor));
 
@@ -178,7 +182,7 @@ void UpdateValues() {
 
     pWeapons->SetBoolean("enabled"   , Settings.Visuals.Weapons.Enabled);
 
-    pWeapons->SetString("color"      , std::to_string(Settings.Visuals.Weapons.Color));
+    pWeapons->SetString("color"      , WriteColor(Settings.Visuals.Weapons.Color));
 
     JsonObject* pRecoil = g_pParsedConfig->GetJsonObject("recoil");
 

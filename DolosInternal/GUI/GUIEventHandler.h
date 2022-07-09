@@ -19,7 +19,9 @@ enum class GUI_EVENT_TYPE {
     HOVER,
     KEYDOWN,
     BUTTON,
-    SCROLL
+    SCROLL,
+    FOCUS,
+    UNFOCUS
 };
 
 struct GUIEvent {

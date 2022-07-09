@@ -71,6 +71,12 @@ void IGUIElement::SetCallback(GUI_EVENT_TYPE tEvent, std::function<void()> pCall
 	case GUI_EVENT_TYPE::SCROLL:
 		m_pScrollCallback = pCallback;
 		break;
+	case GUI_EVENT_TYPE::FOCUS:
+		m_pFocusCallback = pCallback;
+		break;
+	case GUI_EVENT_TYPE::UNFOCUS:
+		m_pUnfocusCallback = pCallback;
+		break;
 	case GUI_EVENT_TYPE::BUTTON:
 	default:
 		break;
@@ -86,6 +92,8 @@ std::function<void()> IGUIElement::GetCallback(GUI_EVENT_TYPE tEvent){
 	case GUI_EVENT_TYPE::HOVER:		return m_pHoverCallback;
 	case GUI_EVENT_TYPE::KEYDOWN:	return m_pTypeCallback;
 	case GUI_EVENT_TYPE::SCROLL:	return m_pScrollCallback;
+	case GUI_EVENT_TYPE::FOCUS:		return m_pFocusCallback;
+	case GUI_EVENT_TYPE::UNFOCUS:	return m_pUnfocusCallback;
 	case GUI_EVENT_TYPE::BUTTON:
 	default:
 		return nullptr;
@@ -103,6 +111,8 @@ void IGUIElement::RunCallback(GUI_EVENT_TYPE tEvent){
 	case GUI_EVENT_TYPE::HOVER:		{if (m_pHoverCallback)	m_pHoverCallback(); break; }
 	case GUI_EVENT_TYPE::KEYDOWN:	{if (m_pTypeCallback)	m_pTypeCallback(); break; }
 	case GUI_EVENT_TYPE::SCROLL:	{if (m_pScrollCallback)	m_pScrollCallback(); break; }
+	case GUI_EVENT_TYPE::FOCUS:		{if (m_pFocusCallback)	m_pFocusCallback(); break; }
+	case GUI_EVENT_TYPE::UNFOCUS:	{if (m_pUnfocusCallback)m_pUnfocusCallback(); break; }
 	case GUI_EVENT_TYPE::BUTTON:
 	default:
 		break;

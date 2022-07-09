@@ -79,6 +79,8 @@ private:
 	std::function<void()> m_pReleaseCallback	= nullptr;
 	std::function<void()> m_pHoverCallback		= nullptr;
 	std::function<void()> m_pScrollCallback		= nullptr;
+	std::function<void()> m_pFocusCallback		= nullptr;
+	std::function<void()> m_pUnfocusCallback	= nullptr;
 
 };
 

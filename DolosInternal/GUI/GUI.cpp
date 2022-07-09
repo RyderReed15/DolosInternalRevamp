@@ -18,13 +18,14 @@ SkinChanger::SkinInfo* pDefaultSkin = nullptr;
 ElementEditor<AimTarget>* pAimEditor = nullptr;
 ElementEditor<SkinChanger::SkinInfo>* pSkinEditor = nullptr;
 
-int skin, weap;
 
 
 
 
 
 bool InitializeGUI(HMODULE hMod) {
+
+	g_Locale = _get_current_locale();
 	
 	g_pRender = new Render(g_pD3DDevice, hMod);
 	g_pGUIContainer = new GUIContainer({ 1920,1080 });
@@ -104,8 +105,9 @@ bool InitializeGUI(HMODULE hMod) {
 }
 
 bool UninitializeGUI() {
-	
+
 	delete pDefaultTarget;
+	delete pDefaultSkin;
 	delete g_pRender;
 	delete g_pGUIContainer;
 	return true;
