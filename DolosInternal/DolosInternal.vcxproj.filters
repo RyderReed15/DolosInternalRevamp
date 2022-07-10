@@ -381,6 +381,9 @@
     <ClInclude Include="GUI\Widgets\DropDown.tcc">
       <Filter>GUI\Widgets</Filter>
     </ClInclude>
+    <ClInclude Include="SDK\Interfaces\ILocalize.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\TextureAtlas.png">

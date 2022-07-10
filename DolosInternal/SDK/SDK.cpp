@@ -8,6 +8,7 @@ bool InitializeSDK() {
     fnCreateInterface pDataCache            = GetFactory("datacache.dll");
     fnCreateInterface pMaterialFactory      = GetFactory("materialsystem.dll");
     fnCreateInterface pValveFactory         = GetFactory("vstdlib.dll");
+    fnCreateInterface pLocalizeFactory      = GetFactory("localize.dll");
 
 
     g_pBaseClient               = (IBaseClientDLL*)     GetInterface(pClientFactory     , "VClient018");
@@ -22,6 +23,7 @@ bool InitializeSDK() {
     g_pEngineClient             = (IVEngineClient*)     GetInterface(pEngineFactory     , "VEngineClient014");
     g_pModelInfo                = (IVModelInfoClient*)  GetInterface(pEngineFactory     , "VModelInfoClient004");
     g_pModelRender              = (IVModelRender*)      GetInterface(pEngineFactory     , "VEngineModel016");
+    g_pLocalize                 = (ILocalize*)          GetInterface(pLocalizeFactory   , "Localize_001");
 
    
     

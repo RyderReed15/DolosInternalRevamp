@@ -35,6 +35,7 @@
 #include "Interfaces/IGameEventListener.h"
 #include "Interfaces/IGameMovement.h"
 #include "Interfaces/IHandleEntity.h"
+#include "Interfaces/ILocalize.h"
 #include "Interfaces/IMaterialSystem.h"
 #include "Interfaces/IMDLCache.h"
 #include "Interfaces/IMoveHelper.h"
@@ -63,6 +64,7 @@ inline IPrediction*                 g_pPrediction;
 inline IVEngineClient*              g_pEngineClient;
 inline IVModelInfoClient*           g_pModelInfo;
 inline IVModelRender*               g_pModelRender;
+inline ILocalize*                   g_pLocalize;
 
 inline IDirect3DDevice9*            g_pD3DDevice;
 

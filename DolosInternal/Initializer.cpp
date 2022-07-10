@@ -30,13 +30,6 @@ bool InitializeCheat(HMODULE hMod) {
 	}
 	std::cout << "Netvars Initialized" << std::endl;
 
-	char lang[128];
-	g_pEngineClient->GetUILanguage(lang, 128);
-	if (!InitializeLocalization(lang)) {
-		return false;
-	}
-	std::cout << "Localization Initialized" << std::endl;
-
 	if (!InitializeConfig()) {
 		return false;
 	}

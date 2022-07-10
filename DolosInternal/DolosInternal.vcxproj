@@ -105,6 +105,7 @@
     <ClInclude Include="SDK\Interfaces\IGameEventListener.h" />
     <ClInclude Include="SDK\Interfaces\IGameMovement.h" />
     <ClInclude Include="SDK\Interfaces\IHandleEntity.h" />
+    <ClInclude Include="SDK\Interfaces\ILocalize.h" />
     <ClInclude Include="SDK\Interfaces\IMaterialSystem.h" />
     <ClInclude Include="SDK\Interfaces\IMDLCache.h" />
     <ClInclude Include="SDK\Interfaces\IMoveHelper.h" />

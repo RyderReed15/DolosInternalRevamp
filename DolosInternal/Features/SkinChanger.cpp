@@ -164,7 +164,7 @@ bool SkinChanger::InitializeModels(JsonObject* pItems) {
 			if (pItem->GetString("name").find("weapon") != -1 || pItem->GetString("prefab").find("hands") != -1) {
 
 				g_mModelNames[strtol(pItem->m_szName.c_str(), 0, 10)] = ParseModelName(pItem, pPrefabs);
-				g_mWeapNames[strtol(pItem->m_szName.c_str(), 0, 10)] = GetLocalizedStringW(ParseItemName(pItem, pPrefabs).c_str());
+				g_mWeapNames[strtol(pItem->m_szName.c_str(), 0, 10)] = g_pLocalize->LocalizeStringSafeW(ParseItemName(pItem, pPrefabs).c_str());
 				g_mWeapIds[pItem->GetString("name")] = strtol(pItem->m_szName.c_str(), 0, 10);
 
 			}
@@ -193,7 +193,7 @@ bool SkinChanger::InitializeSkins(JsonObject* pItems, std::string szPath) {
 				}
 				//Place all skins into a map
 				mSkinIds[szKitName] = strtol(pKit->m_szName.c_str(), 0, 10);
-				mSkinNames[strtol(pKit->m_szName.c_str(), 0, 10)] = GetLocalizedStringW(pKit->GetString("description_tag").c_str());
+				mSkinNames[strtol(pKit->m_szName.c_str(), 0, 10)] = g_pLocalize->LocalizeStringSafeW(pKit->GetString("description_tag").c_str());
 			}
 		}
 	}
