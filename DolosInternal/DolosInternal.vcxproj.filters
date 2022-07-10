@@ -375,6 +375,12 @@
     <ClInclude Include="Utils\LocalizationManager.h">
       <Filter>Utils\Headers</Filter>
     </ClInclude>
+    <ClInclude Include="GUI\Widgets\List.tcc">
+      <Filter>GUI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Widgets\DropDown.tcc">
+      <Filter>GUI\Widgets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\TextureAtlas.png">

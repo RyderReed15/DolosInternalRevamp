@@ -37,31 +37,20 @@ bool UpdateLocalization(const char* szLanguage) {
 }
 
 std::wstring GetLocalizedStringW(const wchar_t* wszName) {
-	if (wszName[0] == '#')
-		return mStrings[localeHash(string_cast(wszName + 1))];
-	else
-		return mStrings[localeHash(string_cast(wszName))];
+	//If string starts with # add 1 to ptr to ignore
+	return mStrings[localeHash(string_cast(wszName + (wszName[0] == '#')))];
 }
 
 std::wstring GetLocalizedStringW(const char* szName) {
-	if (szName[0] == '#')
-		return mStrings[localeHash(szName + 1)];
-	else
-		return mStrings[localeHash(szName)];
+	return mStrings[localeHash(szName + (szName[0] == '#'))];
 }
 
 std::string GetLocalizedString(const wchar_t* wszName){
-	if (wszName[0] == '#')
-		return string_cast(mStrings[localeHash(string_cast(wszName + 1))]);
-	else
-		return string_cast(mStrings[localeHash(string_cast(wszName))]);
+	return string_cast(mStrings[localeHash(string_cast(wszName + (wszName[0] == '#')))]);
 }
 
 std::string GetLocalizedString(const char* szName) {
-	if (szName[0] == '#')
-		return string_cast(mStrings[localeHash(szName + 1)]);
-	else 
-		return string_cast(mStrings[localeHash(szName)]);
+	return string_cast(mStrings[localeHash(szName + (szName[0] == '#'))]);
 }
 std::wstring wstring_cast(std::string szString){
 	int iSize = MultiByteToWideChar(CP_ACP, 0, szString.c_str(), szString.length() + 1, 0, 0);

@@ -92,8 +92,6 @@ bool InitializeGUI(HMODULE hMod) {
 
 	}
 
-	
-
 	g_pGUIContainer->AddElement(pSettings = new Panel({ 250, 0, PANEL_WIDTH, PANEL_HEIGHT }, false, DARKGRAY, DARKGRAY, pMain));
 	g_pGUIContainer->AddElement(new Button("SETTINGS", std::bind(ShowPanel, pSettings), { 0, 300, 250, 75 }, DARKGRAY, pMain));
 
@@ -143,8 +141,8 @@ ElementEditor<SkinChanger::SkinInfo>* CreateSkinEditor() {
 
 
 	Slider*		pWear			= new Slider	("Float: "	, &pDummy->flWear, 1, 0, { 50, 100, 300, 12 }, 200, BLACK, LIGHTBLUE, PINK, false, pEditorPanel);
-	DropDown*	pSkinPicker		= new DropDown	("Skin: "	, &pDummy->iPaintKit, &(SkinChanger::g_mWeapSkins[0]), 5, { 50, 75, 300, 20 }, 200, LIGHTGRAY, pEditorPanel);
-	DropDown*	pWeaponPicker	= new DropDown	("Weapon: "	, &pDummy->nItemId, &SkinChanger::g_mWeapNames, 5, { 50, 50, 300, 20 }, 200, LIGHTGRAY, pEditorPanel);
+	DropDown*	pSkinPicker		= new DropDown	(L"Skin: "	, &pDummy->iPaintKit, &(SkinChanger::g_mWeapSkins[0]), 5, { 50, 75, 300, 20 }, 200, LIGHTGRAY, pEditorPanel);
+	DropDown*	pWeaponPicker	= new DropDown	(L"Weapon: ", &pDummy->nItemId, &SkinChanger::g_mWeapNames, 5, { 50, 50, 300, 20 }, 200, LIGHTGRAY, pEditorPanel);
 
 	ElementEditor<SkinChanger::SkinInfo>* pEditor = new ElementEditor<SkinChanger::SkinInfo>(pDummy, pEditorPanel);
 
@@ -195,5 +193,5 @@ void ShowPanel(Panel* pPanel) {
 }
 
 void SetSkinList(DropDown* pWeaponPicker, DropDown* pSkinPicker) {
-	pSkinPicker->SetMapPointer(&(SkinChanger::g_mWeapSkins[*(int*)pWeaponPicker->GetValuePointer()]));
+	pSkinPicker->SetMapPointerW(&(SkinChanger::g_mWeapSkins[*(int*)pWeaponPicker->GetValuePointer()]));
 }

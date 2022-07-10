@@ -42,8 +42,8 @@ namespace SkinChanger {
     bool InitializeSkinChanger  (void);
 
 
-    inline std::map<int, std::map<int, std::string>> g_mWeapSkins;
-    inline std::map<int, std::string> g_mWeapNames;
+    inline std::map<int, std::map<int, std::wstring>> g_mWeapSkins;
+    inline std::map<int, std::wstring> g_mWeapNames;
 }
 
 

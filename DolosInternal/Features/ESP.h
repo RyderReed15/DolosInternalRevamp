@@ -29,7 +29,11 @@ struct EntityData {
     int iHealth = 0;
     int iArmor = 0;
     int iDistance = 0;
-    char szName[256];
+    union {
+        char szName[128];
+        wchar_t wszName[128];
+    };
+   
     bool bPlayer = false;
     bool bEnemy = false;
     bool bDeleted = true;

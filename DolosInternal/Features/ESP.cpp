@@ -101,7 +101,7 @@ void ESP::GetEntityInfo(CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int
     g_mEntityData[iIndex].bDeleted     = false;
     g_mEntityData[iIndex].vSize        = vSize;
     g_mEntityData[iIndex].cColor       = cColor;
-    g_mEntityData[iIndex].iDistance    = static_cast<int>((pEntity->GetVecOrigin() -g_pLocalPlayer->GetVecOrigin()).Magnitude() * INCH_TO_METER);
+    g_mEntityData[iIndex].iDistance    = static_cast<int>((pEntity->GetVecOrigin() - g_pLocalPlayer->GetVecOrigin()).Magnitude() * INCH_TO_METER);
     g_mEntityData[iIndex].bPlayer      = bPlayer;
     if (bPlayer) { 
 
@@ -117,7 +117,7 @@ void ESP::GetEntityInfo(CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int
 
     }
     else {
-        wcscpy_s(reinterpret_cast<wchar_t*>(g_mEntityData[iIndex].szName), 128, GetLocalizedStringW(pEntity->GetWeaponData()->szHudName).c_str());
+        wcscpy_s(g_mEntityData[iIndex].wszName, 128, GetLocalizedStringW(pEntity->GetWeaponData()->szHudName).c_str());
     } 
 
     
@@ -227,7 +227,7 @@ void ESP::DrawElements(){
             if (pInfo->DrawBones)     DrawBones       (it->second.vBones, WHITE);
         }
         else {
-            if (Settings.Visuals.Weapons.Enabled)       DrawWeaponName  (it->second.vSize, reinterpret_cast<wchar_t*>(it->second.szName));
+            if (Settings.Visuals.Weapons.Enabled)       DrawWeaponName  (it->second.vSize, it->second.wszName);
         }
     }
     
