@@ -384,6 +384,9 @@
     <ClInclude Include="SDK\Interfaces\ILocalize.h">
       <Filter>SDK\Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IInputSystem.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\TextureAtlas.png">

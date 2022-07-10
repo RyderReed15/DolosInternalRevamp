@@ -24,7 +24,6 @@ bool InitializeCheat(HMODULE hMod) {
 		return false;
 	}
 	std::cout << "SDK Initialized" << std::endl;
-	
 	if (!InitializeNetvars(g_pBaseClient->GetAllClasses())) {
 		return false;
 	}
@@ -64,12 +63,16 @@ bool InitializeCheat(HMODULE hMod) {
 
 	std::cout << "Hooks Initialized" << std::endl;
 
-	
+
+	g_pInput->EnableInput(false);
 
 	return true;
 }
 
 bool ExitCheat() {
+
+	g_pInput->EnableInput(true);
+
 	UninitializeHooks(); //Hook are auto deleted when game is closed so no need 
 
 	UninitializeCheat();

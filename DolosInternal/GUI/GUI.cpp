@@ -163,6 +163,7 @@ ElementEditor<SkinChanger::SkinInfo>* CreateSkinEditor() {
 
 void ShowMenu() {
 	g_bMenuOpen = !g_bMenuOpen;
+	g_pInput->EnableInput(!g_bMenuOpen);
 }
 
 void ChangeChildren(IGUIElement* pElement, bool bShow) {
