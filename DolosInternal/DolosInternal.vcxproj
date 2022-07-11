@@ -106,6 +106,7 @@
     <ClInclude Include="SDK\Interfaces\IGameMovement.h" />
     <ClInclude Include="SDK\Interfaces\IHandleEntity.h" />
     <ClInclude Include="SDK\Interfaces\IInputSystem.h" />
+    <ClInclude Include="SDK\Interfaces\IItemSchema.h" />
     <ClInclude Include="SDK\Interfaces\ILocalize.h" />
     <ClInclude Include="SDK\Interfaces\IMaterialSystem.h" />
     <ClInclude Include="SDK\Interfaces\IMDLCache.h" />
@@ -117,6 +118,9 @@
     <ClInclude Include="SDK\Interfaces\IVModelInfoClient.h" />
     <ClInclude Include="SDK\Interfaces\IVModelRender.h" />
     <ClInclude Include="SDK\Math\QAngle.h" />
+    <ClInclude Include="SDK\Math\UtlMap.h" />
+    <ClInclude Include="SDK\Math\UtlMemory.h" />
+    <ClInclude Include="SDK\Math\UtlString.h" />
     <ClInclude Include="SDK\Math\UtlVector.h" />
     <ClInclude Include="SDK\Math\Vector.h" />
     <ClInclude Include="SDK\Math\Vector2D.h" />

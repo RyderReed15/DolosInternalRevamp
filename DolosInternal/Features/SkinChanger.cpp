@@ -9,9 +9,7 @@ unsigned int iLastSize = UINT_MAX;
 
 
 //Counter-Strike Global Offensive\csgo\scripts\items\items_game_cdn.txt contains links to pictures for all skins for use in gui
-// //Counter-Strike Global Offensive\csgo\scripts\items\items_game.txt contains all skin ids paired with their names under paint_kits 
-//Rework to set g_mOwnedWeapons in PreTick to prevent bugs and game errors
-//Reqork to use entire list of changed skins
+//Counter-Strike Global Offensive\csgo\scripts\items\items_game.txt contains all skin ids paired with their names under paint_kits 
 //Changes models and item index before frame stage notify call
 void SkinChanger::PreTick() {
 	if (!g_pLocalPlayer) return;

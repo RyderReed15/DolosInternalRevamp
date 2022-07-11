@@ -387,6 +387,18 @@
     <ClInclude Include="SDK\Interfaces\IInputSystem.h">
       <Filter>SDK\Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IItemSchema.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Math\UtlMap.h">
+      <Filter>SDK\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Math\UtlMemory.h">
+      <Filter>SDK\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\Math\UtlString.h">
+      <Filter>SDK\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\TextureAtlas.png">

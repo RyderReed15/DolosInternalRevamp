@@ -171,12 +171,13 @@ HRESULT APIENTRY hkDrawIndexedPrimitive(IDirect3DDevice9* pDevice, D3DPRIMITIVET
 	return hReturn;
 }
 
+
 HRESULT APIENTRY hkPresent(IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST RECT* pDestRect, HWND hDestWindowOverride, CONST RGNDATA* pDirtyRegion) {
 	//Main render thread
 
 	IDirect3DStateBlock9* pState;
 	pDevice->CreateStateBlock(D3DSBT_PIXELSTATE, &pState);
-
+	
 	if (g_pGUIContainer && g_pRender) {
 
 		if (g_pEngineClient->IsInGame()) ESP::Tick();
@@ -185,6 +186,7 @@ HRESULT APIENTRY hkPresent(IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST R
 			g_pGUIContainer->GetEventHandler()->ProccessEvents();
 			g_pGUIContainer->DrawElements(g_pRender, g_pAvenirFont);
 		}
+
 		FixD3D((void***)pDevice);
 	}
 	pState->Apply();

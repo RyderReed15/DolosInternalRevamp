@@ -8,17 +8,21 @@ Render::Render() {
 
 	m_pTriIndex		= nullptr;
 	m_pTriVertex	= nullptr;
+	m_pTextureIndex = nullptr;
+	m_pTextureVertex= nullptr;
 	m_pLineIndex	= nullptr;
 	m_pLineVertex	= nullptr;
 	m_pDevice		= nullptr;
 	m_iMaxVertices	= 0;
-	m_iLineCount		= m_iTriangleCount			= 0;
-	m_iLineIndices		= m_iTriangleIndices		= 0;
-	m_iLineVertices		= m_iTriangleVertices		= 0;
+	m_iLineIndices	= m_iTriangleIndices	= m_iTextureIndices = 0;
+	m_iLineCount	= m_iTriangleCount		= m_iTextureCount	= 0;
+	m_iLineVertices = m_iTriangleVertices	= m_iTextureVertices= 0;
 	m_pLineVertexBuffer		= nullptr;
 	m_pLineIndexBuffer		= nullptr;
 	m_pTriVertexBuffer		= nullptr;
 	m_pTriIndexBuffer		= nullptr;
+	m_pTextureVertexBuffer	= nullptr;
+	m_pTextureIndexBuffer	= nullptr;
 }
 Render::Render(IDirect3DDevice9* pDevice, HMODULE hMod) {
 	Initialize(pDevice, hMod);
@@ -34,14 +38,16 @@ void Render::Initialize(IDirect3DDevice9* pDevice, HMODULE hMod) {
 
 	m_pTriIndex		= nullptr;
 	m_pTriVertex	= nullptr;
+	m_pTextureIndex = nullptr;
+	m_pTextureVertex= nullptr;
 	m_pLineIndex	= nullptr;
 	m_pLineVertex	= nullptr;
 	m_pDevice		= pDevice;
 
 	m_iMaxVertices	= MAXSHORT;
-	m_iLineIndices	= m_iTriangleIndices	= 0;
-	m_iLineCount	= m_iTriangleCount		= 0;
-	m_iLineVertices = m_iTriangleVertices	= 0;
+	m_iLineIndices	= m_iTriangleIndices	= m_iTextureIndices	= 0;
+	m_iLineCount	= m_iTriangleCount		= m_iTextureCount	= 0;
+	m_iLineVertices = m_iTriangleVertices	= m_iTextureVertices= 0;
 
 	//Create buffers to hold lines and triangle meshes
 
@@ -49,6 +55,9 @@ void Render::Initialize(IDirect3DDevice9* pDevice, HMODULE hMod) {
 	m_pDevice->CreateIndexBuffer	(m_iMaxVertices * 2 * sizeof(int)		, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX32		, D3DPOOL_DEFAULT, &m_pLineIndexBuffer, NULL);
 	m_pDevice->CreateVertexBuffer	(m_iMaxVertices * sizeof(CustomVertex)	, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &m_pTriVertexBuffer, NULL);
 	m_pDevice->CreateIndexBuffer	(m_iMaxVertices * 2 * sizeof(int)		, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX32		, D3DPOOL_DEFAULT, &m_pTriIndexBuffer, NULL);
+
+	m_pDevice->CreateVertexBuffer	(m_iMaxVertices * sizeof(CustomTextureVertex)	, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFVF_CUSTOMVERTEX_TEXTURE, D3DPOOL_DEFAULT, &m_pTextureVertexBuffer, NULL);
+	m_pDevice->CreateIndexBuffer	(m_iMaxVertices * 2 * sizeof(int)				, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX32				, D3DPOOL_DEFAULT, &m_pTextureIndexBuffer, NULL);
 }
 
 Render::~Render() {
@@ -82,13 +91,21 @@ void Render::Release() {
 		m_pTriIndexBuffer->Release();
 		m_pTriIndexBuffer = nullptr;
 	}
+	if (m_pTextureVertexBuffer) {
+		m_pTextureVertexBuffer->Release();
+		m_pTextureVertexBuffer = nullptr;
+	}
+	if (m_pTextureIndexBuffer) {
+		m_pTextureIndexBuffer->Release();
+		m_pTextureIndexBuffer = nullptr;
+	}
 
 }
 
 void Render::Begin(BUFFER_TYPE tBufferType) {
 	if (IsInitialized()) {
 
-		m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX);
+		m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX_TEXTURE);
 		m_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 		m_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		m_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
@@ -102,6 +119,10 @@ void Render::Begin(BUFFER_TYPE tBufferType) {
 			m_pLineIndexBuffer->	Lock(0, 0, (void**)&m_pLineIndex, D3DLOCK_DISCARD);
 			m_pTriVertexBuffer->	Lock(0, 0, (void**)&m_pTriVertex, D3DLOCK_DISCARD);
 			m_pTriIndexBuffer->		Lock(0, 0, (void**)&m_pTriIndex, D3DLOCK_DISCARD);
+
+			m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX_TEXTURE);
+			m_pTextureVertexBuffer->Lock(0, 0, (void**)&m_pTextureVertex, D3DLOCK_DISCARD);
+			m_pTextureIndexBuffer->	Lock(0, 0, (void**)&m_pTextureIndex, D3DLOCK_DISCARD);
 			break;
 		case BUFFER_TYPE::BUFFER_LINE:
 			m_pLineVertexBuffer->	Lock(0, 0, (void**)&m_pLineVertex, D3DLOCK_DISCARD);
@@ -110,6 +131,11 @@ void Render::Begin(BUFFER_TYPE tBufferType) {
 		case BUFFER_TYPE::BUFFER_TRI:
 			m_pTriVertexBuffer->	Lock(0, 0, (void**)&m_pTriVertex, D3DLOCK_DISCARD);
 			m_pTriIndexBuffer->		Lock(0, 0, (void**)&m_pTriIndex, D3DLOCK_DISCARD);
+			break;
+		case BUFFER_TYPE::BUFFER_TEXTURE:
+			m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX_TEXTURE);
+			m_pTextureVertexBuffer->Lock(0, 0, (void**)&m_pTextureVertex, D3DLOCK_DISCARD);
+			m_pTextureIndexBuffer->	Lock(0, 0, (void**)&m_pTextureIndex, D3DLOCK_DISCARD);
 			break;
 		case BUFFER_TYPE::BUFFER_TEXT:
 			m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
@@ -122,11 +148,8 @@ void Render::Begin(BUFFER_TYPE tBufferType) {
 
 
 void Render::End(BUFFER_TYPE tBufferType) {
-	if (IsInitialized()) {
-
-		m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX);
-
-		
+	if (IsInitialized()) {	
+		m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX_TEXTURE);
 		switch (tBufferType) {
 		case BUFFER_TYPE::BUFFER_ALL:
 			//Draw both line and triangle batch
@@ -134,7 +157,17 @@ void Render::End(BUFFER_TYPE tBufferType) {
 			m_pLineIndexBuffer->	Unlock();
 			m_pTriVertexBuffer->	Unlock();
 			m_pTriIndexBuffer->		Unlock();
+			m_pTextureVertexBuffer->Unlock();
+			m_pTextureIndexBuffer->	Unlock();
 
+			m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX_TEXTURE);
+			m_pDevice->SetStreamSource(0, m_pTextureVertexBuffer, 0, sizeof(CustomTextureVertex));
+			m_pDevice->SetIndices(m_pTextureIndexBuffer);
+
+			m_pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_iTextureVertices, 0, m_iTextureCount);
+			m_iTextureCount = m_iTextureIndices = m_iTextureVertices = 0;
+
+			m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX_TEXTURE);
 			m_pDevice->SetStreamSource(0, m_pTriVertexBuffer, 0, sizeof(CustomVertex));
 			m_pDevice->SetIndices(m_pTriIndexBuffer);
 
@@ -147,6 +180,7 @@ void Render::End(BUFFER_TYPE tBufferType) {
 			m_pDevice->DrawIndexedPrimitive(D3DPT_LINELIST, 0, 0, m_iLineVertices, 0, m_iLineCount);
 			m_iLineCount = m_iLineIndices = m_iLineVertices = 0;
 
+			
 
 			m_pSprite->End();
 
@@ -175,6 +209,18 @@ void Render::End(BUFFER_TYPE tBufferType) {
 			m_iTriangleCount = m_iTriangleIndices = m_iTriangleVertices = 0;
 
 			break;
+
+		case BUFFER_TYPE::BUFFER_TEXTURE:
+			m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX_TEXTURE);
+			m_pTextureVertexBuffer->Unlock();
+			m_pTextureIndexBuffer->Unlock();
+
+			m_pDevice->SetStreamSource(0, m_pTextureVertexBuffer, 0, sizeof(CustomTextureVertex));
+			m_pDevice->SetIndices(m_pTextureIndexBuffer);
+
+			m_pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_iTextureVertices, 0, m_iTextureCount);
+			m_iTextureCount = m_iTextureIndices = m_iTextureVertices = 0;
+			break;
 		case BUFFER_TYPE::BUFFER_TEXT:
 			m_pSprite->End();
 			break;
@@ -188,65 +234,110 @@ void Render::End(BUFFER_TYPE tBufferType) {
 }
 
 bool Render::IsInitialized() {
-	return m_pDevice && m_pLineVertexBuffer && m_pLineIndexBuffer && m_pTriIndexBuffer && m_pTriVertexBuffer;
+	return m_pDevice && m_pLineVertexBuffer && m_pLineIndexBuffer && m_pTriIndexBuffer && m_pTriVertexBuffer && m_pTextureIndexBuffer && m_pTextureVertexBuffer;
 }
 
-void Render::ManageBatch(D3DPRIMITIVETYPE tPrimitiveType, unsigned int iNeededVerts, unsigned int iNeededIndices) {
+void Render::ManageBatch(BUFFER_TYPE tBufferType, unsigned int iNeededVerts, unsigned int iNeededIndices) {
 	//Ensure there is enough room in the buffer for the next primitive, empty if needed
-	switch (tPrimitiveType) {
-	case D3DPT_LINELIST:
+	switch (tBufferType) {
+	case BUFFER_TYPE::BUFFER_LINE:
 		if (m_iLineIndices + iNeededIndices > m_iMaxVertices * 2 || m_iLineVertices + iNeededVerts > m_iMaxVertices) {
 			End(BUFFER_TYPE::BUFFER_LINE);
 			Begin(BUFFER_TYPE::BUFFER_LINE);
 		}
 
 		break;
-	case D3DPT_TRIANGLELIST:
+	case BUFFER_TYPE::BUFFER_TRI:
 		if (m_iTriangleIndices + iNeededIndices > m_iMaxVertices * 2 || m_iTriangleVertices + iNeededVerts > m_iMaxVertices) {
 			End(BUFFER_TYPE::BUFFER_TRI);
 			Begin(BUFFER_TYPE::BUFFER_TRI);
 		}
 
 		break;
-	}
-}
-unsigned int Render::AddVertex(D3DPRIMITIVETYPE tPrimitiveType, D3DXVECTOR2 vLocation, D3DCOLOR cColor) {
+	case BUFFER_TYPE::BUFFER_TEXTURE:
+		if (m_iTextureIndices + iNeededIndices > m_iMaxVertices * 2 || m_iTextureVertices + iNeededVerts > m_iMaxVertices) {
+			End(BUFFER_TYPE::BUFFER_TEXTURE);
+			Begin(BUFFER_TYPE::BUFFER_TEXTURE);
+		}
 
-	switch (tPrimitiveType) {
-	case D3DPT_LINELIST:
+		break;
+	}
+
+}
+unsigned int Render::AddVertex(BUFFER_TYPE tBufferType, D3DXVECTOR2 vLocation, D3DCOLOR cColor, D3DXVECTOR2 vTexCoords) {
+
+	switch (tBufferType) {
+	case BUFFER_TYPE::BUFFER_LINE:
 		m_pLineVertex[m_iLineVertices] = { vLocation.x, vLocation.y, 0, 1, cColor };
 		m_iLineVertices++;
 		return m_iLineVertices - 1;
-	case D3DPT_TRIANGLELIST:
+	case BUFFER_TYPE::BUFFER_TRI:
 		m_pTriVertex[m_iTriangleVertices] = { vLocation.x, vLocation.y, 0, 1, cColor };
 		m_iTriangleVertices++;
 		return m_iTriangleVertices - 1;
+	case BUFFER_TYPE::BUFFER_TEXTURE:
+		m_pTextureVertex[m_iTextureVertices] = { vLocation.x, vLocation.y, 0, 1, cColor, vTexCoords.x, vTexCoords.y };
+		m_iTextureVertices++;
+		return m_iTextureVertices - 1;
 	default:
 		return UINT_MAX;
 	}
 
 }
 
-void Render::AddIndex(D3DPRIMITIVETYPE tPrimitiveType, unsigned int iVertexPos) {
+void Render::AddIndex(BUFFER_TYPE tBufferType, unsigned int iVertexPos) {
 
-	switch (tPrimitiveType) {
-	case D3DPT_LINELIST:
+	switch (tBufferType) {
+	case BUFFER_TYPE::BUFFER_LINE:
 		m_pLineIndex[m_iLineIndices] = iVertexPos;
 		m_iLineIndices++;
 		break;
-	case D3DPT_TRIANGLELIST:
+	case BUFFER_TYPE::BUFFER_TRI:
 		m_pTriIndex[m_iTriangleIndices] = iVertexPos;
 		m_iTriangleIndices++;
+		break;
+	case BUFFER_TYPE::BUFFER_TEXTURE:
+		m_pTextureIndex[m_iTextureIndices] = iVertexPos;
+		m_iTextureIndices++;
 		break;
 	}
 
 }
 
 void Render::AddTriangle(unsigned int iVertexPosOne, unsigned int iVertexPosTwo, unsigned int iVertexPosThree) {
-	AddIndex(D3DPT_TRIANGLELIST, iVertexPosOne);
-	AddIndex(D3DPT_TRIANGLELIST, iVertexPosTwo);
-	AddIndex(D3DPT_TRIANGLELIST, iVertexPosThree);
+	AddIndex(BUFFER_TYPE::BUFFER_TRI, iVertexPosOne);
+	AddIndex(BUFFER_TYPE::BUFFER_TRI, iVertexPosTwo);
+	AddIndex(BUFFER_TYPE::BUFFER_TRI, iVertexPosThree);
 	m_iTriangleCount++;
+}
+
+void Render::AddTexTriangle(unsigned int iVertexPosOne, unsigned int iVertexPosTwo, unsigned int iVertexPosThree) {
+	AddIndex(BUFFER_TYPE::BUFFER_TEXTURE, iVertexPosOne);
+	AddIndex(BUFFER_TYPE::BUFFER_TEXTURE, iVertexPosTwo);
+	AddIndex(BUFFER_TYPE::BUFFER_TEXTURE, iVertexPosThree);
+	m_iTextureCount++;
+}
+
+void Render::SetTexture(IDirect3DTexture9* pTexture) {
+	m_pDevice->SetTexture(0, pTexture);
+}
+
+IDirect3DTexture9* Render::LoadTexture(const char* szPath) {
+	if (IsInitialized()) {
+		IDirect3DTexture9* pTexture;
+
+		HRESULT hResult = D3DXCreateTextureFromFile(m_pDevice, szPath, &pTexture);
+		if (FAILED(hResult)) {
+			std::cout << (void*)hResult << std::endl;
+			return nullptr;
+		}
+
+		//Return the newly made texture
+		return pTexture;
+	}
+	std::cout << "no init" << std::endl;
+	return nullptr;
+	
 }
 
 
@@ -276,10 +367,10 @@ HRESULT Render::DrawSprite(D3DXVECTOR4 vRect, D3DXVECTOR2 vLocation, D3DCOLOR cC
 
 HRESULT Render::DrawLine(D3DXVECTOR2 vLocationOne, D3DXVECTOR2 vLocationTwo, D3DCOLOR cColor, D3DCOLOR cColor2) {
 	if (IsInitialized()) {
-		ManageBatch(D3DPT_LINELIST, 2, 2);
+		ManageBatch(BUFFER_TYPE::BUFFER_LINE, 2, 2);
 
-		AddIndex(D3DPT_LINELIST, AddVertex(D3DPT_LINELIST, vLocationOne, cColor));
-		AddIndex(D3DPT_LINELIST, AddVertex(D3DPT_LINELIST, vLocationTwo, cColor2 ? cColor2 : cColor));
+		AddIndex(BUFFER_TYPE::BUFFER_LINE, AddVertex(BUFFER_TYPE::BUFFER_LINE, vLocationOne, cColor));
+		AddIndex(BUFFER_TYPE::BUFFER_LINE, AddVertex(BUFFER_TYPE::BUFFER_LINE, vLocationTwo, cColor2 ? cColor2 : cColor));
 		m_iLineCount++;
 		return S_OK;
 	}
@@ -289,15 +380,15 @@ HRESULT Render::DrawLine(D3DXVECTOR2 vLocationOne, D3DXVECTOR2 vLocationTwo, D3D
 
 HRESULT Render::DrawRectangle(D3DXVECTOR4 vBounds, D3DCOLOR cColor, D3DCOLOR cColor2, bool bVertical) {
 	if (IsInitialized()) {
-		ManageBatch(D3DPT_TRIANGLELIST, 4, 6);
+		ManageBatch(BUFFER_TYPE::BUFFER_TRI, 4, 6);
 		vBounds.w += vBounds.y;
 		vBounds.z += vBounds.x;
 		unsigned int v1, v2, v3, v4;
 		cColor2 = cColor2 ? cColor2 : cColor;
-		v1 = AddVertex(D3DPT_TRIANGLELIST, { vBounds.x, vBounds.w }, bVertical ? cColor2 : cColor);
-		v2 = AddVertex(D3DPT_TRIANGLELIST, { vBounds.x, vBounds.y }, cColor);
-		v3 = AddVertex(D3DPT_TRIANGLELIST, { vBounds.z, vBounds.w }, cColor2);
-		v4 = AddVertex(D3DPT_TRIANGLELIST, { vBounds.z, vBounds.y }, bVertical ? cColor : cColor2);
+		v1 = AddVertex(BUFFER_TYPE::BUFFER_TRI, { vBounds.x, vBounds.w }, bVertical ? cColor2 : cColor);
+		v2 = AddVertex(BUFFER_TYPE::BUFFER_TRI, { vBounds.x, vBounds.y }, cColor);
+		v3 = AddVertex(BUFFER_TYPE::BUFFER_TRI, { vBounds.z, vBounds.w }, cColor2);
+		v4 = AddVertex(BUFFER_TYPE::BUFFER_TRI, { vBounds.z, vBounds.y }, bVertical ? cColor : cColor2);
 		AddTriangle(v1, v2, v3);
 		AddTriangle(v2, v4, v3);
 		return S_OK;
@@ -305,6 +396,25 @@ HRESULT Render::DrawRectangle(D3DXVECTOR4 vBounds, D3DCOLOR cColor, D3DCOLOR cCo
 	}
 	return OLE_E_BLANK;
 }
+HRESULT Render::DrawTextureRectangle(D3DXVECTOR4 vBounds, D3DXVECTOR4 vTexCoords) {
+	if (IsInitialized()) {
+		ManageBatch(BUFFER_TYPE::BUFFER_TEXTURE, 4, 6);
+		vBounds.w += vBounds.y;
+		vBounds.z += vBounds.x;
+		unsigned int v1, v2, v3, v4;
+		v1 = AddVertex(BUFFER_TYPE::BUFFER_TEXTURE, { vBounds.x, vBounds.w }, WHITE, { vTexCoords.x, vTexCoords.w });
+		v2 = AddVertex(BUFFER_TYPE::BUFFER_TEXTURE, { vBounds.x, vBounds.y }, WHITE, { vTexCoords.x, vTexCoords.y });
+		v3 = AddVertex(BUFFER_TYPE::BUFFER_TEXTURE, { vBounds.z, vBounds.w }, WHITE, { vTexCoords.z, vTexCoords.w });
+		v4 = AddVertex(BUFFER_TYPE::BUFFER_TEXTURE, { vBounds.z, vBounds.y }, WHITE, { vTexCoords.z, vTexCoords.y });
+		AddTexTriangle(v1, v2, v3);
+		AddTexTriangle(v2, v4, v3);
+		return S_OK;
+
+	}
+	return OLE_E_BLANK;
+}
+
+
 HRESULT Render::DrawOutlinedRect(D3DXVECTOR4 vBounds, unsigned int iThickness, D3DCOLOR cOutline, D3DCOLOR cColor, D3DCOLOR cColor2, bool bVertical) {
 	if (IsInitialized()) {
 		DrawRectangle(vBounds, cOutline);
@@ -361,16 +471,14 @@ HRESULT Render::DrawRoundedRectangle(D3DXVECTOR4 vBounds, float flCornerSize, D3
 }
 HRESULT Render::DrawFadingCircle(D3DXVECTOR2 vLocation, float flRadius, unsigned int iSides, D3DCOLOR cColor, D3DCOLOR cColor2, bool bVertical, float flFraction, float flRotation) {
 	if (IsInitialized()) {
-		ManageBatch(D3DPT_TRIANGLELIST, iSides + 2, iSides * 3);
+		ManageBatch(BUFFER_TYPE::BUFFER_TRI, iSides + 2, iSides * 3);
 		float flCos = cosf(2 * PI / iSides * flFraction);
 		float flSin = sinf(2 * PI / iSides * flFraction);
-		float flFracCos = cosf(flRotation * DEG_TO_RAD);
-		float flFracSin = sinf(flRotation * DEG_TO_RAD);
-		float flR = flRadius * flFracCos;
-		float flD = flRadius * flFracSin;
+		float flR = flRadius * cosf(flRotation * DEG_TO_RAD);
+		float flD = flRadius * sinf(flRotation * DEG_TO_RAD);
 		float flTemp;
-		unsigned int iCenter = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x, vLocation.y }, LerpColor(cColor, cColor2, .5));
-		unsigned int iPrev = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x + flR, vLocation.y + flD }, LerpColor(cColor, cColor2, (bVertical ? flD : flR) / flRadius));
+		unsigned int iCenter = AddVertex(BUFFER_TYPE::BUFFER_TRI, { vLocation.x, vLocation.y }, LerpColor(cColor, cColor2, .5));
+		unsigned int iPrev = AddVertex(BUFFER_TYPE::BUFFER_TRI, { vLocation.x + flR, vLocation.y + flD }, LerpColor(cColor, cColor2, (bVertical ? flD : flR) / flRadius));
 
 
 		for (unsigned int i = 0; i < iSides; i++) {
@@ -378,7 +486,7 @@ HRESULT Render::DrawFadingCircle(D3DXVECTOR2 vLocation, float flRadius, unsigned
 			flR = flCos * flR - flSin * flD;
 			flD = flSin * flTemp + flCos * flD;
 
-			unsigned int iTemp = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x + flR, vLocation.y + flD }, LerpColor(cColor, cColor2, (bVertical ? flD : flR) / flRadius));
+			unsigned int iTemp = AddVertex(BUFFER_TYPE::BUFFER_TRI, { vLocation.x + flR, vLocation.y + flD }, LerpColor(cColor, cColor2, (bVertical ? flD : flR) / flRadius));
 			AddTriangle(iTemp, iCenter, iPrev);
 
 			iPrev = iTemp;
@@ -393,17 +501,15 @@ HRESULT Render::DrawFadingCircle(D3DXVECTOR2 vLocation, float flRadius, unsigned
 
 HRESULT Render::DrawCircleOutline(D3DXVECTOR2 vLocation, float flRadius, unsigned int iSides, D3DCOLOR cColor, float flFraction, float flRotation) {
 	if (IsInitialized()) {
-		ManageBatch(D3DPT_LINELIST, iSides + 1, iSides * 2);
+		ManageBatch(BUFFER_TYPE::BUFFER_LINE, iSides + 1, iSides * 2);
 		float flCos = cosf(2 * PI / iSides * flFraction);
 		float flSin = sinf(2 * PI / iSides * flFraction);
-		float flFracCos = cosf(flRotation * DEG_TO_RAD);
-		float flFracSin = sinf(flRotation * DEG_TO_RAD);
-		float flR = flRadius * flFracCos;
-		float flD = flRadius * flFracSin;
+		float flR = flRadius * cosf(flRotation * DEG_TO_RAD);
+		float flD = flRadius * sinf(flRotation * DEG_TO_RAD);
 		float flTemp;
 
 
-		unsigned int iPrev = AddVertex(D3DPT_LINELIST, { vLocation.x + flR, vLocation.y + flD }, cColor);
+		unsigned int iPrev = AddVertex(BUFFER_TYPE::BUFFER_LINE, { vLocation.x + flR, vLocation.y + flD }, cColor);
 
 
 		for (unsigned int i = 0; i < iSides; i++) {
@@ -411,10 +517,10 @@ HRESULT Render::DrawCircleOutline(D3DXVECTOR2 vLocation, float flRadius, unsigne
 			flR = flCos * flR - flSin * flD;
 			flD = flSin * flTemp + flCos * flD;
 
-			unsigned int iTemp = AddVertex(D3DPT_LINELIST, { vLocation.x + flR, vLocation.y + flD }, cColor);
+			unsigned int iTemp = AddVertex(BUFFER_TYPE::BUFFER_LINE, { vLocation.x + flR, vLocation.y + flD }, cColor);
 
-			AddIndex(D3DPT_LINELIST, iPrev);
-			AddIndex(D3DPT_LINELIST, iTemp);
+			AddIndex(BUFFER_TYPE::BUFFER_LINE, iPrev);
+			AddIndex(BUFFER_TYPE::BUFFER_LINE, iTemp);
 			m_iLineCount++;
 
 
@@ -430,17 +536,15 @@ HRESULT Render::DrawCircleOutline(D3DXVECTOR2 vLocation, float flRadius, unsigne
 
 HRESULT Render::DrawCircle(D3DXVECTOR2 vLocation, float flRadius, unsigned int iSides, D3DCOLOR cColor, float flFraction, float flRotation) {
 	if (IsInitialized()) {
-		ManageBatch(D3DPT_TRIANGLELIST, iSides + 2, iSides * 3);
+		ManageBatch(BUFFER_TYPE::BUFFER_TRI, iSides + 2, iSides * 3);
 		float flCos = cosf(2 * PI / iSides * flFraction);
 		float flSin = sinf(2 * PI / iSides * flFraction);
-		float flFracCos = cosf(flRotation * DEG_TO_RAD);
-		float flFracSin = sinf(flRotation * DEG_TO_RAD);
-		float flR = flRadius * flFracCos;
-		float flD = flRadius * flFracSin;
+		float flR = flRadius * cosf(flRotation * DEG_TO_RAD);;
+		float flD = flRadius * sinf(flRotation * DEG_TO_RAD);;
 		float flTemp;
 
-		unsigned int iCenter = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x, vLocation.y }, cColor);
-		unsigned int iPrev = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x + flR, vLocation.y + flD }, cColor);
+		unsigned int iCenter = AddVertex(BUFFER_TYPE::BUFFER_TRI, { vLocation.x, vLocation.y }, cColor);
+		unsigned int iPrev = AddVertex(BUFFER_TYPE::BUFFER_TRI, { vLocation.x + flR, vLocation.y + flD }, cColor);
 
 
 		for (unsigned int i = 0; i < iSides; i++) {
@@ -448,8 +552,52 @@ HRESULT Render::DrawCircle(D3DXVECTOR2 vLocation, float flRadius, unsigned int i
 			flR = flCos * flR - flSin * flD;
 			flD = flSin * flTemp + flCos * flD;
 
-			unsigned int iTemp = AddVertex(D3DPT_TRIANGLELIST, { vLocation.x + flR, vLocation.y + flD }, cColor);
+			unsigned int iTemp = AddVertex(BUFFER_TYPE::BUFFER_TRI, { vLocation.x + flR, vLocation.y + flD }, cColor);
 			AddTriangle(iTemp, iCenter, iPrev);
+
+
+			iPrev = iTemp;
+
+		}
+
+		return S_OK;
+
+	}
+	return OLE_E_BLANK;
+}
+
+HRESULT Render::DrawTextureCircle(D3DXVECTOR2 vLocation, float flRadius, unsigned int iSides, D3DXVECTOR4 vTexCoords, float flFraction, float flRotation) {
+	if (IsInitialized()) {
+		ManageBatch(BUFFER_TYPE::BUFFER_TEXTURE, iSides + 2, iSides * 3);
+		float flCos = cosf(2 * PI / iSides * flFraction);
+		float flSin = sinf(2 * PI / iSides * flFraction);
+		float flR = flRadius;
+		float flD = 0;
+		float flRRotated = flRadius * cosf(flRotation * DEG_TO_RAD);
+		float flDRotated = flRadius * sinf(flRotation * DEG_TO_RAD);
+		float flTemp;
+		
+
+
+		float flDiameter = flRadius * 2;
+		float flTexMidX = (vTexCoords.z + vTexCoords.x) / 2;
+		float flTexMidY = (vTexCoords.w + vTexCoords.y) / 2;
+
+		unsigned int iCenter = AddVertex(BUFFER_TYPE::BUFFER_TEXTURE, { vLocation.x, vLocation.y }, WHITE, { flTexMidX, flTexMidY });
+		unsigned int iPrev = AddVertex(BUFFER_TYPE::BUFFER_TEXTURE, { vLocation.x + flRRotated, vLocation.y + flDRotated }, WHITE, { flTexMidX + flR / flDiameter, flTexMidY + flD / flDiameter });
+
+
+		for (unsigned int i = 0; i < iSides; i++) {
+			flTemp = flR;
+			flR = flCos * flR - flSin * flD;
+			flD = flSin * flTemp + flCos * flD;
+
+			flTemp = flRRotated;
+			flRRotated = flCos * flRRotated - flSin * flDRotated;
+			flDRotated = flSin * flTemp + flCos * flDRotated;
+
+			unsigned int iTemp = AddVertex(BUFFER_TYPE::BUFFER_TEXTURE, { vLocation.x + flRRotated, vLocation.y + flDRotated }, WHITE, { flTexMidX + flR / flDiameter, flTexMidY + flD / flDiameter });
+			AddTexTriangle(iTemp, iCenter, iPrev);
 
 
 			iPrev = iTemp;

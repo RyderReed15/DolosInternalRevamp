@@ -52,6 +52,7 @@ std::string GetLocalizedString(const wchar_t* wszName){
 std::string GetLocalizedString(const char* szName) {
 	return string_cast(mStrings[localeHash(szName + (szName[0] == '#'))]);
 }
+
 std::wstring wstring_cast(std::string szString){
 	int iSize = MultiByteToWideChar(CP_ACP, 0, szString.c_str(), szString.length() + 1, 0, 0);
 
