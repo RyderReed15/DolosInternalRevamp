@@ -24,6 +24,7 @@
     <ClCompile Include="Features\EnginePrediction.cpp" />
     <ClCompile Include="Features\ESP.cpp" />
     <ClCompile Include="Features\Misc.cpp" />
+    <ClCompile Include="Features\Radar.cpp" />
     <ClCompile Include="Features\RecoilControl.cpp" />
     <ClCompile Include="Features\SkinChanger.cpp" />
     <ClCompile Include="Features\Triggerbot.cpp" />
@@ -64,6 +65,7 @@
     <ClInclude Include="Features\EnginePrediction.h" />
     <ClInclude Include="Features\ESP.h" />
     <ClInclude Include="Features\Misc.h" />
+    <ClInclude Include="Features\Radar.h" />
     <ClInclude Include="Features\RecoilControl.h" />
     <ClInclude Include="Features\SkinChanger.h" />
     <ClInclude Include="Features\Triggerbot.h" />
@@ -114,6 +116,7 @@
     <ClInclude Include="SDK\Interfaces\INetChannelInfo.h" />
     <ClInclude Include="SDK\Interfaces\IPanel.h" />
     <ClInclude Include="SDK\Interfaces\IPrediction.h" />
+    <ClInclude Include="SDK\Interfaces\ISurface.h" />
     <ClInclude Include="SDK\Interfaces\IVEngineClient.h" />
     <ClInclude Include="SDK\Interfaces\IVModelInfoClient.h" />
     <ClInclude Include="SDK\Interfaces\IVModelRender.h" />

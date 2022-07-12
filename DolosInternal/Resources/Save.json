@@ -19,13 +19,13 @@
 				"fov": 10,
 				"bone": 8,
 				"name": "Head",
-				"enabled": false
+				"enabled": true
 			},
 			{
-				"fov": 0,
+				"fov": 5,
 				"bone": 6,
 				"name": "Chest",
-				"enabled": false
+				"enabled": true
 			}
 		]
 	},
@@ -36,7 +36,7 @@
 			"draw_health": true,
 			"draw_armor": true,
 			"draw_name": true,
-			"team_color": "ff00ff00"
+			"team_color": "ff29ffe0"
 		},
 		"enemy": {
 			"show_team": true,

@@ -18,6 +18,7 @@ bool InitializeHooks() {
 	g_vClientBase			= new VMTManager((void***)g_pBaseClient);
 	g_vD3D					= new VMTManager((void***)g_pD3DDevice);
 	g_vModelRender			= new VMTManager((void***)g_pModelRender);
+	g_vSurface				= new VMTManager((void***)g_pSurface);
 	
 
 	oCreateMove				= (fnCreateMove)			g_vClient->HookFunction			(CREATE_MOVE_INDEX			, hkCreateMove);
@@ -25,6 +26,8 @@ bool InitializeHooks() {
 	oFrameStageNotify		= (fnFrameStageNotify)		g_vClientBase->HookFunction		(FRAME_STAGE_INDEX			, hkFrameStageNotify);
 
 	oDrawModelExecute		= (fnDrawModelExecute)		g_vModelRender->HookFunction	(DRAW_MODEL_EXECUTE_INDEX	, hkDrawModelExecute);
+
+	oLockCursor				= (fnLockCursor)			g_vSurface->HookFunction		(LOCK_CURSOR_INDEX			, hkLockCursor);
 
 	oBeginScene				= (fnBeginScene)			g_vD3D->HookFunction			(BEGIN_SCENE_INDEX			, hkBeginScene);
 	oDrawIndexedPrimitive	= (fnDrawIndexedPrimitive)	g_vD3D->HookFunction			(DRAW_INDEXED_PRIM_INDEX	, hkDrawIndexedPrimitive);
@@ -48,6 +51,8 @@ bool UninitializeHooks() {
 	
 	g_vModelRender->FreeFunction	(DRAW_MODEL_EXECUTE_INDEX);
 
+	g_vSurface->FreeFunction		(LOCK_CURSOR_INDEX);
+
 	g_vD3D->FreeFunction			(BEGIN_SCENE_INDEX);
 	g_vD3D->FreeFunction			(DRAW_INDEXED_PRIM_INDEX);
 	g_vD3D->FreeFunction			(PRESENT_INDEX);
@@ -58,6 +63,7 @@ bool UninitializeHooks() {
 	delete g_vClientBase;
 	delete g_vD3D;
 	delete g_vModelRender;
+	delete g_vSurface;
 	SetWindowLongPtrW(hValveWnd, GWLP_WNDPROC, oWndProc);
 	return true;
 }
@@ -151,6 +157,11 @@ bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CU
 	return bReturn && bAimbot;
 }
 
+void __stdcall hkLockCursor() {
+	if (g_bMenuOpen) return g_pSurface->UnlockCursor();
+	else return oLockCursor();
+}
+
 char __fastcall hkVerifyReturn(void* _this, void* edx, const char* szModuleName) {
 
 	//((fnVerifyReturn)g_vDetours[0]->GetOriginal())(_this, edx, szModuleName); //Error for now
@@ -180,7 +191,11 @@ HRESULT APIENTRY hkPresent(IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST R
 	
 	if (g_pGUIContainer && g_pRender) {
 
-		if (g_pEngineClient->IsInGame()) ESP::Tick();
+		if (g_pEngineClient->IsInGame()) {
+			ESP::Tick();
+			if(!g_pRadar) g_pRadar = RadarESP::LoadRadar(g_pRender, g_pEngineClient->GetLevelNameShort());
+			else RadarESP::DrawRadar(g_pRender, g_pRadar);
+		}
 
 		if (g_bMenuOpen) {
 			g_pGUIContainer->GetEventHandler()->ProccessEvents();

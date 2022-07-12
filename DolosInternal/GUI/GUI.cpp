@@ -25,6 +25,8 @@ ElementEditor<SkinChanger::SkinInfo>* pSkinEditor = nullptr;
 
 bool InitializeGUI(HMODULE hMod) {
 
+	g_pInput->EnableInput(false);
+
 	g_Locale = _get_current_locale();
 	
 	g_pRender = new Render(g_pD3DDevice, hMod);
@@ -103,6 +105,7 @@ bool InitializeGUI(HMODULE hMod) {
 }
 
 bool UninitializeGUI() {
+	g_pInput->EnableInput(true);
 
 	delete pDefaultTarget;
 	delete pDefaultSkin;
@@ -164,6 +167,7 @@ ElementEditor<SkinChanger::SkinInfo>* CreateSkinEditor() {
 void ShowMenu() {
 	g_bMenuOpen = !g_bMenuOpen;
 	g_pInput->EnableInput(!g_bMenuOpen);
+	
 }
 
 void ChangeChildren(IGUIElement* pElement, bool bShow) {

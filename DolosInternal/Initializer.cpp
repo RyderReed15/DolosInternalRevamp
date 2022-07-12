@@ -63,15 +63,15 @@ bool InitializeCheat(HMODULE hMod) {
 
 	std::cout << "Hooks Initialized" << std::endl;
 
-
-	g_pInput->EnableInput(false);
-
 	return true;
 }
 
 bool ExitCheat() {
-
-	g_pInput->EnableInput(true);
+	if (g_pRadar) {
+		g_pRadar->pTexture->Release();
+		delete g_pRadar;
+	}
+	
 
 	UninitializeHooks(); //Hook are auto deleted when game is closed so no need 
 

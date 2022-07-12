@@ -26,6 +26,7 @@ enum BONES {
 struct EntityData {
     D3DCOLOR cColor = 0;
     Vector4D vSize = { 0,0,0,0 };
+    Vector vPos = { 0,0,0 };
     int iHealth = 0;
     int iArmor = 0;
     int iDistance = 0;
@@ -63,6 +64,8 @@ namespace ESP {
     bool WorldToScreen      (Vector2D& vScreen, Vector vPos);
     bool WorldToScreen      (Vector2D& vScreen, Vector vPos, VMatrix vMatrix);
    
+
+    inline                  std::unordered_map<int, EntityData> g_mEntityData;;
 }
 
 

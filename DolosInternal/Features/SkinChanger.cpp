@@ -67,7 +67,8 @@ void SkinChanger::OverrideSkin(CBaseCombatWeapon* pWeapon, SkinInfo* pSkinInfo) 
 		*pWeapon->FallbackStatTrak()	= pSkinInfo->iStatTrak;
 		*pWeapon->FallbackSeed()		= pSkinInfo->iSeed;
 
-		if (strcmp(pSkinInfo->szCustomName, "") && !strcmp(pSkinInfo->szCustomName, pWeapon->CustomName())) {
+
+		if (strcmp(pSkinInfo->szCustomName, "") && strcmp(pSkinInfo->szCustomName, pWeapon->CustomName()) != 0) {
 			strcpy_s(pWeapon->CustomName(), 32, pSkinInfo->szCustomName);
 		}
 

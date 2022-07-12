@@ -14,6 +14,9 @@
 #include "Math/Vector2D.h"
 #include "Math/Vector4D.h"
 #include "Math/VMatrix.h"
+#include "Math/UtlMap.h"
+#include "Math/UtlMemory.h"
+#include "Math/UtlString.h"
 #include "Math/UtlVector.h"
 #include "Studio.h"
 
@@ -43,6 +46,7 @@
 #include "Interfaces/INetChannelInfo.h"
 #include "Interfaces/IPanel.h"
 #include "Interfaces/IPrediction.h"
+#include "Interfaces/ISurface.h"
 #include "Interfaces/IVEngineClient.h"
 #include "Interfaces/IVModelInfoClient.h"
 #include "Interfaces/IVModelRender.h"
@@ -67,6 +71,7 @@ inline IVModelInfoClient*           g_pModelInfo;
 inline IVModelRender*               g_pModelRender;
 inline ILocalize*                   g_pLocalize;
 inline IInputSystem*                g_pInput;
+inline ISurface*                    g_pSurface;
 
 inline IDirect3DDevice9*            g_pD3DDevice;
 

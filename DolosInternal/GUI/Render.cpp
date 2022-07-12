@@ -105,7 +105,7 @@ void Render::Release() {
 void Render::Begin(BUFFER_TYPE tBufferType) {
 	if (IsInitialized()) {
 
-		m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX_TEXTURE);
+		m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX);
 		m_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 		m_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		m_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
@@ -149,7 +149,7 @@ void Render::Begin(BUFFER_TYPE tBufferType) {
 
 void Render::End(BUFFER_TYPE tBufferType) {
 	if (IsInitialized()) {	
-		m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX_TEXTURE);
+		m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX);
 		switch (tBufferType) {
 		case BUFFER_TYPE::BUFFER_ALL:
 			//Draw both line and triangle batch
@@ -167,7 +167,7 @@ void Render::End(BUFFER_TYPE tBufferType) {
 			m_pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_iTextureVertices, 0, m_iTextureCount);
 			m_iTextureCount = m_iTextureIndices = m_iTextureVertices = 0;
 
-			m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX_TEXTURE);
+			m_pDevice->SetFVF(D3DFVF_CUSTOMVERTEX);
 			m_pDevice->SetStreamSource(0, m_pTriVertexBuffer, 0, sizeof(CustomVertex));
 			m_pDevice->SetIndices(m_pTriIndexBuffer);
 
@@ -326,9 +326,8 @@ IDirect3DTexture9* Render::LoadTexture(const char* szPath) {
 	if (IsInitialized()) {
 		IDirect3DTexture9* pTexture;
 
-		HRESULT hResult = D3DXCreateTextureFromFile(m_pDevice, szPath, &pTexture);
-		if (FAILED(hResult)) {
-			std::cout << (void*)hResult << std::endl;
+
+		if (FAILED(D3DXCreateTextureFromFile(m_pDevice, szPath, &pTexture))) {
 			return nullptr;
 		}
 
@@ -579,12 +578,13 @@ HRESULT Render::DrawTextureCircle(D3DXVECTOR2 vLocation, float flRadius, unsigne
 		
 
 
-		float flDiameter = flRadius * 2;
+		float flXGap = flRadius * 2 / (vTexCoords.z - vTexCoords.x);
+		float flYGap = flRadius * 2 / (vTexCoords.w - vTexCoords.y);
 		float flTexMidX = (vTexCoords.z + vTexCoords.x) / 2;
 		float flTexMidY = (vTexCoords.w + vTexCoords.y) / 2;
 
 		unsigned int iCenter = AddVertex(BUFFER_TYPE::BUFFER_TEXTURE, { vLocation.x, vLocation.y }, WHITE, { flTexMidX, flTexMidY });
-		unsigned int iPrev = AddVertex(BUFFER_TYPE::BUFFER_TEXTURE, { vLocation.x + flRRotated, vLocation.y + flDRotated }, WHITE, { flTexMidX + flR / flDiameter, flTexMidY + flD / flDiameter });
+		unsigned int iPrev = AddVertex(BUFFER_TYPE::BUFFER_TEXTURE, { vLocation.x + flRRotated, vLocation.y + flDRotated }, WHITE, { flTexMidX + flR / flXGap, flTexMidY + flD / flYGap });
 
 
 		for (unsigned int i = 0; i < iSides; i++) {
@@ -596,7 +596,7 @@ HRESULT Render::DrawTextureCircle(D3DXVECTOR2 vLocation, float flRadius, unsigne
 			flRRotated = flCos * flRRotated - flSin * flDRotated;
 			flDRotated = flSin * flTemp + flCos * flDRotated;
 
-			unsigned int iTemp = AddVertex(BUFFER_TYPE::BUFFER_TEXTURE, { vLocation.x + flRRotated, vLocation.y + flDRotated }, WHITE, { flTexMidX + flR / flDiameter, flTexMidY + flD / flDiameter });
+			unsigned int iTemp = AddVertex(BUFFER_TYPE::BUFFER_TEXTURE, { vLocation.x + flRRotated, vLocation.y + flDRotated }, WHITE, { flTexMidX + flR / flXGap, flTexMidY + flD / flYGap });
 			AddTexTriangle(iTemp, iCenter, iPrev);
 
 

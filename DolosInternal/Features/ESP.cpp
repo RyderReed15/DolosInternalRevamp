@@ -1,6 +1,6 @@
 #include "ESP.h"
 
-std::unordered_map<int, EntityData> g_mEntityData;
+
 
 //Use a game thread to get and store data for all displayable entities
 void ESP::GetData() {
@@ -100,6 +100,7 @@ void ESP::GetEntityInfo(CBaseEntity* pEntity, D3DCOLOR cColor, bool bPlayer, int
     
     g_mEntityData[iIndex].bDeleted     = false;
     g_mEntityData[iIndex].vSize        = vSize;
+    g_mEntityData[iIndex].vPos         = pEntity->GetAbsOrigin();
     g_mEntityData[iIndex].cColor       = cColor;
     g_mEntityData[iIndex].iDistance    = static_cast<int>((pEntity->GetVecOrigin() - g_pLocalPlayer->GetVecOrigin()).Magnitude() * INCH_TO_METER);
     g_mEntityData[iIndex].bPlayer      = bPlayer;

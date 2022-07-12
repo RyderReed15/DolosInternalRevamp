@@ -9,18 +9,22 @@
 #include "Utils/HotKeyManager.h"
 #include <d3d9.h>
 
+
 #include "Features/ESP.h"
 #include "Features/SkinChanger.h"
 #include "Features/Aimbot.h"
 #include "Features/Misc.h"
 #include "Features/EnginePrediction.h"
 #include "Features/Triggerbot.h"
+#include "Features/Radar.h"
 
 #define CREATE_MOVE_INDEX           24
 
 #define FRAME_STAGE_INDEX           37
 
 #define DRAW_MODEL_EXECUTE_INDEX    21
+
+#define LOCK_CURSOR_INDEX           67
 
 #define BEGIN_SCENE_INDEX           41
 #define DRAW_INDEXED_PRIM_INDEX     82
@@ -30,12 +34,13 @@
 
 
 
-
+inline RadarESP::Radar* g_pRadar;
 
 inline VMTManager* g_vD3D;
 inline VMTManager* g_vClient;
 inline VMTManager* g_vModelRender;
 inline VMTManager* g_vClientBase;
+inline VMTManager* g_vSurface;
 
 inline HWND hValveWnd;
 
@@ -44,6 +49,7 @@ typedef bool(__fastcall* fnCreateMove)              (void* _this, void* edx, flo
 typedef void(__thiscall* fnDrawModelExecute)        (void* _this, void* edx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, void* pCustomBoneToWorld);
 typedef void(__fastcall* fnFrameStageNotify)        (void* _this, void* edx, ClientFrameStage_t stage);
 typedef bool(__fastcall* fnVerifyReturn)            (void* _this, void* edx, const char* szModuleName);
+typedef void(__stdcall*  fnLockCursor)              (void);
 
 
 typedef HRESULT(__stdcall* fnEndScene)              (IDirect3DDevice9* pDevice);
@@ -55,6 +61,7 @@ typedef HRESULT(__stdcall* fnDrawIndexedPrimitive)  (IDirect3DDevice9* pDevice, 
 inline fnCreateMove             oCreateMove;
 inline fnDrawModelExecute       oDrawModelExecute;
 inline fnFrameStageNotify       oFrameStageNotify;
+inline fnLockCursor             oLockCursor;
 
 inline fnBeginScene             oBeginScene;
 inline fnDrawIndexedPrimitive   oDrawIndexedPrimitive;
@@ -73,6 +80,7 @@ LRESULT             hkWndProc                   (HWND hWnd, UINT uMsg, WPARAM wP
 void __fastcall     hkFrameStageNotify          (void* _this, void* edx, ClientFrameStage_t stage);
 void __fastcall     hkDrawModelExecute          (void* _this, void* edx, void* pCtx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, void* pCustomBoneToWorld);
 bool __fastcall     hkCreateMove                (void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd);
+void __stdcall      hkLockCursor                (void);
 char __fastcall     hkVerifyReturn              (void* _this, void* edx, const char* szModuleName);
 
 HRESULT APIENTRY    hkBeginScene                (IDirect3DDevice9* pDevice);

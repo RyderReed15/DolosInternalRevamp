@@ -10,6 +10,7 @@ bool InitializeSDK() {
     fnCreateInterface pValveFactory         = GetFactory("vstdlib.dll");
     fnCreateInterface pLocalizeFactory      = GetFactory("localize.dll");
     fnCreateInterface pInputFactory         = GetFactory("inputsystem.dll");
+    fnCreateInterface pVGUIFactory          = GetFactory("vguimatsurface.dll");
 
 
     g_pBaseClient               = (IBaseClientDLL*)     GetInterface(pClientFactory     , "VClient018");
@@ -26,6 +27,7 @@ bool InitializeSDK() {
     g_pModelRender              = (IVModelRender*)      GetInterface(pEngineFactory     , "VEngineModel016");
     g_pLocalize                 = (ILocalize*)          GetInterface(pLocalizeFactory   , "Localize_001");
     g_pInput                    = (IInputSystem*)       GetInterface(pInputFactory      , "InputSystemVersion001");
+    g_pSurface                  = (ISurface*)           GetInterface(pVGUIFactory       , "VGUI_Surface031");
 
    
     
