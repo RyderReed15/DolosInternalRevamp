@@ -4,7 +4,7 @@
 #define RECOIL_CONTROL_H
 
 #include "../SDK/SDK.h"
-#include "../Utils/ConfigManager.h"
+#include "../Settings.h"
 #include "../GUI/GUI.h"
 
 namespace RecoilControl {

@@ -95,10 +95,10 @@ public:
 
     HRESULT             DrawSprite              (D3DXVECTOR4 vRect, D3DXVECTOR2 vLocation, D3DCOLOR cColor, float flScale = 1.f, float flRotation = 0.f);
     HRESULT             DrawLine                (D3DXVECTOR2 vLocationOne, D3DXVECTOR2 vLocationTwo, D3DCOLOR cColor, D3DCOLOR cColor2 = 0);
-    HRESULT             DrawString              (D3DXVECTOR2 vLocation, D3DCOLOR cColor, ID3DXFont* pFont, const char* szString, ...);
-    HRESULT             DrawString              (D3DXVECTOR2 vLocation, D3DCOLOR cColor, ID3DXFont* pFont, const WCHAR* szString, ...);
-    D3DXVECTOR2         GetStringSize           (ID3DXFont* font, const WCHAR* string, ...);
-    D3DXVECTOR2         GetStringSize           (ID3DXFont* font, const char* string, ...);
+    HRESULT             DrawString              (D3DXVECTOR2 vLocation, D3DCOLOR cColor, ID3DXFont* pFont, const char* szString);
+    HRESULT             DrawString              (D3DXVECTOR2 vLocation, D3DCOLOR cColor, ID3DXFont* pFont, const wchar_t* szString);
+    D3DXVECTOR2         GetStringSize           (ID3DXFont* font, const wchar_t* szString);
+    D3DXVECTOR2         GetStringSize           (ID3DXFont* font, const char* szString);
     HRESULT             DrawRectangle           (D3DXVECTOR4 vBounds, D3DCOLOR cColor, D3DCOLOR cColor2 = 0, bool bVertical = true);
     HRESULT             DrawTextureRectangle    (D3DXVECTOR4 vBounds, D3DXVECTOR4 vTexCoords);
     HRESULT             DrawOutlinedRect        (D3DXVECTOR4 vBounds, unsigned int iThickness, D3DCOLOR cOutline, D3DCOLOR cColor, D3DCOLOR cColor2 = 0, bool bVertical = true);

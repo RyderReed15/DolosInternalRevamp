@@ -44,9 +44,8 @@ bool InitializeSDK() {
         g_pD3DDevice                        = **(IDirect3DDevice9***)   (FindPattern(pShaderBase, "A1 ? ? ? ? 50 8B 08 FF 51 0C") + 1);
         //void * g_pGlowObjectManager         = *(void**)                 (FindPattern(pClientBase, "0F 11 05 ? ? ? ? 83 C8 01") + 3);
         //void * g_pClientState               = **(void***)               (FindPattern(pEngineBase, "A1 ? ? ? ? 8B 80 ? ? ? ? C3") + 1);
-        g_pViewMatrix                       = (VMatrix*)((*(char**)     (FindPattern(pClientBase, "0F 10 05 ? ? ? ? 8D 85 ? ? ? ? B9") + 3)) + 176);
 
-        
+        g_pMouseEnable      = g_pCVar->FindVar("cl_mouseenable");
 
         return true;
     }

@@ -220,6 +220,10 @@ vec_t Vector2D::NormalizeInPlace()
     return Vector2DNormalize(*this);
 }
 
+Vector2D Vector2D::Normalized() const {
+    return *this / Length();
+}
+
 bool Vector2D::IsLengthGreaterThan(float val) const
 {
     return LengthSqr() > val * val;

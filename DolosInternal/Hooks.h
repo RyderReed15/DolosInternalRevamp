@@ -7,6 +7,7 @@
 #include "GUI/GUI.h"
 #include "GUI/FontManager.h"
 #include "Utils/HotKeyManager.h"
+#include "Utils/EntityData.h"
 #include <d3d9.h>
 
 
@@ -32,9 +33,6 @@
 #define END_SCENE_INDEX             42
 #define RESET_INDEX                 16
 
-
-
-inline RadarESP::Radar* g_pRadar;
 
 inline VMTManager* g_vD3D;
 inline VMTManager* g_vClient;

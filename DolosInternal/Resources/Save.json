@@ -11,9 +11,9 @@
 		"overaim_factor": 1,
 		"curve": false,
 		"range_dec_multiplier": 1,
-		"time_to_aim": 0.50000,
+		"time_to_aim": 0.5,
 		"wait_time": 1,
-		"antilock_factor": 0.50000,
+		"antilock_factor": 0.5,
 		"targets": [
 			{
 				"fov": 10,
@@ -50,10 +50,17 @@
 			"enabled": true,
 			"draw_name": true,
 			"color": "ff00ff00"
+		},
+		"radar": {
+			"enabled": true,
+			"x_coord": 10,
+			"y_coord": 10,
+			"zoom": 1.5,
+			"size": 200
 		}
 	},
 	"misc": {
-		"bhop": false
+		"bhop": true
 	},
 	"skin_changer": {
 		"track_kills": false,
@@ -62,7 +69,7 @@
 				"weapon_id": 7,
 				"new_index": 0,
 				"skin_id": 675,
-				"wear": 0.90000,
+				"wear": 0.899999976158142,
 				"stattrak_kills": -1,
 				"seed": 1,
 				"quality": 3,
@@ -72,7 +79,7 @@
 				"weapon_id": 16,
 				"new_index": 0,
 				"skin_id": 309,
-				"wear": 0.01000,
+				"wear": 0.00999999977648258,
 				"stattrak_kills": -1,
 				"seed": 1,
 				"quality": 7,
@@ -82,7 +89,7 @@
 				"weapon_id": 9,
 				"new_index": 0,
 				"skin_id": 475,
-				"wear": 0.99000,
+				"wear": 0.990000009536743,
 				"stattrak_kills": -1,
 				"seed": 1,
 				"quality": 12,
@@ -92,7 +99,7 @@
 				"weapon_id": 59,
 				"new_index": 507,
 				"skin_id": 38,
-				"wear": 0.01000,
+				"wear": 0.00999999977648258,
 				"stattrak_kills": 20,
 				"seed": 1,
 				"quality": 3,

@@ -5,7 +5,7 @@
 
 
 #include "../SDK/SDK.h"
-#include "../Utils/ConfigManager.h"
+#include "../Settings.h"
 
 namespace Misc {
     void Bhop(CUserCmd* pCmd, int iFlags);

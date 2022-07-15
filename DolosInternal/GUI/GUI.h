@@ -5,7 +5,7 @@
 
 #include <d3d9.h>
 #include <d3dx9.h>
-#include "../Utils/ConfigManager.h"
+#include "../Settings.h"
 #include "GUIContainer.h"
 #include "GUIEventHandler.h"
 #include "Widgets/IGUIElement.h"

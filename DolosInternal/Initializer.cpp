@@ -67,11 +67,6 @@ bool InitializeCheat(HMODULE hMod) {
 }
 
 bool ExitCheat() {
-	if (g_pRadar) {
-		g_pRadar->pTexture->Release();
-		delete g_pRadar;
-	}
-	
 
 	UninitializeHooks(); //Hook are auto deleted when game is closed so no need 
 

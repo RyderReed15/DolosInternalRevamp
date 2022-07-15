@@ -2,69 +2,80 @@
 
 
 
-void RadarESP::DrawRadar(Render* pRender, RadarESP::Radar* pRadar) {
-    if (!g_pLocalPlayer || !pRadar) return;
+void RadarESP::DrawRadar(Render* pRender) {
+    if (!g_pLocalPlayer || !Settings.Visuals.Overview.pTexture || !Settings.Visuals.Overview.bEnabled || !g_pMouseEnable->GetInt()) return;
+
+    Config::VisualsConfig::Radar* pRadar = &Settings.Visuals.Overview;
+    EntityData::LocalPlayerData* pLocalPlayerData = EntityData::GetLocalPlayerData();
+
     pRender->Begin(BUFFER_TYPE::BUFFER_TEXTURE);
-    Vector vPlayerPos = g_pLocalPlayer->GetAbsOrigin();
-    QAngle qViewAngles; g_pEngineClient->GetViewAngles(qViewAngles);
-    Vector vCenter = { pRadar->vTopLeft.x + pRadar->flSize, pRadar->vTopLeft.y + pRadar->flSize, 0 };
-    Vector vPlayerCoords = GetRadarCoords(pRadar, vCenter, vCenter, vPlayerPos, 0);
-    
+
+    Vector2D vCenter = { pRadar->vTopLeft.x + pRadar->flSize, pRadar->vTopLeft.y + pRadar->flSize };
+    Vector2D vPlayerCoords = GetRadarCoords(vCenter, vCenter, pLocalPlayerData->vPosition, 0);
 
     pRender->SetTexture(pRadar->pTexture);
-    float flZoom = (1.f / pRadar->flZoom) / 2.f;
-    Vector2D vOffset = { (vPlayerCoords.x / pRadar->flZoom - pRadar->flSize) / pRadar->flSize / 2, (vPlayerCoords.y / pRadar->flZoom - pRadar->flSize) / pRadar->flSize / 2 };
-    pRender->DrawTextureCircle({ vCenter.x, vCenter.y }, pRadar->flSize, 100, { (vOffset.x + .5f - flZoom) * .6666f, (vOffset.y + .5f - flZoom) * .6666f, (vOffset.x + .5f + flZoom) * .6666f, (vOffset.y + .5f + flZoom) * .6666f }, 1, qViewAngles.yaw - 90);
+
+    float flYaw = pLocalPlayerData->vViewAngles.y - 90;
+    float flZoom = .3333f / pRadar->flZoom; //  1 / 2  *.666f  / zoom | 1/3 is to correct for increase in size of texture for black borders
+
+    Vector2D vOffset = vPlayerCoords * flZoom / pRadar->flSize;
+    pRender->DrawTextureCircle({ vCenter.x, vCenter.y }, pRadar->flSize, 100, { vOffset.x - flZoom, vOffset.y - flZoom, vOffset.x + flZoom, vOffset.y + flZoom}, 1, flYaw);
 
     pRender->End(BUFFER_TYPE::BUFFER_TEXTURE);
+
+
 
     pRender->Begin(BUFFER_TYPE::BUFFER_TRI);
     pRender->SetTexture(nullptr);
 
-    
-    for (std::unordered_map<int, EntityData>::iterator it = ESP::g_mEntityData.begin(); it != ESP::g_mEntityData.end(); it++) {
+    std::unordered_map<int, EntityData::PlayerData>* mPlayerData = EntityData::GetAllPlayerData();
 
-        if (it->second.bPlayer && !it->second.bDeleted) {
-            Vector vCoords = GetRadarCoords(pRadar, vCenter, vPlayerCoords, it->second.vPos, qViewAngles.yaw - 90);
+    for (std::unordered_map<int, EntityData::PlayerData>::iterator it = mPlayerData->begin(); it != mPlayerData->end(); it++) {
 
-            if (vPlayerPos.z > it->second.vPos.z + 100) {
-                g_pRender->DrawCircle({ vCoords.x, vCoords.y + 9 }, 4, 1, (it->second.bEnemy ? Settings.Visuals.Enemy.TeamColor : Settings.Visuals.Friendly.TeamColor), .25f, 225);
-                
+        if (it->second.bAccessible) {
+            Vector2D vCoords = GetRadarCoords(vCenter, vPlayerCoords, it->second.vPosition, flYaw);
+
+            D3DCOLOR cColor = (it->second.bFriendly ? Settings.Visuals.Friendly.TeamColor : Settings.Visuals.Enemy.TeamColor);
+            //Draw either up or down arrows - arbitrary height for now
+            if (pLocalPlayerData->vPosition.z > it->second.vPosition.z + 100) { // Down
+                g_pRender->DrawCircle({ vCoords.x, vCoords.y + 9 }, 4, 1, cColor, .25f, 225);
             }
-            else if(vPlayerPos.z < it->second.vPos.z - 100){
-                g_pRender->DrawCircle({ vCoords.x, vCoords.y - 9 }, 4, 1, (it->second.bEnemy ? Settings.Visuals.Enemy.TeamColor : Settings.Visuals.Friendly.TeamColor), .25f, 45);
+            else if(pLocalPlayerData->vPosition.z < it->second.vPosition.z - 100){ // Up
+                g_pRender->DrawCircle({ vCoords.x, vCoords.y - 9 }, 4, 1, cColor, .25f, 45);
             }
-            g_pRender->DrawCircle({vCoords.x, vCoords.y}, 5, 10, (it->second.bEnemy ? Settings.Visuals.Enemy.TeamColor : Settings.Visuals.Friendly.TeamColor));
+
+            g_pRender->DrawCircle({vCoords.x, vCoords.y}, 5, 10, cColor);
            
         }
         
     }
-    g_pRender->DrawCircle({ vCenter.x, vCenter.y, }, 10, 2, BLUE, .75f, 135); // Makes an arrow - magic numbers dont change
+    g_pRender->DrawCircle({ vCenter.x, vCenter.y, }, 10, 2, LIGHTBLUE, .75f, 135); // Makes an arrow - magic numbers dont change
     pRender->End(BUFFER_TYPE::BUFFER_TRI);
     
 }
 
-Vector RadarESP::GetRadarCoords(RadarESP::Radar* pRadar, Vector vCircleCenter, Vector vCoordCenter, Vector vPos, float flYaw) {
+Vector2D RadarESP::GetRadarCoords(Vector2D vCircleCenter, Vector2D vCoordCenter, Vector vPos, float flYaw) {
     float flCos = cosf(flYaw * DEG_TO_RAD);
     float flSin = sinf(flYaw * DEG_TO_RAD);
 
-    Vector vAdjCoords = { vPos.x - pRadar->vWorldCoords.x, pRadar->vWorldCoords.y - vPos.y, vPos.z }; // Adjust for radar offset
+    Config::VisualsConfig::Radar* pRadar = &Settings.Visuals.Overview;
 
-    Vector vRadarCoords = vAdjCoords / pRadar->flScale * pRadar->flZoom * pRadar->flSize * 2; // Scale to size of radar
+    Vector2D vAdjCoords = { vPos.x - pRadar->vWorldCoords.x, pRadar->vWorldCoords.y - vPos.y}; // Adjust for radar offset
 
-    Vector vPolarCoords = { vRadarCoords.x - vCoordCenter.x, vRadarCoords.y - vCoordCenter.y, vRadarCoords.z }; // Convert to coordinates centered around the chosen center
+    Vector2D vRadarCoords = vAdjCoords / pRadar->flScale * pRadar->flZoom * pRadar->flSize * 2; // Scale to size of radar
 
-    Vector vRotatedCoords = {vPolarCoords.x * flCos - vPolarCoords.y * flSin, vPolarCoords.x * flSin + vPolarCoords.y * flCos, vPolarCoords.z}; // Rotate around coordinate center point
+    Vector2D vPolarCoords = vRadarCoords - vCoordCenter; // Convert to coordinates centered around the chosen center
 
-    if (vRotatedCoords.Magnitude() > pRadar->flSize && vCircleCenter != vCoordCenter) {
-        vRotatedCoords = vRotatedCoords.Normalize() * pRadar->flSize;
+    Vector2D vRotatedCoords = {vPolarCoords.x * flCos - vPolarCoords.y * flSin, vPolarCoords.x * flSin + vPolarCoords.y * flCos}; // Rotate around coordinate center point
+
+    if (vRotatedCoords.Length() > pRadar->flSize && vCircleCenter != vCoordCenter) {
+        vRotatedCoords = vRotatedCoords.Normalized() * pRadar->flSize; // Max out position at radar edge
     }
 
     return vRotatedCoords + vCircleCenter;
 
 }
-
-RadarESP::Radar* RadarESP::LoadRadar(Render* pRender, const char* szMapName) {
+void RadarESP::LoadRadar(Render* pRender, const char* szMapName) {
     char name[MAX_PATH];
 
     GetModuleFileName(NULL, name, MAX_PATH);
@@ -77,29 +88,23 @@ RadarESP::Radar* RadarESP::LoadRadar(Render* pRender, const char* szMapName) {
     szOverviewPath = szRadarPath + "overviews\\" + szMapName;
     szOverviewPath += ".txt";
     
+    JsonObject* pOverview = ParseJsonFile(szOverviewPath.c_str());
+    if (pOverview) {
+       
+        Settings.Visuals.Overview.vWorldCoords  = { strtof(pOverview->GetString("pos_x").c_str(), 0),  strtof(pOverview->GetString("pos_y").c_str(), 0) };
+        Settings.Visuals.Overview.flScale       = ( strtof(pOverview->GetString("scale").c_str(), 0) + .1f) * 1000.f;
 
-    JsonObject* pFile = ParseJsonFile(szOverviewPath.c_str());
-    if (pFile) {
-        JsonObject* pOverview = pFile->GetJsonObject(szMapName);
-        if (pOverview) {
-            Radar* pRadar = new Radar();
-            pRadar->vWorldCoords = { strtof(pOverview->GetString("pos_x").c_str(), 0),  strtof(pOverview->GetString("pos_y").c_str(), 0) };
-            pRadar->vTopLeft = { 10, 10 };            
-            pRadar->flSize = 200;
-            pRadar->flScale = (strtof(pOverview->GetString("scale").c_str(), 0) + .1f) * 1000.f;
-            pRadar->flZoom = 1.5f;
-            std::string s(szRadarPath + pOverview->GetString("material"));
-            s += (s.find("radar") == -1 ? "_radar" : "");
-            s += ".dds";
-            pRadar->pTexture = MakeRadarTexture(pRender, pRender->LoadTexture(s.c_str()));
-            
-            return pRadar;
-        }
+        std::string szRadarName(szRadarPath + pOverview->GetString("material"));
+        szRadarName += (pOverview->GetString("material").find("radar") == -1 ? "_radar.dds" : ".dds");
+
+        if (Settings.Visuals.Overview.pTexture) Settings.Visuals.Overview.pTexture->Release();
+
+        Settings.Visuals.Overview.pTexture = MakeRadarTexture(pRender, pRender->LoadTexture(szRadarName.c_str()));
+        
     }
-    return nullptr;
 }
 
-
+//Builds a texture with the original texture at 0, 0, 2/3, 2/3 leaving black space around the edge to prevent tiling within the radar
 IDirect3DTexture9* RadarESP::MakeRadarTexture(Render* pRender, IDirect3DTexture9* pTexture) {
     IDirect3DSurface9* pRenderSurface, * pTextureSurface;
     IDirect3DTexture9* pRenderTexture;
@@ -107,9 +112,9 @@ IDirect3DTexture9* RadarESP::MakeRadarTexture(Render* pRender, IDirect3DTexture9
     D3DSURFACE_DESC texDesc;
     pTexture->GetLevelDesc(0, &texDesc);
 
-    RECT rDest = { 0, 0, texDesc.Width, texDesc.Height };
+    RECT rDest = { 0, 0, static_cast<long>(texDesc.Width), static_cast<long>(texDesc.Height) };
 
-    pRender->GetDevice()->CreateTexture(texDesc.Width * 1.5, texDesc.Height * 1.5, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &pRenderTexture, NULL);
+    pRender->GetDevice()->CreateTexture(static_cast<unsigned int>(texDesc.Width * 1.5), static_cast<unsigned int>(texDesc.Height * 1.5), 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &pRenderTexture, NULL);
 
     pTexture->GetSurfaceLevel(0, &pTextureSurface);
     pRenderTexture->GetSurfaceLevel(0, &pRenderSurface);

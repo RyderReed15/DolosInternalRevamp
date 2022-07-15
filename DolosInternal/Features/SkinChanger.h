@@ -6,6 +6,7 @@
 #include "../SDK/SDK.h"
 #include "Json--/JsonParser.h"
 #include "../Utils/LocalizationManager.h"
+
 #include <map>
 
 #define ITEMS_PATH  "\\csgo\\scripts\\items\\items_game.txt"
@@ -47,7 +48,8 @@ namespace SkinChanger {
 }
 
 
-#include "../Utils/ConfigManager.h"
+
+#include "../Settings.h"
 
 #endif // !SKIN_CHANGER_H
 

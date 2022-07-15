@@ -4,7 +4,7 @@
 #define TRIGGERBOT_H
 
 #include "../SDK/SDK.h"
-#include "../Utils/ConfigManager.h"
+#include "../Settings.h"
 #include "RecoilControl.h"
 
 namespace Triggerbot {

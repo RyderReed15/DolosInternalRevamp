@@ -51,6 +51,7 @@
     <ClCompile Include="SDK\Math\VMatrix.cpp" />
     <ClCompile Include="SDK\SDK.cpp" />
     <ClCompile Include="Utils\ConfigManager.cpp" />
+    <ClCompile Include="Utils\EntityData.cpp" />
     <ClCompile Include="Utils\HookManager.cpp" />
     <ClCompile Include="Utils\HotKeyManager.cpp" />
     <ClCompile Include="Utils\NetvarManager.cpp" />
@@ -131,7 +132,9 @@
     <ClInclude Include="SDK\Math\VMatrix.h" />
     <ClInclude Include="SDK\SDK.h" />
     <ClInclude Include="SDK\Studio.h" />
+    <ClInclude Include="Settings.h" />
     <ClInclude Include="Utils\ConfigManager.h" />
+    <ClInclude Include="Utils\EntityData.h" />
     <ClInclude Include="Utils\HookManager.h" />
     <ClInclude Include="Utils\HotKeyManager.h" />
     <ClInclude Include="Utils\Macros.h" />

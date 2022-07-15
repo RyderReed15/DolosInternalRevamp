@@ -75,7 +75,7 @@ inline ISurface*                    g_pSurface;
 
 inline IDirect3DDevice9*            g_pD3DDevice;
 
-inline VMatrix*                     g_pViewMatrix;
+inline IConVar*                     g_pMouseEnable;
 
 
 typedef void* (__cdecl* fnCreateInterface)(const char* szName, int* pReturnCode);

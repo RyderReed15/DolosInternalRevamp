@@ -120,10 +120,20 @@ LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 
 void __fastcall hkFrameStageNotify(void* _this, void* edx, ClientFrameStage_t stage) {
+	g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer());
 
-	if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START) SkinChanger::PreTick();
+	if (stage == ClientFrameStage_t::FRAME_START) {
+		EntityData::UpdateEntityData();
+	}
+	else if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START) {
+		SkinChanger::PreTick();
+		oFrameStageNotify(_this, edx, stage);
+		SkinChanger::PostTick();
+		return;
+	}
+	
 	oFrameStageNotify(_this, edx, stage);
-	if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START) SkinChanger::PostTick();
+
 }
 
 void __fastcall hkDrawModelExecute(void* _this, void*, void* pCtx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, void* pCustomBoneToWorld) {
@@ -132,12 +142,10 @@ void __fastcall hkDrawModelExecute(void* _this, void*, void* pCtx, const DrawMod
 }
 
 bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd) {
-	g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer());
+	
 	bool bReturn = oCreateMove(_this, edx, flInputSampleTime, pCmd);
 	bool bAimbot = true;
 	if (pCmd->iTickCount != 0 && g_pEngineClient->IsInGame()) {
-
-		ESP::GetData();
 
 		int iFlags = EnginePrediction::Begin(g_pLocalPlayer, pCmd);
 
@@ -149,9 +157,9 @@ bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CU
 
 		EnginePrediction::End(g_pLocalPlayer);
 
-		g_pLocalPlayer->SetFlags(iFlags);
+		g_pLocalPlayer->SetFlags(iFlags); //Return flags to before prediction to preserve state
 
-		 //Return flags to before prediction to preserve state
+		
 
 	}
 	return bReturn && bAimbot;
@@ -193,8 +201,8 @@ HRESULT APIENTRY hkPresent(IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST R
 
 		if (g_pEngineClient->IsInGame()) {
 			ESP::Tick();
-			if(!g_pRadar) g_pRadar = RadarESP::LoadRadar(g_pRender, g_pEngineClient->GetLevelNameShort());
-			else RadarESP::DrawRadar(g_pRender, g_pRadar);
+			if(!Settings.Visuals.Overview.pTexture) RadarESP::LoadRadar(g_pRender, g_pEngineClient->GetLevelNameShort());
+			else RadarESP::DrawRadar(g_pRender);
 		}
 
 		if (g_bMenuOpen) {

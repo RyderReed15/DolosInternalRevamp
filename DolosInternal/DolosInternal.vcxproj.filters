@@ -160,6 +160,9 @@
     <ClCompile Include="Features\Radar.cpp">
       <Filter>Features</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\EntityData.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Initializer.h">
@@ -407,6 +410,12 @@
     </ClInclude>
     <ClInclude Include="SDK\Interfaces\ISurface.h">
       <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\EntityData.h">
+      <Filter>Utils\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
+      <Filter>Source\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

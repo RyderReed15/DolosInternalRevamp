@@ -3,34 +3,28 @@
 #ifndef RADAR_H
 #define RADAR_H
 
+#include "Json--/JsonParser.h"
 #include "../SDK/SDK.h"
-#include "../Utils/ConfigManager.h" 
+#include "../GUI/GUI.h"
+#include "../Utils/EntityData.h"
 #include "../GUI/Render.h"
-
-struct EntityData;
+#include "../Settings.h"
 
 #define RADAR_PATH    "\\csgo\\resource\\"
 
 namespace RadarESP {
 
-    struct Radar {
-        Vector2D vTopLeft;
-        Vector2D vWorldCoords;
-        float flSize;
-        float flZoom;
-        float flScale;
-        IDirect3DTexture9* pTexture;
-    };
+    
 
-    void DrawRadar(Render* pRender, Radar* pRadar);
+    void                DrawRadar       (Render* pRender);
+    void                LoadRadar       (Render* pRender, const char* szMapName);
 
-    Vector GetRadarCoords(Radar* pRadar, Vector vCircleCenter, Vector vCoordCenter, Vector vPos, float flYaw);
+    Vector2D            GetRadarCoords  (Vector2D vCircleCenter, Vector2D vCoordCenter, Vector vPos, float flYaw);
 
-    Radar* LoadRadar(Render* pRedconst, const char* szMapName);
-
-    IDirect3DTexture9* MakeRadarTexture(Render* pRender, IDirect3DTexture9* pTexture);
+    IDirect3DTexture9*  MakeRadarTexture(Render* pRender, IDirect3DTexture9* pTexture);
 
 }
-#include "ESP.h"
+
+
 
 #endif // !RADAR_H

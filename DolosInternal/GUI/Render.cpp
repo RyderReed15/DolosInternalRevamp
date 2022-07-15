@@ -610,7 +610,7 @@ HRESULT Render::DrawTextureCircle(D3DXVECTOR2 vLocation, float flRadius, unsigne
 	return OLE_E_BLANK;
 }
 
-HRESULT Render::DrawString(D3DXVECTOR2 vLocation, D3DCOLOR cColor, ID3DXFont* pFont, const char* szString, ...) {
+HRESULT Render::DrawString(D3DXVECTOR2 vLocation, D3DCOLOR cColor, ID3DXFont* pFont, const char* szString) {
 
 	RECT pRect;
 
@@ -618,7 +618,7 @@ HRESULT Render::DrawString(D3DXVECTOR2 vLocation, D3DCOLOR cColor, ID3DXFont* pF
 	pRect.top = (long)vLocation.y;
 	return pFont->DrawTextA(m_pSprite, szString, -1, &pRect, DT_NOCLIP, cColor);
 }
-HRESULT Render::DrawString(D3DXVECTOR2 vLocation, D3DCOLOR cColor, ID3DXFont* pFont, const WCHAR* szString, ...) {
+HRESULT Render::DrawString(D3DXVECTOR2 vLocation, D3DCOLOR cColor, ID3DXFont* pFont, const wchar_t* szString) {
 
 	RECT pRect;
 
@@ -627,22 +627,14 @@ HRESULT Render::DrawString(D3DXVECTOR2 vLocation, D3DCOLOR cColor, ID3DXFont* pF
 	return pFont->DrawTextW(m_pSprite, szString, -1, &pRect, DT_NOCLIP, cColor);
 }
 
-D3DXVECTOR2 Render::GetStringSize(ID3DXFont* pFont, const WCHAR* szString, ...) {
-	RECT rect;
-	rect.left = 0;
-	rect.top = 0;
-	rect.bottom = 0;
-	rect.right = 0;
+D3DXVECTOR2 Render::GetStringSize(ID3DXFont* pFont, const wchar_t* szString) {
+	RECT rect = { 0, 0, 0, 0 };
 	pFont->DrawTextW(NULL, szString, -1, &rect, DT_CALCRECT, WHITE);
 	return { (float)rect.right, (float)rect.bottom };
 }
-D3DXVECTOR2 Render::GetStringSize(ID3DXFont* pFont, const char* szString, ...) {
+D3DXVECTOR2 Render::GetStringSize(ID3DXFont* pFont, const char* szString) {
 
-	RECT rect;
-	rect.left = 0;
-	rect.top = 0;
-	rect.bottom = 0;
-	rect.right = 0;
+	RECT rect = { 0, 0, 0, 0 };
 	pFont->DrawTextA(NULL, szString, -1, &rect, DT_CALCRECT, WHITE);
 	return { (float)rect.right, (float)rect.bottom };
 }

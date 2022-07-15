@@ -100,6 +100,14 @@ void StoreValues() {
 
     Settings.Visuals.Weapons.Color      = ParseColor(pWeapons->GetString("color"));
 
+    JsonObject* pRadar = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("radar");
+
+    Settings.Visuals.Overview.bEnabled      = pRadar->GetBoolean        ("enabled");
+    Settings.Visuals.Overview.vTopLeft.x    = pRadar->GetNumber<float>  ("x_coord");
+    Settings.Visuals.Overview.vTopLeft.y    = pRadar->GetNumber<float>  ("y_coord");
+    Settings.Visuals.Overview.flZoom        = pRadar->GetNumber<float>  ("zoom");
+    Settings.Visuals.Overview.flSize        = pRadar->GetNumber<float>  ("size");
+
     JsonObject* pRecoil = g_pParsedConfig->GetJsonObject("recoil");
 
     Settings.Recoil.Enabled         = pRecoil->GetBoolean       ("enabled");
@@ -181,8 +189,17 @@ void UpdateValues() {
     JsonObject* pWeapons = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("weapons");
 
     pWeapons->SetBoolean("enabled"   , Settings.Visuals.Weapons.Enabled);
+    pWeapons->SetBoolean("draw_name" , Settings.Visuals.Weapons.DrawName);
 
     pWeapons->SetString("color"      , WriteColor(Settings.Visuals.Weapons.Color));
+
+    JsonObject* pRadar = g_pParsedConfig->GetJsonObject("visuals")->GetJsonObject("radar");
+
+    pRadar->SetBoolean("enabled", Settings.Visuals.Overview.bEnabled);
+    pRadar->SetNumber("x_coord" , Settings.Visuals.Overview.vTopLeft.x);
+    pRadar->SetNumber("y_coord" , Settings.Visuals.Overview.vTopLeft.y);
+    pRadar->SetNumber("zoom"    , Settings.Visuals.Overview.flZoom);
+    pRadar->SetNumber("size"    , Settings.Visuals.Overview.flSize);
 
     JsonObject* pRecoil = g_pParsedConfig->GetJsonObject("recoil");
 
