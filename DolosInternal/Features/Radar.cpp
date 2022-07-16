@@ -122,6 +122,7 @@ void RadarESP::LoadRadar(Render* pRender, const char* szMapName) {
             Settings.Visuals.Overview.vMaxs.push_back(999999);
         }
     }
+    delete pOverview;
 }
 
 //Builds a texture with the original texture at 0, 0, 2/3, 2/3 leaving black space around the edge to prevent tiling within the radar

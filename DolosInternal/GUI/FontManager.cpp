@@ -28,6 +28,7 @@ bool UninitializeFonts() {
 			return false;
 		}
 	}
+	RemoveD3DFonts();
 	return true;
 }
 

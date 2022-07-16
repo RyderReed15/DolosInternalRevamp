@@ -226,13 +226,11 @@ void UpdateValues() {
         pSkins->RemoveValue(0);
     }
 
-    
     for (std::vector<SkinChanger::SkinInfo>::iterator it = Settings.SkinChanger.Skins.begin(); it != Settings.SkinChanger.Skins.end(); it++) {
         JsonObject* pSkin = WriteSkin(&*it);
         if (!pSkin) continue;
         pSkins->AddJsonObject(pSkin);
     }
-
 
 }
 
