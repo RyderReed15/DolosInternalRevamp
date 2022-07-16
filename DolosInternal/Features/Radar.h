@@ -10,7 +10,7 @@
 #include "../GUI/Render.h"
 #include "../Settings.h"
 
-#define RADAR_PATH    "\\csgo\\resource\\"
+#define RADAR_PATH    "\\csgo\\resource\\overviews\\"
 
 namespace RadarESP {
 

@@ -3,7 +3,7 @@
 
 
 void RadarESP::DrawRadar(Render* pRender) {
-    if (!g_pLocalPlayer || !Settings.Visuals.Overview.pTexture || !Settings.Visuals.Overview.bEnabled || !g_pMouseEnable->GetInt()) return;
+    if (!g_pLocalPlayer || !Settings.Visuals.Overview.vTextures.size() || !Settings.Visuals.Overview.bEnabled || !g_pMouseEnable->GetInt()) return;
 
     Config::VisualsConfig::Radar* pRadar = &Settings.Visuals.Overview;
     EntityData::LocalPlayerData* pLocalPlayerData = EntityData::GetLocalPlayerData();
@@ -13,7 +13,14 @@ void RadarESP::DrawRadar(Render* pRender) {
     Vector2D vCenter = { pRadar->vTopLeft.x + pRadar->flSize, pRadar->vTopLeft.y + pRadar->flSize };
     Vector2D vPlayerCoords = GetRadarCoords(vCenter, vCenter, pLocalPlayerData->vPosition, 0);
 
-    pRender->SetTexture(pRadar->pTexture);
+    for (size_t i = pRadar->vTextures.size() - 1; i >= 0; i--) {
+        if (pLocalPlayerData->vPosition.z < pRadar->vMaxs[i]) {
+            pRender->SetTexture(pRadar->vTextures[i]);
+            break;
+        }
+        if (i == 0) return; // Stop error from being outside minimap range
+    }
+    
 
     float flYaw = pLocalPlayerData->vViewAngles.y - 90;
     float flZoom = .3333f / pRadar->flZoom; //  1 / 2  *.666f  / zoom | 1/3 is to correct for increase in size of texture for black borders
@@ -22,8 +29,6 @@ void RadarESP::DrawRadar(Render* pRender) {
     pRender->DrawTextureCircle({ vCenter.x, vCenter.y }, pRadar->flSize, 100, { vOffset.x - flZoom, vOffset.y - flZoom, vOffset.x + flZoom, vOffset.y + flZoom}, 1, flYaw);
 
     pRender->End(BUFFER_TYPE::BUFFER_TEXTURE);
-
-
 
     pRender->Begin(BUFFER_TYPE::BUFFER_TRI);
     pRender->SetTexture(nullptr);
@@ -38,18 +43,18 @@ void RadarESP::DrawRadar(Render* pRender) {
             D3DCOLOR cColor = (it->second.bFriendly ? Settings.Visuals.Friendly.TeamColor : Settings.Visuals.Enemy.TeamColor);
             //Draw either up or down arrows - arbitrary height for now
             if (pLocalPlayerData->vPosition.z > it->second.vPosition.z + 100) { // Down
-                g_pRender->DrawCircle({ vCoords.x, vCoords.y + 9 }, 4, 1, cColor, .25f, 225);
+                pRender->DrawCircle({ vCoords.x, vCoords.y + 9 }, 4, 1, cColor, .25f, 225);
             }
             else if(pLocalPlayerData->vPosition.z < it->second.vPosition.z - 100){ // Up
-                g_pRender->DrawCircle({ vCoords.x, vCoords.y - 9 }, 4, 1, cColor, .25f, 45);
+                pRender->DrawCircle({ vCoords.x, vCoords.y - 9 }, 4, 1, cColor, .25f, 45);
             }
 
-            g_pRender->DrawCircle({vCoords.x, vCoords.y}, 5, 10, cColor);
+            pRender->DrawCircle({vCoords.x, vCoords.y}, 5, 10, cColor);
            
         }
         
     }
-    g_pRender->DrawCircle({ vCenter.x, vCenter.y, }, 10, 2, LIGHTBLUE, .75f, 135); // Makes an arrow - magic numbers dont change
+    pRender->DrawCircle({ vCenter.x, vCenter.y, }, 10, 2, LIGHTBLUE, .75f, 135); // Makes an arrow - magic numbers dont change
     pRender->End(BUFFER_TYPE::BUFFER_TRI);
     
 }
@@ -82,30 +87,46 @@ void RadarESP::LoadRadar(Render* pRender, const char* szMapName) {
 
     //Locate game files containing model and skin info
     std::string szRadarPath = name;
-    std::string szOverviewPath;
-    szRadarPath = szRadarPath.substr(0, szRadarPath.find_last_of('\\'));
-    szRadarPath += RADAR_PATH;
-    szOverviewPath = szRadarPath + "overviews\\" + szMapName;
-    szOverviewPath += ".txt";
+    szRadarPath = szRadarPath.substr(0, szRadarPath.find_last_of('\\')) + RADAR_PATH + szMapName;
     
-    JsonObject* pOverview = ParseJsonFile(szOverviewPath.c_str());
+    JsonObject* pOverview = ParseJsonFile((szRadarPath + ".txt").c_str());
     if (pOverview) {
        
         Settings.Visuals.Overview.vWorldCoords  = { strtof(pOverview->GetString("pos_x").c_str(), 0),  strtof(pOverview->GetString("pos_y").c_str(), 0) };
         Settings.Visuals.Overview.flScale       = ( strtof(pOverview->GetString("scale").c_str(), 0) + .1f) * 1000.f;
 
-        std::string szRadarName(szRadarPath + pOverview->GetString("material"));
-        szRadarName += (pOverview->GetString("material").find("radar") == -1 ? "_radar.dds" : ".dds");
+        for (size_t i = 0; i < Settings.Visuals.Overview.vTextures.size(); i++) {
+            Settings.Visuals.Overview.vTextures[i]->Release();
+        }
+        Settings.Visuals.Overview.vTextures.clear();
+        Settings.Visuals.Overview.vMaxs.clear();
 
-        if (Settings.Visuals.Overview.pTexture) Settings.Visuals.Overview.pTexture->Release();
+        JsonObject* pLevels = pOverview->GetJsonObject("verticalsections");
+        if (pLevels) {
+            for (size_t i = 0; i < pLevels->m_vValues.size(); i++) {
 
-        Settings.Visuals.Overview.pTexture = MakeRadarTexture(pRender, pRender->LoadTexture(szRadarName.c_str()));
-        
+                if (pLevels->m_vValues[i].m_tType != VALUE_TYPE::OBJECT) continue;
+                if (pLevels->m_vValues[i].m_pObject->m_szName == "default") {
+
+                    Settings.Visuals.Overview.vTextures.push_back(MakeRadarTexture(pRender, pRender->LoadTexture((szRadarPath + "_radar.dds").c_str())));
+                }
+                else {
+                    std::string szRadarName = szRadarPath + "_" + pLevels->m_vValues[i].m_pObject->m_szName + "_radar.dds";
+              
+                    Settings.Visuals.Overview.vTextures.push_back(MakeRadarTexture(pRender, pRender->LoadTexture(szRadarName.c_str())));
+                }
+                Settings.Visuals.Overview.vMaxs.push_back(strtof(pLevels->m_vValues[i].m_pObject->GetString("AltitudeMax").c_str(), 0));
+            }
+        }else{
+            Settings.Visuals.Overview.vTextures.push_back(MakeRadarTexture(pRender, pRender->LoadTexture((szRadarPath + "_radar.dds").c_str())));
+            Settings.Visuals.Overview.vMaxs.push_back(999999);
+        }
     }
 }
 
 //Builds a texture with the original texture at 0, 0, 2/3, 2/3 leaving black space around the edge to prevent tiling within the radar
 IDirect3DTexture9* RadarESP::MakeRadarTexture(Render* pRender, IDirect3DTexture9* pTexture) {
+    if (!pTexture) return nullptr;
     IDirect3DSurface9* pRenderSurface, * pTextureSurface;
     IDirect3DTexture9* pRenderTexture;
 

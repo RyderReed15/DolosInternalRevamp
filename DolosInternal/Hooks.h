@@ -34,14 +34,7 @@
 #define RESET_INDEX                 16
 
 
-inline VMTManager* g_vD3D;
-inline VMTManager* g_vClient;
-inline VMTManager* g_vModelRender;
-inline VMTManager* g_vClientBase;
-inline VMTManager* g_vSurface;
-
-inline HWND hValveWnd;
-
+inline HWND g_hValveWnd;
 
 typedef bool(__fastcall* fnCreateMove)              (void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd);
 typedef void(__thiscall* fnDrawModelExecute)        (void* _this, void* edx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, void* pCustomBoneToWorld);

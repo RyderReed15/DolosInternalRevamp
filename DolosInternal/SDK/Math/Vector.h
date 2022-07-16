@@ -186,22 +186,27 @@ public:
 */
     Vector Lerp(Vector vec, float percent) {
         Vector Dist = (*this - vec);
-        if (Dist.y < -180) {
-            Dist.y += 360;
-        }
-        else if (Dist.y > 180) {
-            Dist.y -= 360;
-        }
+        Dist = Dist.ToAngles();
         Dist = Dist * percent;
         return Dist;
     }
+
+    float AngularDistance(Vector vec) {
+        return (*this - vec).ToAngles().Magnitude();
+    }
     Vector ToAngles() {
-        while (abs(y) > 180) {
-            y += 360 * (y > 0 ? -1 : 1);
+        while (y > 180) {
+            y -= 360;
+        }
+        while (y < -180) {
+            y += 360;
         }
 
-        if (abs(x) > 89) {
-            x = 89.f * (x > 0 ? 1 : -1);
+        if (x > 89) {
+            x = 89.f;
+        }
+        else if (x < -89) {
+            x = -89.f;
         }
         return *this;
     }

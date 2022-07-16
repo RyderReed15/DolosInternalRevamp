@@ -2,6 +2,13 @@
 
 std::vector<DetourManager*> g_vDetours;
 
+VMTManager* vD3D;
+VMTManager* vClient;
+VMTManager* vModelRender;
+VMTManager* vClientBase;
+VMTManager* vSurface;
+
+
 bool InitializeHooks() {
 
 
@@ -14,28 +21,28 @@ bool InitializeHooks() {
 		g_vDetours.push_back(new DetourManager(pPattern, hkVerifyReturn));
 	}
 	
-	g_vClient				= new VMTManager((void***)g_pClientMode);
-	g_vClientBase			= new VMTManager((void***)g_pBaseClient);
-	g_vD3D					= new VMTManager((void***)g_pD3DDevice);
-	g_vModelRender			= new VMTManager((void***)g_pModelRender);
-	g_vSurface				= new VMTManager((void***)g_pSurface);
+	vClient					= new VMTManager((void***)g_pClientMode);
+	vClientBase				= new VMTManager((void***)g_pBaseClient);
+	vD3D					= new VMTManager((void***)g_pD3DDevice);
+	vModelRender			= new VMTManager((void***)g_pModelRender);
+	vSurface				= new VMTManager((void***)g_pSurface);
 	
 
-	oCreateMove				= (fnCreateMove)			g_vClient->HookFunction			(CREATE_MOVE_INDEX			, hkCreateMove);
+	oCreateMove				= (fnCreateMove)			vClient->HookFunction		(CREATE_MOVE_INDEX			, hkCreateMove);
 
-	oFrameStageNotify		= (fnFrameStageNotify)		g_vClientBase->HookFunction		(FRAME_STAGE_INDEX			, hkFrameStageNotify);
+	oFrameStageNotify		= (fnFrameStageNotify)		vClientBase->HookFunction	(FRAME_STAGE_INDEX			, hkFrameStageNotify);
 
-	oDrawModelExecute		= (fnDrawModelExecute)		g_vModelRender->HookFunction	(DRAW_MODEL_EXECUTE_INDEX	, hkDrawModelExecute);
+	oDrawModelExecute		= (fnDrawModelExecute)		vModelRender->HookFunction	(DRAW_MODEL_EXECUTE_INDEX	, hkDrawModelExecute);
 
-	oLockCursor				= (fnLockCursor)			g_vSurface->HookFunction		(LOCK_CURSOR_INDEX			, hkLockCursor);
+	oLockCursor				= (fnLockCursor)			vSurface->HookFunction		(LOCK_CURSOR_INDEX			, hkLockCursor);
 
-	oBeginScene				= (fnBeginScene)			g_vD3D->HookFunction			(BEGIN_SCENE_INDEX			, hkBeginScene);
-	oDrawIndexedPrimitive	= (fnDrawIndexedPrimitive)	g_vD3D->HookFunction			(DRAW_INDEXED_PRIM_INDEX	, hkDrawIndexedPrimitive);
-	oPresent				= (fnPresent)				g_vD3D->HookFunction			(PRESENT_INDEX				, hkPresent);
-	oEndScene				= (fnEndScene)				g_vD3D->HookFunction			(END_SCENE_INDEX			, hkEndscene);
-	oReset					= (fnReset)					g_vD3D->HookFunction			(RESET_INDEX				, hkReset);
+	oBeginScene				= (fnBeginScene)			vD3D->HookFunction			(BEGIN_SCENE_INDEX			, hkBeginScene);
+	oDrawIndexedPrimitive	= (fnDrawIndexedPrimitive)	vD3D->HookFunction			(DRAW_INDEXED_PRIM_INDEX	, hkDrawIndexedPrimitive);
+	oPresent				= (fnPresent)				vD3D->HookFunction			(PRESENT_INDEX				, hkPresent);
+	oEndScene				= (fnEndScene)				vD3D->HookFunction			(END_SCENE_INDEX			, hkEndscene);
+	oReset					= (fnReset)					vD3D->HookFunction			(RESET_INDEX				, hkReset);
 
-	hValveWnd				= FindWindow("Valve001", NULL);	
+	g_hValveWnd				= FindWindow("Valve001", NULL);
 
 	return true;
 }
@@ -45,26 +52,26 @@ bool UninitializeHooks() {
 		delete g_vDetours[i];
 	}
 
-	g_vClient->FreeFunction			(CREATE_MOVE_INDEX);
+	vClient->FreeFunction		(CREATE_MOVE_INDEX);
 
-	g_vClientBase->FreeFunction		(FRAME_STAGE_INDEX);
+	vClientBase->FreeFunction	(FRAME_STAGE_INDEX);
 	
-	g_vModelRender->FreeFunction	(DRAW_MODEL_EXECUTE_INDEX);
+	vModelRender->FreeFunction	(DRAW_MODEL_EXECUTE_INDEX);
 
-	g_vSurface->FreeFunction		(LOCK_CURSOR_INDEX);
+	vSurface->FreeFunction		(LOCK_CURSOR_INDEX);
 
-	g_vD3D->FreeFunction			(BEGIN_SCENE_INDEX);
-	g_vD3D->FreeFunction			(DRAW_INDEXED_PRIM_INDEX);
-	g_vD3D->FreeFunction			(PRESENT_INDEX);
-	g_vD3D->FreeFunction			(END_SCENE_INDEX);
-	g_vD3D->FreeFunction			(RESET_INDEX);
+	vD3D->FreeFunction			(BEGIN_SCENE_INDEX);
+	vD3D->FreeFunction			(DRAW_INDEXED_PRIM_INDEX);
+	vD3D->FreeFunction			(PRESENT_INDEX);
+	vD3D->FreeFunction			(END_SCENE_INDEX);
+	vD3D->FreeFunction			(RESET_INDEX);
 
-	delete g_vClient;
-	delete g_vClientBase;
-	delete g_vD3D;
-	delete g_vModelRender;
-	delete g_vSurface;
-	SetWindowLongPtrW(hValveWnd, GWLP_WNDPROC, oWndProc);
+	delete vClient;
+	delete vClientBase;
+	delete vD3D;
+	delete vModelRender;
+	delete vSurface;
+	SetWindowLongPtrW(g_hValveWnd, GWLP_WNDPROC, oWndProc);
 	return true;
 }
 
@@ -109,11 +116,7 @@ LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			pEventHandler->CreateGUIEvent(GUI_EVENT_TYPE::SCROLL, pEventHandler->BuildFunction(&GUIEventHandler::HandleScroll, pEventHandler, ptLocation, GET_WHEEL_DELTA_WPARAM(wParam)));
 			break;
 		}
-		
-		
 	}
-	
-
 	
 	return CallWindowProc((WNDPROC)oWndProc, hWnd, uMsg, wParam, lParam);
 }
@@ -159,8 +162,6 @@ bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CU
 
 		g_pLocalPlayer->SetFlags(iFlags); //Return flags to before prediction to preserve state
 
-		
-
 	}
 	return bReturn && bAimbot;
 }
@@ -201,7 +202,7 @@ HRESULT APIENTRY hkPresent(IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST R
 
 		if (g_pEngineClient->IsInGame()) {
 			ESP::Tick();
-			if(!Settings.Visuals.Overview.pTexture) RadarESP::LoadRadar(g_pRender, g_pEngineClient->GetLevelNameShort());
+			if(!Settings.Visuals.Overview.vTextures.size()) RadarESP::LoadRadar(g_pRender, g_pEngineClient->GetLevelNameShort());
 			else RadarESP::DrawRadar(g_pRender);
 		}
 
@@ -221,7 +222,6 @@ HRESULT APIENTRY hkPresent(IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST R
 HRESULT APIENTRY hkEndscene(IDirect3DDevice9* pDevice) {
 	
 	HRESULT hReturn = oEndScene(pDevice);
-	
 	
 	return hReturn;
 }

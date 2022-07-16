@@ -28,7 +28,7 @@ void EntityData::UpdateEntityData() {
     UpdateLocalPlayerData();
 }
 
-// Finds bounding boxes, names, health, armor, location and more info - stored in g_mEntityData[iIndex]
+// Finds bounding boxes, names, and more info
 void EntityData::UpdateWeaponData(CBaseEntity* pWeapon) {
     if (!pWeapon) return;
 
@@ -92,7 +92,7 @@ void EntityData::UpdateWeaponData(CBaseEntity* pWeapon) {
 }
 
 
-// Finds bounding boxes, names, health, armor, location and more info - stored in g_mEntityData[iIndex]
+// Finds bounding boxes, names, health, armor, location and more info 
 void EntityData::UpdatePlayerData(CBaseEntity* pPlayer) {
     if (!pPlayer) return;
 
@@ -202,8 +202,10 @@ void EntityData::UpdatePlayerBones(IClientEntity* pPlayer) {
 
     if (!pStudioHdr) return;
 
-    Vector vChest   = pPlayer->GetBonePos(BONES::CHEST);
-    Vector vNeck    = pPlayer->GetBonePos(BONES::NECK);
+    matrix3x4_t* pBoneMatrix = pPlayer->GetBoneMatrix();
+
+    Vector vChest   = pBoneMatrix[BONES::CHEST].GetOrigin();
+    Vector vNeck    = pBoneMatrix[BONES::NECK].GetOrigin();
 
     //Loop through bones finding only those with a hitbox and eliminating uneeded ones.
     //This will form a skeleton using head, feet, knees, elbows, chest, and arms
@@ -212,11 +214,9 @@ void EntityData::UpdatePlayerBones(IClientEntity* pPlayer) {
         mstudiobone_t* pBone = pStudioHdr->GetBone(i);
         if (pBone && (pBone->flags & BONE_USED_BY_HITBOX) && pBone->parent != -1) {
 
-            Vector vChild   = pPlayer->GetBonePos(i);
-            Vector vParent  = pPlayer->GetBonePos(pBone->parent);
+            Vector vChild   = pBoneMatrix[i].GetOrigin();
+            Vector vParent  = pBoneMatrix[pBone->parent].GetOrigin();
 
-            Vector vDeltaChild  = vChild - vAttach;
-            Vector vDeltaParent = vParent - vAttach;
             if (i == BONES::NECK) {
                 vChild = vAttach;
             }

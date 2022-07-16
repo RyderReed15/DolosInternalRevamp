@@ -52,7 +52,8 @@ struct Config {
             float       flSize;
             float       flZoom;
             float       flScale;
-            IDirect3DTexture9* pTexture;
+            std::vector<IDirect3DTexture9*> vTextures;
+            std::vector<float>              vMaxs;
         } Overview;
 
     } Visuals;

@@ -59,7 +59,7 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vViewAngles, Vector v
 
                 vRotateAngle = RecoilControl::RecoilControl(vRotateAngle, vAimPunch, true);
 
-                float flRotateDistance = vRotateAngle.Lerp(vViewAngles, 1).Magnitude();
+                float flRotateDistance = vRotateAngle.AngularDistance(vViewAngles);
 
                 if (flRotateDistance <= FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist)) {
 
@@ -99,7 +99,7 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vViewAngles, Vector v
 
                             vRotateAngle = RecoilControl::RecoilControl(vRotateAngle, vAimPunch, true);
 
-                            float flRotateDistance = vRotateAngle.Lerp(vViewAngles, 1).Magnitude(); //Degrees to rotate to target
+                            float flRotateDistance = vRotateAngle.AngularDistance(vViewAngles); //Degrees to rotate to target
 
                             if (flRotateDistance <= FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist)) {
 
@@ -130,7 +130,7 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vViewAngles, Vector v
 // Calculates position to miss the target at
 Vector Aimbot::CalculateOveraim(Vector vViewAngles, Vector vTargetAngles, int iTick){
     if (iTick == iStartTick && !vOveraim.IsValid()) {
-        float flDistance = vTargetAngles.Lerp(vViewAngles, 1).Magnitude() / (OVERAIM_REDUCTION_FACTOR * Settings.Aimbot.OveraimFactor);
+        float flDistance = vTargetAngles.AngularDistance(vViewAngles) / (OVERAIM_REDUCTION_FACTOR * Settings.Aimbot.OveraimFactor);
 
         float flAngle = static_cast<float>(rand() % 360); //Find random direction
 
@@ -157,9 +157,7 @@ Vector Aimbot::GetNewAngles(Vector vViewAngles, Vector vTargetAngles, int iTick)
 
     if (flPercent < 0) return vViewAngles;
 
-    float flDistance = vViewAngles.Distance(vTargetAngles);
-
-    if (flDistance < 1) vOveraim.Invalidate();
+    if (vViewAngles.Distance(vTargetAngles) < 1) vOveraim.Invalidate();
 
     Vector vDelta = vViewAngles.Lerp(vTargetAngles, flPercent);
 
@@ -182,12 +180,12 @@ Vector Aimbot::GetNewAngles(Vector vViewAngles, Vector vTargetAngles, int iTick)
 
 //Weight distance to player and angular distance
 float Aimbot::WeightFormula(float flFOV, float flDistance, float flRotateDistance){
-    return flRotateDistance + (flFOV / (.01f + Settings.Aimbot.RangeFactor * DISTANCE_WEIGHT / flDistance));
+    return flRotateDistance + (flFOV / (Settings.Aimbot.RangeFactor * DISTANCE_WEIGHT / flDistance));
 }
 
 //Decrease FOV with range
 float Aimbot::FOVFormula(float flFOV, float flDistance){
-    return flFOV / (1 + Settings.Aimbot.RangeFactor * flDistance / DISTANCE_REDUCTION_FACTOR);
+    return flFOV / (Settings.Aimbot.RangeFactor * flDistance / DISTANCE_REDUCTION_FACTOR);
 }
 
 // Calculates the angle required to aim at the destination from the start

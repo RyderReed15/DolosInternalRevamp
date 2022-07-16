@@ -11,8 +11,6 @@ namespace RecoilControl {
 
     Vector  RecoilControl(Vector vAngles, Vector vAimPunch, bool bAimbot); 
     void    UpdateOldPunch(Vector vAimPunch);
-
-    inline Vector vOldAimPunch = { 0,0,0 };
 }
 
 
