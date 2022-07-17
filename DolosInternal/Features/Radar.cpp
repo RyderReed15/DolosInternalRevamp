@@ -20,7 +20,6 @@ void RadarESP::DrawRadar(Render* pRender) {
         }
         if (i == 0) return; // Stop error from being outside minimap range
     }
-    
 
     float flYaw = pLocalPlayerData->vViewAngles.y - 90;
     float flZoom = .3333f / pRadar->flZoom; //  1 / 2  *.666f  / zoom | 1/3 is to correct for increase in size of texture for black borders
@@ -39,8 +38,8 @@ void RadarESP::DrawRadar(Render* pRender) {
 
         if (it->second.bAccessible) {
             Vector2D vCoords = GetRadarCoords(vCenter, vPlayerCoords, it->second.vPosition, flYaw);
-
             D3DCOLOR cColor = (it->second.bFriendly ? Settings.Visuals.Friendly.TeamColor : Settings.Visuals.Enemy.TeamColor);
+
             //Draw either up or down arrows - arbitrary height for now
             if (pLocalPlayerData->vPosition.z > it->second.vPosition.z + 100) { // Down
                 pRender->DrawCircle({ vCoords.x, vCoords.y + 9 }, 4, 1, cColor, .25f, 225);
@@ -50,13 +49,10 @@ void RadarESP::DrawRadar(Render* pRender) {
             }
 
             pRender->DrawCircle({vCoords.x, vCoords.y}, 5, 10, cColor);
-           
         }
-        
     }
     pRender->DrawCircle({ vCenter.x, vCenter.y, }, 10, 2, LIGHTBLUE, .75f, 135); // Makes an arrow - magic numbers dont change
     pRender->End(BUFFER_TYPE::BUFFER_TRI);
-    
 }
 
 Vector2D RadarESP::GetRadarCoords(Vector2D vCircleCenter, Vector2D vCoordCenter, Vector vPos, float flYaw) {

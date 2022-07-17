@@ -185,10 +185,7 @@ public:
  @return location of partial movement towards destination
 */
     Vector Lerp(Vector vec, float percent) {
-        Vector Dist = (*this - vec);
-        Dist = Dist.ToAngles();
-        Dist = Dist * percent;
-        return Dist;
+        return (*this - vec).ToAngles() * percent;
     }
 
     float AngularDistance(Vector vec) {

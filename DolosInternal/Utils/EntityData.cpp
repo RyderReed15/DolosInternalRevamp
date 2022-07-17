@@ -9,8 +9,8 @@ void EntityData::UpdateEntityData() {
     if (g_pLocalPlayer == 0) return;
     for (int i = 0; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
 
-        if (mWeaponData.count(i)) mWeaponData[i].bAccessible = false;
-        if (mPlayerData.count(i)) mPlayerData[i].bAccessible = false;
+        if (mWeaponData.count(i)) { if (!mWeaponData[i].bAccessible) mWeaponData.erase(i); else mWeaponData[i].bAccessible = false; }
+        if (mPlayerData.count(i)) { if (!mPlayerData[i].bAccessible) mPlayerData.erase(i); else mPlayerData[i].bAccessible = false; }
         dLocalPlayerData.bAccessible = false;
 
         CBaseEntity* pEntity = g_pClientEntityList->GetClientEntity(i);
@@ -18,10 +18,9 @@ void EntityData::UpdateEntityData() {
         if (!pEntity || !(pEntity->IsWeapon() || pEntity->IsPlayer())) continue;
 
         if (pEntity->IsWeapon()) {
-            if(pEntity->GetOwner() == -1) UpdateWeaponData(pEntity);
+            UpdateWeaponData(pEntity);
         }
         else if (pEntity->SanityCheck() && pEntity != g_pLocalPlayer) {
-
             UpdatePlayerData(pEntity);
         }
     }
@@ -48,39 +47,12 @@ void EntityData::UpdateWeaponData(CBaseEntity* pWeapon) {
 
     //Outerbounds of the hitboxes
     pWeaponData->mCoordinateFrame = pWeapon->GetCoordinateFrame();
-    VMatrix mTranspose(pWeaponData->mCoordinateFrame);
-    Vector vBounds[] = {
-        Vector(vMin.x, vMin.y, vMin.z),//      .6 -----.5
-        Vector(vMin.x, vMax.y, vMin.z),//    .` |    .` |
-        Vector(vMax.x, vMax.y, vMin.z),//   7 ----- 4	|
-        Vector(vMax.x, vMin.y, vMin.z),//	|  .0 - | -.1
-        Vector(vMax.x, vMax.y, vMax.z),//	|.`		|.`
-        Vector(vMin.x, vMax.y, vMax.z),//	3 ----- 2
-        Vector(vMin.x, vMin.y, vMax.z),
-        Vector(vMax.x, vMin.y, vMax.z),
-    };
-
-    Vector vTransformed[8];
-    for (int i = 0; i < 8; i++) {
-        vTransformed[i] = mTranspose.VMul4x3(vBounds[i]);
-    }
-
-    Vector2D vScreen;
-    WorldToScreen(vScreen, vTransformed[0]);
-    Vector4D vSize = { vScreen.x, vScreen.y, vScreen.x, vScreen.y };
-    //Most extreme coordinates
-    for (int i = 1; i < 8; i++) {
-
-        if (WorldToScreen(vScreen, vTransformed[i])) {
-            if (vSize.x > vScreen.x) vSize.x = vScreen.x;
-            if (vSize.y > vScreen.y) vSize.y = vScreen.y;
-            if (vSize.z < vScreen.x) vSize.z = vScreen.x;
-            if (vSize.w < vScreen.y) vSize.w = vScreen.y;
-        }
-    }
+    
     
     pWeaponData->iDistance  = static_cast<int>((pWeapon->GetOrigin() - g_pLocalPlayer->GetVecOrigin()).Magnitude() * INCH_TO_METER);
-    pWeaponData->vBounds    = vSize;
+    pWeaponData->vBounds    = GetBoundingBox(vMin, vMax, pWeaponData->mCoordinateFrame);
+
+    pWeaponData->eOwner     = pWeapon->GetOwner();
 
     if (strcmp(pWeaponData->szUnLocalizedName, pWeapon->GetWeaponData()->szHudName) != 0) {
         wcscpy_s(pWeaponData->wszName, 128, g_pLocalize->LocalizeStringSafeW(pWeapon->GetWeaponData()->szHudName));
@@ -117,38 +89,9 @@ void EntityData::UpdatePlayerData(CBaseEntity* pPlayer) {
 
     //Outerbounds of the hitboxes
     pPlayerData->mCoordinateFrame = pPlayer->GetCoordinateFrame();
-    VMatrix mTranspose(pPlayerData->mCoordinateFrame);
-    Vector vBounds[] = {
-        Vector(vMin.x, vMin.y, vMin.z),//      .6 -----.5
-        Vector(vMin.x, vMax.y, vMin.z),//    .` |    .` |
-        Vector(vMax.x, vMax.y, vMin.z),//   7 ----- 4	|
-        Vector(vMax.x, vMin.y, vMin.z),//	|  .0 - | -.1
-        Vector(vMax.x, vMax.y, vMax.z),//	|.`		|.`
-        Vector(vMin.x, vMax.y, vMax.z),//	3 ----- 2
-        Vector(vMin.x, vMin.y, vMax.z),
-        Vector(vMax.x, vMin.y, vMax.z),
-    };
+    
 
-    Vector vTransformed[8];
-    for (int i = 0; i < 8; i++) {
-        vTransformed[i] = mTranspose.VMul4x3(vBounds[i]);
-    }
-
-    Vector2D vScreen;
-    WorldToScreen(vScreen, vTransformed[0]);
-    Vector4D vSize = { vScreen.x, vScreen.y, vScreen.x, vScreen.y };
-    //Most extreme coordinates
-    for (int i = 1; i < 8; i++) {
-
-        if (WorldToScreen(vScreen, vTransformed[i])) {
-            if (vSize.x > vScreen.x) vSize.x = vScreen.x;
-            if (vSize.y > vScreen.y) vSize.y = vScreen.y;
-            if (vSize.z < vScreen.x) vSize.z = vScreen.x;
-            if (vSize.w < vScreen.y) vSize.w = vScreen.y;
-        }
-    }
-
-    pPlayerData->vBounds    = vSize;
+    pPlayerData->vBounds    = GetBoundingBox(vMin, vMax, pPlayerData->mCoordinateFrame);
     pPlayerData->vPosition  = pPlayer->GetOrigin();
     pPlayerData->iDistance  = static_cast<int>((pPlayer->GetOrigin() - g_pLocalPlayer->GetOrigin()).Magnitude() * INCH_TO_METER);
 
@@ -157,8 +100,6 @@ void EntityData::UpdatePlayerData(CBaseEntity* pPlayer) {
     pPlayerData->iTeam      = pPlayer->GetTeam();
     pPlayerData->iHealth    = pPlayer->GetHealth();
     pPlayerData->iArmor     = pPlayer->GetArmor();
-
-    pPlayerData->eHandle    = pPlayer->GetRefEHandle();
 
     player_info_t playerInfo; g_pEngineClient->GetPlayerInfo(pPlayer->Index(), &playerInfo);
 
@@ -232,6 +173,40 @@ void EntityData::UpdatePlayerBones(IClientEntity* pPlayer) {
 
         }
     }
+}
+
+Vector4D EntityData::GetBoundingBox(Vector vMin, Vector vMax, matrix3x4_t mCoordinateFrame) {
+    VMatrix mTranspose(mCoordinateFrame);
+    Vector vBoxes[] = {
+        Vector(vMin.x, vMin.y, vMin.z),//      .6 -----.5
+        Vector(vMin.x, vMax.y, vMin.z),//    .` |    .` |
+        Vector(vMax.x, vMax.y, vMin.z),//   7 ----- 4	|
+        Vector(vMax.x, vMin.y, vMin.z),//	|  .0 - | -.1
+        Vector(vMax.x, vMax.y, vMax.z),//	|.`		|.`
+        Vector(vMin.x, vMax.y, vMax.z),//	3 ----- 2
+        Vector(vMin.x, vMin.y, vMax.z),
+        Vector(vMax.x, vMin.y, vMax.z),
+    };
+
+    Vector vTransformed[8];
+    for (int i = 0; i < 8; i++) {
+        vTransformed[i] = mTranspose.VMul4x3(vBoxes[i]);
+    }
+
+    Vector2D vScreen;
+    WorldToScreen(vScreen, vTransformed[0]);
+    Vector4D vBounds = { vScreen.x, vScreen.y, vScreen.x, vScreen.y };
+    //Most extreme coordinates
+    for (int i = 1; i < 8; i++) {
+
+        if (WorldToScreen(vScreen, vTransformed[i])) {
+            if (vBounds.x > vScreen.x) vBounds.x = vScreen.x;
+            if (vBounds.y > vScreen.y) vBounds.y = vScreen.y;
+            if (vBounds.z < vScreen.x) vBounds.z = vScreen.x;
+            if (vBounds.w < vScreen.y) vBounds.w = vScreen.y;
+        }
+    }
+    return vBounds;
 }
 
 bool EntityData::WorldToScreen(Vector2D& vScreen, Vector vPos) {

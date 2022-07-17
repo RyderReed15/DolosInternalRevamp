@@ -5,7 +5,7 @@
 	"data_created": "06-23-2021",
 	"aimbot": {
 		"enabled": true,
-		"silent": true,
+		"silent": false,
 		"target_all": true,
 		"overaim": false,
 		"overaim_factor": 1,

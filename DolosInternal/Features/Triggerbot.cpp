@@ -22,13 +22,13 @@ void Triggerbot::Tick(CUserCmd* pCmd){
 
                     if (pWeapon->GetWeaponId() == WeaponIndices::WEAPON_REVOLVER) {
                         pCmd->iButtons &= ~IN_ATTACK2;
-                    }else{
+                    }
+                    else{
                         pCmd->iButtons &= ~IN_ATTACK;
                     }
                 }
                 else {
                     if (pWeapon->GetWeaponId() == WeaponIndices::WEAPON_REVOLVER) {
-
                         pCmd->iButtons |= IN_ATTACK2;
                     }
                     else {

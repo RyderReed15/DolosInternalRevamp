@@ -75,7 +75,7 @@ void ESP::DrawElements(){
     }
     for (std::unordered_map<int, EntityData::WeaponData>::iterator it = mWeaponData->begin(); it != mWeaponData->end(); it++) {
         //SCREEN SIZE HERE - dont render boxes if too big
-        if (!it->second.bAccessible || it->second.vBounds.z - it->second.vBounds.x < 5 || it->second.vBounds.w - it->second.vBounds.y < 5 || it->second.vBounds.z - it->second.vBounds.x > 800 || it->second.vBounds.w - it->second.vBounds.y > 800) continue;
+        if (!it->second.bAccessible || it->second.eOwner != -1 || it->second.vBounds.z - it->second.vBounds.x < 5 || it->second.vBounds.w - it->second.vBounds.y < 5 || it->second.vBounds.z - it->second.vBounds.x > 800 || it->second.vBounds.w - it->second.vBounds.y > 800) continue;
 
 
         g_pRender-> DrawRectangle   ({ it->second.vBounds.x, it->second.vBounds.y, it->second.vBounds.z - it->second.vBounds.x, it->second.vBounds.w - it->second.vBounds.y }, TRANSPARENT_GRAY);

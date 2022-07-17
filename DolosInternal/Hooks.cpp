@@ -123,9 +123,10 @@ LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 
 void __fastcall hkFrameStageNotify(void* _this, void* edx, ClientFrameStage_t stage) {
-	g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer());
+	
 
 	if (stage == ClientFrameStage_t::FRAME_START) {
+		g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer());
 		EntityData::UpdateEntityData();
 	}
 	else if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START) {
@@ -148,7 +149,7 @@ bool __fastcall hkCreateMove(void* _this, void* edx, float flInputSampleTime, CU
 	
 	bool bReturn = oCreateMove(_this, edx, flInputSampleTime, pCmd);
 	bool bAimbot = true;
-	if (pCmd->iTickCount != 0 && g_pEngineClient->IsInGame()) {
+	if (g_pLocalPlayer && pCmd->iTickCount != 0 && g_pEngineClient->IsInGame()) {
 
 		int iFlags = EnginePrediction::Begin(g_pLocalPlayer, pCmd);
 

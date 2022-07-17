@@ -16,13 +16,15 @@ void SkinChanger::PreTick() {
 
 	UpdateIndices();
 	
-	for (int i = 1; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
+	//Cant use entity data here because this is called before its updated, updating data earlier causes more problems 
+	for (int i = 0; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
+		
 		CBaseCombatWeapon* pWeapon = reinterpret_cast<CBaseCombatWeapon*>(g_pClientEntityList->GetClientEntity(i));
 		
 		if (!pWeapon || !pWeapon->IsWeapon() || g_pClientEntityList->GetClientEntityFromHandle(pWeapon->GetOwner()) != g_pLocalPlayer) {
 			continue;
 		}
-
+		
 		int nItemIndex = pWeapon->GetWeaponId();
 
 		if (g_mSkinIndices.count(nItemIndex)) {
@@ -35,7 +37,8 @@ void SkinChanger::PreTick() {
 void SkinChanger::PostTick() {
 	if (!g_pLocalPlayer) return;
 
-	for (int i = 1; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
+	for (int i = 0; i < g_pClientEntityList->GetHighestEntityIndex(); i++) {
+		
 		CBaseCombatWeapon* pWeapon = reinterpret_cast<CBaseCombatWeapon*>(g_pClientEntityList->GetClientEntity(i));
 
 		if (!pWeapon || !pWeapon->IsWeapon() || g_pClientEntityList->GetClientEntityFromHandle(pWeapon->GetOwner()) != g_pLocalPlayer) {

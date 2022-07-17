@@ -1,5 +1,7 @@
 #include "EnginePrediction.h"
 
+float flOldTime, flOldFrameTime;
+
 //Predicts player locations to the location at the end of the tick
 int EnginePrediction::Begin(IClientEntity* pLocalPlayer, CUserCmd* pCmd) {
 
@@ -7,8 +9,8 @@ int EnginePrediction::Begin(IClientEntity* pLocalPlayer, CUserCmd* pCmd) {
 		return 0;
 	}
 
-	g_flOldTime = g_pGlobalVars->curtime;
-	g_flOldFrameTime = g_pGlobalVars->frametime;
+	flOldTime = g_pGlobalVars->curtime;
+	flOldFrameTime = g_pGlobalVars->frametime;
 
 	int iFlags = pLocalPlayer->GetFlags();
 
@@ -39,6 +41,6 @@ void EnginePrediction::End(IClientEntity* pLocalPlayer) {
 
 	g_pMoveHelper->SetHost(nullptr);
 
-	g_pGlobalVars->curtime = g_flOldTime;
-	g_pGlobalVars->frametime = g_flOldFrameTime;
+	g_pGlobalVars->curtime = flOldTime;
+	g_pGlobalVars->frametime = flOldFrameTime;
 }

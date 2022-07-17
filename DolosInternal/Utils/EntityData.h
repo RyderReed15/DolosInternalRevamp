@@ -30,6 +30,7 @@ namespace EntityData {
     };
 
     struct WeaponData : BaseData {
+        EHANDLE     eOwner;
         Vector4D    vBounds;
         wchar_t     wszName[128];
         char        szUnLocalizedName[128];
@@ -43,8 +44,6 @@ namespace EntityData {
         int     iHealth;
         int     iArmor;
         int     iTeam;
-
-        EHANDLE eHandle;
 
         char    szName[128];
 
@@ -75,6 +74,8 @@ namespace EntityData {
     void                UpdatePlayerData        (CBaseEntity* pPlayer);
     void                UpdateLocalPlayerData   (void);
     void                UpdatePlayerBones       (IClientEntity* pPlayer);
+
+    Vector4D            GetBoundingBox          (Vector vMin, Vector vMax, matrix3x4_t mCoordinateFrame);
 
     bool                WorldToScreen           (Vector2D& vScreen, Vector vPos);
     bool                WorldToScreen           (Vector2D& vScreen, Vector vPos, VMatrix vMatrix);

@@ -6,6 +6,7 @@
 #include "../Settings.h"
 #include "../GUI/GUI.h"
 #include "RecoilControl.h"
+#include "../Utils/EntityData.h"
 
 
 

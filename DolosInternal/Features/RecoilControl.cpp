@@ -14,14 +14,12 @@ Vector RecoilControl::RecoilControl(Vector vAngles, Vector vAimPunch, bool bAimb
         return (vAngles - vAimPunch * Settings.Recoil.ControlFactor).ToAngles();
     }
     else {
-        
         Vector vNewAngles = ((vAngles + vOldAimPunch) - (vAimPunch * Settings.Recoil.ControlFactor)).ToAngles();
 
         UpdateOldPunch(vAimPunch);
 
         return vNewAngles;
     }
-
 }
 
 void RecoilControl::UpdateOldPunch(Vector vAimPunch){
