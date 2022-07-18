@@ -5,6 +5,8 @@ HotKeyStruct EndThread = { ExitCheat , VK_INSERT, false, false, false, false };
 HMODULE hModule;
 FILE* fConsole;
 
+bool InitializeFeatures(void);
+
 bool StartCheat(HMODULE hMod) {
 	// Hook WndProc and send it a message letting it know its been hooked so that initialization can be done from a game thread
 	oWndProc = SetWindowLongPtrW(FindWindow("Valve001", NULL), GWLP_WNDPROC, LONG_PTR(&hkInitWndProc));
@@ -63,6 +65,15 @@ bool InitializeCheat(HMODULE hMod) {
 
 	std::cout << "Hooks Initialized" << std::endl;
 
+	if (!InitializeFeatures()) {
+
+		UninitializeHooks();
+		UninitializeGUI();
+		UninitializeFonts();
+		UninitializeHooks();
+		return false;
+	}
+
 	return true;
 }
 
@@ -117,4 +128,12 @@ LRESULT hkInitWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		SetWindowLongPtrW(FindWindow("Valve001", NULL), GWLP_WNDPROC, (LONG_PTR)hkWndProc);
 	}
 	return CallWindowProc((WNDPROC)oWndProc, hWnd, uMsg, wParam, lParam);
+}
+
+bool InitializeFeatures(void) {
+	g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer());
+	EntityData::UpdateLocalPlayerDataOnce();
+	RadarESP::LoadRadar(g_pRender, g_pEngineClient->GetLevelNameShort());
+
+	return true;
 }

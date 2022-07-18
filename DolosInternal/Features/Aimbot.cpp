@@ -186,7 +186,7 @@ float Aimbot::WeightFormula(float flFOV, float flDistance, float flRotateDistanc
 
 //Decrease FOV with range
 float Aimbot::FOVFormula(float flFOV, float flDistance){
-    return flFOV / (Settings.Aimbot.RangeFactor * flDistance / DISTANCE_REDUCTION_FACTOR);
+    return flFOV / (1.f + Settings.Aimbot.RangeFactor * flDistance / DISTANCE_REDUCTION_FACTOR);
 }
 
 // Calculates the angle required to aim at the destination from the start

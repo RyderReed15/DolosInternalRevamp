@@ -5,7 +5,7 @@
 	"data_created": "06-23-2021",
 	"aimbot": {
 		"enabled": true,
-		"silent": false,
+		"silent": true,
 		"target_all": true,
 		"overaim": false,
 		"overaim_factor": 1,
@@ -22,8 +22,8 @@
 				"enabled": true
 			},
 			{
-				"fov": 5,
-				"bone": 6,
+				"fov": 1.998602,
+				"bone": -1,
 				"name": "Chest",
 				"enabled": true
 			}
@@ -100,7 +100,7 @@
 				"new_index": 507,
 				"skin_id": 38,
 				"wear": 0.01,
-				"stattrak_kills": 39,
+				"stattrak_kills": 53,
 				"seed": 1,
 				"quality": 3,
 				"custom_name": ""
@@ -110,7 +110,7 @@
 				"new_index": 0,
 				"skin_id": 764,
 				"wear": 0,
-				"stattrak_kills": 12,
+				"stattrak_kills": 19,
 				"seed": 0,
 				"quality": 0,
 				"custom_name": "UwU"

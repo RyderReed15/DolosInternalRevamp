@@ -36,6 +36,10 @@ namespace SkinChanger {
     void OverrideModel          (CBaseCombatWeapon* pWeapon, int nItemDefinitionIndex);
 
     void UpdateIndices          (void);
+    void UpdateStatTrak         (IGameEvent* pEvent);
+    void OverrideKillIcon       (IGameEvent* pEvent);
+
+    void ForceWeaponUpdate      (CBaseCombatWeapon* pWeapon);
 
     bool InitializeModels       (JsonObject* pItems);
 
@@ -43,10 +47,6 @@ namespace SkinChanger {
 
     bool InitializeSkinChanger  (void);
 
-    void UpdateStatTrak(IGameEvent* pEvent);
-    void OverrideKillIcon(IGameEvent* pEvent);
-
-    void ForceWeaponUpdate(CBaseCombatWeapon* pWeapon);
 
 
     inline std::map<int, std::map<int, std::wstring>> g_mWeapSkins;

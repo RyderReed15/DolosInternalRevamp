@@ -74,6 +74,7 @@ namespace EntityData {
     void                UpdateWeaponData        (CBaseEntity* pWeapon);
     void                UpdatePlayerData        (CBaseEntity* pPlayer);
     void                UpdateLocalPlayerData   (void);
+    void                UpdateLocalPlayerDataOnce(void);
     void                UpdatePlayerBones       (IClientEntity* pPlayer);
 
     Vector4D            GetBoundingBox          (Vector vMin, Vector vMax, matrix3x4_t mCoordinateFrame);

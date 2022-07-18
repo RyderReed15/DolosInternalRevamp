@@ -63,12 +63,13 @@ void SkinChanger::OverrideSkin(CBaseCombatWeapon* pWeapon, SkinInfo* pSkinInfo) 
 	int* pItemIdHigh = pWeapon->ItemIDHigh();
 	if (!pItemIdHigh) return;
 
-	if (!pSkinInfo->nItemDefIndex || pWeapon->GetWeaponId() == pSkinInfo->nItemDefIndex) {
+	if (!pSkinInfo->nItemDefIndex || pWeapon->GetWeaponId() == pSkinInfo->nItemDefIndex || *pWeapon->FallbackPaintKit() != pSkinInfo->iPaintKit) {
 
 		*pItemIdHigh = -1;
 		//Update skin info
 		*pWeapon->EntityQuality()		= pSkinInfo->iQuality;
-		*pWeapon->FallbackPaintKit()	= pSkinInfo->iPaintKit;
+		*pWeapon->FallbackPaintKit()	= pSkinInfo->iPaintKit; 
+		*pWeapon->FallbackStatTrak()	= pSkinInfo->iStatTrak;
 		*pWeapon->FallbackWear()		= pSkinInfo->flWear;
 		*pWeapon->FallbackSeed()		= pSkinInfo->iSeed;
 
@@ -77,10 +78,7 @@ void SkinChanger::OverrideSkin(CBaseCombatWeapon* pWeapon, SkinInfo* pSkinInfo) 
 		}
 
 		if (pSkinInfo->iStatTrak) {
-			if (*pWeapon->FallbackStatTrak() != pSkinInfo->iStatTrak) {
-				*pWeapon->FallbackStatTrak() = pSkinInfo->iStatTrak;
-				ForceWeaponUpdate(pWeapon); // Need to force update or change in stattrak will not show
-			}
+			
 			player_info_s playerInfo;
 			if (g_pEngineClient->GetPlayerInfo(g_pEngineClient->GetLocalPlayer(), &playerInfo)) {
 				*(pWeapon->AccountID()) = playerInfo.xuid_low;
@@ -132,12 +130,58 @@ void SkinChanger::UpdateIndices(void){
 	}
 }
 
+void SkinChanger::UpdateStatTrak(IGameEvent* pEvent) {
+
+	if (g_pLocalPlayer == 0 || !Settings.SkinChanger.TrackKills) return;
+
+	EntityData::LocalPlayerData* pLocalPlayerData = EntityData::GetLocalPlayerData();
+
+	if (pEvent->GetInt("attacker") != pLocalPlayerData->iUserID || pEvent->GetInt("userid") == pLocalPlayerData->iUserID) return; // Player is killer and did not kill self
+
+	CBaseCombatWeapon* pWeapon = g_pLocalPlayer->GetWeapon();
+
+	if (!pWeapon) return;
+
+	int nItemIndex = pWeapon->GetWeaponId();
+
+	if (g_mSkinIndices.count(nItemIndex)) {
+		SkinInfo* pSkin = &Settings.SkinChanger.Skins[g_mSkinIndices[nItemIndex]];
+		if (pSkin->iStatTrak >= 0) {
+			pSkin->iStatTrak++;
+			*pWeapon->FallbackStatTrak() = pSkin->iStatTrak;
+			ForceWeaponUpdate(pWeapon); // Need to force update or change in stattrak will not show
+		}
+	}
+}
+
+void SkinChanger::OverrideKillIcon(IGameEvent* pEvent) {
+
+	if (g_pLocalPlayer == 0) return;
+
+	EntityData::LocalPlayerData* pLocalPlayerData = EntityData::GetLocalPlayerData();
+
+	if (pEvent->GetInt("attacker") != pLocalPlayerData->iUserID) return;
+
+	int nItemIndex = g_mWeapIds[std::string("weapon_") + pEvent->GetString("weapon")];
+
+	SkinInfo* pSkin = &Settings.SkinChanger.Skins[g_mSkinIndices[nItemIndex]];
+
+	if (pSkin->nItemDefIndex && pSkin->nItemDefIndex != nItemIndex) {
+		pEvent->SetString("weapon", g_mWeaps[pSkin->nItemDefIndex].c_str() + 7); // Set event data to match changed skin weapon_ is 7 chars
+	}
+}
+
+
+void SkinChanger::ForceWeaponUpdate(CBaseCombatWeapon* pWeapon) {
+	pWeapon->PostDataUpdate(DATA_UPDATE_CREATED);
+	pWeapon->OnDataChanged(DATA_UPDATE_CREATED);
+}
 
 
 std::string ParseModelName(JsonObject* pItem, JsonObject* pPrefabs) {
 	std::string szModel = pItem->GetString("model_player");
 	if (szModel == "") {
-		JsonObject * pPrefab = pPrefabs->GetJsonObject(pItem->GetString("prefab"));
+		JsonObject* pPrefab = pPrefabs->GetJsonObject(pItem->GetString("prefab"));
 		if (pPrefab) {
 			szModel = pPrefab->GetString("model_player");
 		}
@@ -262,56 +306,11 @@ bool SkinChanger::InitializeSkinChanger() {
 			delete pItems;
 			return true;
 		}
-		
+
 		delete pItems;
 		return false;
 	}
 	return false;
 
-	
-}
 
-void SkinChanger::UpdateStatTrak(IGameEvent* pEvent) {
-
-	if (g_pLocalPlayer == 0 || !Settings.SkinChanger.TrackKills) return;
-
-	EntityData::LocalPlayerData* pLocalPlayerData = EntityData::GetLocalPlayerData();
-
-	if (pEvent->GetInt("attacker") != pLocalPlayerData->iUserID || pEvent->GetInt("userid") == pLocalPlayerData->iUserID) return; // Player is killer and did not kill self
-
-	CBaseCombatWeapon* pWeapon = g_pLocalPlayer->GetWeapon();
-
-	if (!pWeapon) return;
-
-	int nItemIndex = pWeapon->GetWeaponId();
-
-	if (g_mSkinIndices.count(nItemIndex)) {
-		SkinInfo* pSkin = &Settings.SkinChanger.Skins[g_mSkinIndices[nItemIndex]];
-		if (pSkin->iStatTrak >= 0) {
-			pSkin->iStatTrak++;
-		}
-	}
-}
-
-void SkinChanger::OverrideKillIcon(IGameEvent* pEvent) {
-
-	if (g_pLocalPlayer == 0) return;
-
-	EntityData::LocalPlayerData* pLocalPlayerData = EntityData::GetLocalPlayerData();
-
-	if (pEvent->GetInt("attacker") != pLocalPlayerData->iUserID) return;
-
-	int nItemIndex = g_mWeapIds[std::string("weapon_") + pEvent->GetString("weapon")];
-
-	SkinInfo* pSkin = &Settings.SkinChanger.Skins[g_mSkinIndices[nItemIndex]];
-
-	if (pSkin->nItemDefIndex != nItemIndex) {
-		pEvent->SetString("weapon", g_mWeaps[pSkin->nItemDefIndex].c_str() + 7); // Set event data to match changed skin weapon_ is 7 chars
-	}
-}
-
-
-void SkinChanger::ForceWeaponUpdate(CBaseCombatWeapon* pWeapon) {
-	pWeapon->PostDataUpdate(DATA_UPDATE_CREATED);
-	pWeapon->OnDataChanged(DATA_UPDATE_CREATED);
 }

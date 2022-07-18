@@ -120,21 +120,22 @@ void EntityData::UpdateLocalPlayerData() {
     dLocalPlayerData.iTeam          = g_pLocalPlayer->GetTeam();
     dLocalPlayerData.iHealth        = g_pLocalPlayer->GetHealth();
     dLocalPlayerData.iArmor         = g_pLocalPlayer->GetArmor();
-
-    dLocalPlayerData.eHandle        = g_pLocalPlayer->GetRefEHandle();
-
+   
     dLocalPlayerData.vAimPunch      = g_pLocalPlayer->GetAimPunch();
 
     QAngle qViewAngles; g_pEngineClient->GetViewAngles(qViewAngles);
-    dLocalPlayerData.vViewAngles    = { qViewAngles.pitch, qViewAngles.yaw , 0 };
+    dLocalPlayerData.vViewAngles    = { qViewAngles.pitch, qViewAngles.yaw , 0 };    
 
-    player_info_t playerInfo; 
+    dLocalPlayerData.bAccessible    = true;
+}
+
+void EntityData::UpdateLocalPlayerDataOnce() {
+    dLocalPlayerData.eHandle        = g_pLocalPlayer->GetRefEHandle();
+
+    player_info_t playerInfo;
     if (g_pEngineClient->GetPlayerInfo(g_pLocalPlayer->Index(), &playerInfo)) {
         dLocalPlayerData.iUserID    = playerInfo.userId;
     }
-    
-
-    dLocalPlayerData.bAccessible    = true;
 }
 
 //Gets location of important bones in a player model

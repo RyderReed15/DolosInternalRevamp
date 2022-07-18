@@ -47,6 +47,8 @@ bool InitializeSDK() {
 
         g_pMouseEnable      = g_pCVar->FindVar("cl_mouseenable");
 
+        
+
         return true;
     }
     return false;

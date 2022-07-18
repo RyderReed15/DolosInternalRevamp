@@ -6,6 +6,7 @@
 #include "../SDK/SDK.h"
 #include "../Utils/Hash.h"
 #include "SkinChanger.h"
+#include "Radar.h"
 
 namespace Events {
 

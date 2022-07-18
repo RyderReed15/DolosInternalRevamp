@@ -146,7 +146,6 @@ void __fastcall hkFrameStageNotify(void* _this, void* edx, ClientFrameStage_t st
 	
 
 	if (stage == ClientFrameStage_t::FRAME_START) {
-		g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer());
 		EntityData::UpdateEntityData();
 	}
 	else if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START) {
@@ -230,8 +229,8 @@ HRESULT APIENTRY hkPresent(IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST R
 
 		if (g_pEngineClient->IsInGame()) {
 			ESP::Tick();
-			if(!Settings.Visuals.Overview.vTextures.size()) RadarESP::LoadRadar(g_pRender, g_pEngineClient->GetLevelNameShort());
-			else RadarESP::DrawRadar(g_pRender);
+			RadarESP::DrawRadar(g_pRender); 
+			
 		}
 
 		if (g_bMenuOpen) {
