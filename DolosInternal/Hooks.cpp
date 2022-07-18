@@ -7,6 +7,20 @@ VMTManager* vClient;
 VMTManager* vModelRender;
 VMTManager* vClientBase;
 VMTManager* vSurface;
+VMTManager* vEventManager;
+
+fnCreateMove            oCreateMove;
+fnDrawModelExecute      oDrawModelExecute;
+fnFrameStageNotify      oFrameStageNotify;
+fnFireEvent				oFireEvent;
+fnLockCursor            oLockCursor;
+
+fnBeginScene            oBeginScene;
+fnDrawIndexedPrimitive  oDrawIndexedPrimitive;
+fnPresent               oPresent;
+fnEndScene              oEndScene;
+fnReset                 oReset;
+
 
 
 bool InitializeHooks() {
@@ -26,6 +40,7 @@ bool InitializeHooks() {
 	vD3D					= new VMTManager((void***)g_pD3DDevice);
 	vModelRender			= new VMTManager((void***)g_pModelRender);
 	vSurface				= new VMTManager((void***)g_pSurface);
+	vEventManager			= new VMTManager((void***)g_pEventManager);
 	
 
 	oCreateMove				= (fnCreateMove)			vClient->HookFunction		(CREATE_MOVE_INDEX			, hkCreateMove);
@@ -33,6 +48,8 @@ bool InitializeHooks() {
 	oFrameStageNotify		= (fnFrameStageNotify)		vClientBase->HookFunction	(FRAME_STAGE_INDEX			, hkFrameStageNotify);
 
 	oDrawModelExecute		= (fnDrawModelExecute)		vModelRender->HookFunction	(DRAW_MODEL_EXECUTE_INDEX	, hkDrawModelExecute);
+
+	oFireEvent				= (fnFireEvent)				vEventManager->HookFunction	(FIRE_EVENT_INDEX			, hkFireEvent);
 
 	oLockCursor				= (fnLockCursor)			vSurface->HookFunction		(LOCK_CURSOR_INDEX			, hkLockCursor);
 
@@ -58,6 +75,8 @@ bool UninitializeHooks() {
 	
 	vModelRender->FreeFunction	(DRAW_MODEL_EXECUTE_INDEX);
 
+	vEventManager->FreeFunction (FIRE_EVENT_INDEX);
+
 	vSurface->FreeFunction		(LOCK_CURSOR_INDEX);
 
 	vD3D->FreeFunction			(BEGIN_SCENE_INDEX);
@@ -70,6 +89,7 @@ bool UninitializeHooks() {
 	delete vClientBase;
 	delete vD3D;
 	delete vModelRender;
+	delete vEventManager;
 	delete vSurface;
 	SetWindowLongPtrW(g_hValveWnd, GWLP_WNDPROC, oWndProc);
 	return true;
@@ -177,6 +197,13 @@ char __fastcall hkVerifyReturn(void* _this, void* edx, const char* szModuleName)
 	//((fnVerifyReturn)g_vDetours[0]->GetOriginal())(_this, edx, szModuleName); //Error for now
 	//hopefully can just reconstruct in the future or spoof return addresses
 	return 1;
+}
+
+bool __fastcall hkFireEvent(void* _this, void* edx, IGameEvent* pEvent) {
+	Events::HandleEvent(pEvent);
+	return oFireEvent(_this, edx, pEvent);
+	
+	
 }
 
 

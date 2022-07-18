@@ -20,7 +20,7 @@ bool InitializeLocalization(const char* szLanguage){
 		JsonObjectW* pStrings = pLang->GetJsonObject(L"Tokens");
 		if (pStrings) {
 			for (size_t i = 0; i < pStrings->m_vValues.size(); i++) {
-				mStrings[localeHash(string_cast(pStrings->m_vValues[i].m_szName))] = pStrings->m_vValues[i].m_szValue;
+				mStrings[const_hash(string_cast(pStrings->m_vValues[i].m_szName).c_str())] = pStrings->m_vValues[i].m_szValue;
 			}
 			delete pLang;
 			return true;
@@ -38,19 +38,19 @@ bool UpdateLocalization(const char* szLanguage) {
 
 std::wstring GetLocalizedStringW(const wchar_t* wszName) {
 	//If string starts with # add 1 to ptr to ignore
-	return mStrings[localeHash(string_cast(wszName + (wszName[0] == '#')))];
+	return mStrings[const_hash(string_cast(wszName + (wszName[0] == '#')).c_str())];
 }
 
 std::wstring GetLocalizedStringW(const char* szName) {
-	return mStrings[localeHash(szName + (szName[0] == '#'))];
+	return mStrings[const_hash(szName + (szName[0] == '#'))];
 }
 
 std::string GetLocalizedString(const wchar_t* wszName){
-	return string_cast(mStrings[localeHash(string_cast(wszName + (wszName[0] == '#')))]);
+	return string_cast(mStrings[const_hash(string_cast(wszName + (wszName[0] == '#')).c_str())]);
 }
 
 std::string GetLocalizedString(const char* szName) {
-	return string_cast(mStrings[localeHash(szName + (szName[0] == '#'))]);
+	return string_cast(mStrings[const_hash(szName + (szName[0] == '#'))]);
 }
 
 std::wstring wstring_cast(std::string szString){

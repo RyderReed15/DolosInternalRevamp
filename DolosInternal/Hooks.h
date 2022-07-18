@@ -18,12 +18,15 @@
 #include "Features/EnginePrediction.h"
 #include "Features/Triggerbot.h"
 #include "Features/Radar.h"
+#include "Features/EventListener.h"
 
 #define CREATE_MOVE_INDEX           24
 
 #define FRAME_STAGE_INDEX           37
 
 #define DRAW_MODEL_EXECUTE_INDEX    21
+
+#define FIRE_EVENT_INDEX            9
 
 #define LOCK_CURSOR_INDEX           67
 
@@ -34,12 +37,14 @@
 #define RESET_INDEX                 16
 
 
-inline HWND g_hValveWnd;
+inline HWND     g_hValveWnd;
+inline LONG_PTR oWndProc;
 
 typedef bool(__fastcall* fnCreateMove)              (void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd);
 typedef void(__thiscall* fnDrawModelExecute)        (void* _this, void* edx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, void* pCustomBoneToWorld);
 typedef void(__fastcall* fnFrameStageNotify)        (void* _this, void* edx, ClientFrameStage_t stage);
 typedef bool(__fastcall* fnVerifyReturn)            (void* _this, void* edx, const char* szModuleName);
+typedef bool(__fastcall* fnFireEvent)               (void* _this, void* edx, IGameEvent* pEvent);
 typedef void(__stdcall*  fnLockCursor)              (void);
 
 
@@ -48,19 +53,6 @@ typedef HRESULT(__stdcall* fnReset)                 (IDirect3DDevice9* pDevice, 
 typedef HRESULT(__stdcall* fnBeginScene)            (IDirect3DDevice9* pDevice);
 typedef HRESULT(__stdcall* fnPresent)               (IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST RECT* pDestRect, HWND hDestWindowOverride, CONST RGNDATA* pDirtyRegion);
 typedef HRESULT(__stdcall* fnDrawIndexedPrimitive)  (IDirect3DDevice9* pDevice, D3DPRIMITIVETYPE tPrimitiveType, int iBaseVertexIndex, int iMinVertexIndex, int iNumVertices, int iStartIndex, int iPrimCount);
-
-inline fnCreateMove             oCreateMove;
-inline fnDrawModelExecute       oDrawModelExecute;
-inline fnFrameStageNotify       oFrameStageNotify;
-inline fnLockCursor             oLockCursor;
-
-inline fnBeginScene             oBeginScene;
-inline fnDrawIndexedPrimitive   oDrawIndexedPrimitive;
-inline fnPresent                oPresent;
-inline fnEndScene               oEndScene;
-inline fnReset                  oReset;
-
-inline LONG_PTR                 oWndProc;
 
 bool InitializeHooks    (void);
 bool UninitializeHooks  (void);
@@ -71,8 +63,9 @@ LRESULT             hkWndProc                   (HWND hWnd, UINT uMsg, WPARAM wP
 void __fastcall     hkFrameStageNotify          (void* _this, void* edx, ClientFrameStage_t stage);
 void __fastcall     hkDrawModelExecute          (void* _this, void* edx, void* pCtx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, void* pCustomBoneToWorld);
 bool __fastcall     hkCreateMove                (void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd);
-void __stdcall      hkLockCursor                (void);
 char __fastcall     hkVerifyReturn              (void* _this, void* edx, const char* szModuleName);
+bool __fastcall     hkFireEvent                 (void* _this, void* edx, IGameEvent* pEvent);
+void __stdcall      hkLockCursor                (void);
 
 HRESULT APIENTRY    hkBeginScene                (IDirect3DDevice9* pDevice);
 HRESULT APIENTRY    hkDrawIndexedPrimitive      (IDirect3DDevice9* pDevice, D3DPRIMITIVETYPE tPrimitiveType, int iBaseVertexIndex, int iMinVertexIndex, int iNumVertices, int iStartIndex, int iPrimCount);

@@ -40,6 +40,7 @@ public:
     virtual bool        AddListener(IGameEventListener* listener, const char* name, bool bServerSide) = 0;
     virtual bool        FindListener(IGameEventListener* listener, const char* name) = 0;
     virtual int         RemoveListener(IGameEventListener* listener) = 0;
+    virtual bool        AddListenerGlobal(IGameEventListener* listener, bool bServerSide) = 0;
     virtual IGameEvent* CreateEvent(const char* name, bool bForce, unsigned int dwUnknown) = 0;
     virtual bool        FireEvent(IGameEvent* event, bool bDontBroadcast = false) = 0;
     virtual bool        FireEventClientSide(IGameEvent* event) = 0;

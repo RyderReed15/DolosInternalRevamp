@@ -23,6 +23,7 @@
     <ClCompile Include="Features\Aimbot.cpp" />
     <ClCompile Include="Features\EnginePrediction.cpp" />
     <ClCompile Include="Features\ESP.cpp" />
+    <ClCompile Include="Features\EventListener.cpp" />
     <ClCompile Include="Features\Misc.cpp" />
     <ClCompile Include="Features\Radar.cpp" />
     <ClCompile Include="Features\RecoilControl.cpp" />
@@ -65,6 +66,7 @@
     <ClInclude Include="Features\Chams.h" />
     <ClInclude Include="Features\EnginePrediction.h" />
     <ClInclude Include="Features\ESP.h" />
+    <ClInclude Include="Features\EventListener.h" />
     <ClInclude Include="Features\Misc.h" />
     <ClInclude Include="Features\Radar.h" />
     <ClInclude Include="Features\RecoilControl.h" />
@@ -135,6 +137,7 @@
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Utils\ConfigManager.h" />
     <ClInclude Include="Utils\EntityData.h" />
+    <ClInclude Include="Utils\Hash.h" />
     <ClInclude Include="Utils\HookManager.h" />
     <ClInclude Include="Utils\HotKeyManager.h" />
     <ClInclude Include="Utils\Macros.h" />

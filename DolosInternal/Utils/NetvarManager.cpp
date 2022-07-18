@@ -23,16 +23,16 @@ void GetNetvarPointer(RecvTable* pRecvTable, unsigned int pOffset) {
             GetNetvarPointer(pRecvProp->m_pDataTable, pRecvProp->m_Offset + pOffset);
         }
         // m_flNextRespawnWave & m_TeamRespawnWaveTimes have duplicates with different offsets and therefore might be a problem with this setup if they are needed
-        if (!mOffsets[hash(pRecvTable->m_pNetTableName)][hash(pRecvProp->m_pVarName)] && pRecvProp->m_Offset) {
+        if (!mOffsets[const_hash(pRecvTable->m_pNetTableName)][const_hash(pRecvProp->m_pVarName)] && pRecvProp->m_Offset) {
 
-            mOffsets[hash(pRecvTable->m_pNetTableName)][hash(pRecvProp->m_pVarName)] = reinterpret_cast<char*>(pRecvProp->m_Offset + pOffset);
+            mOffsets[const_hash(pRecvTable->m_pNetTableName)][const_hash(pRecvProp->m_pVarName)] = reinterpret_cast<char*>(pRecvProp->m_Offset + pOffset);
         }
     }
 }
 
 
 char* GetNetvar(const char* TableName, const char* VarName) {
-    return mOffsets[hash(TableName)][hash(VarName)];
+    return mOffsets[const_hash(TableName)][const_hash(VarName)];
 }
 
 void DumpNetvars(IClientClass* pClientClass, const char* szPath){
@@ -57,9 +57,9 @@ void DumpPointer(std::ostream& fOut, std::unordered_map<unsigned int, std::unord
 
             DumpPointer(fOut, pNetvars, pRecvProp->m_pDataTable, pRecvProp->m_Offset + pOffset);
         }
-        if (!(*pNetvars)[hash(pRecvTable->m_pNetTableName)][hash(pRecvProp->m_pVarName)] && pRecvProp->m_Offset) {
+        if (!(*pNetvars)[const_hash(pRecvTable->m_pNetTableName)][const_hash(pRecvProp->m_pVarName)] && pRecvProp->m_Offset) {
 
-            (*pNetvars)[hash(pRecvTable->m_pNetTableName)][hash(pRecvProp->m_pVarName)] = reinterpret_cast<char*>(pRecvProp->m_Offset + pOffset);
+            (*pNetvars)[const_hash(pRecvTable->m_pNetTableName)][const_hash(pRecvProp->m_pVarName)] = reinterpret_cast<char*>(pRecvProp->m_Offset + pOffset);
 
             char value[8]; sprintf_s(value, 8, "%03i", strtol(pRecvProp->m_pVarName, 0, 10)); // Eliminates 001, 002, 003 etc
             if(strcmp(pRecvProp->m_pVarName, value)) 

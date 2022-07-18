@@ -7,13 +7,13 @@
 #include <d3d9.h>
 #include <unordered_map>
 #include "Json--/JsonParserW.h"
+#include "../Utils/Hash.h"
 
 #define LANG_PATH    "\\csgo\\resource\\csgo_"
 
 
 
 inline std::unordered_map<unsigned int, std::wstring> mStrings;
-inline std::hash<std::string> localeHash;
 
 bool            InitializeLocalization  (const char* szLanguage = "english");
 bool            UpdateLocalization      (const char* szLanguage = "english");
