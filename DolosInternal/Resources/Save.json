@@ -63,7 +63,7 @@
 		"bhop": true
 	},
 	"skin_changer": {
-		"track_kills": false,
+		"track_kills": true,
 		"skins": [
 			{
 				"weapon_id": 7,
@@ -100,7 +100,7 @@
 				"new_index": 507,
 				"skin_id": 38,
 				"wear": 0.01,
-				"stattrak_kills": 20,
+				"stattrak_kills": 39,
 				"seed": 1,
 				"quality": 3,
 				"custom_name": ""
@@ -110,7 +110,7 @@
 				"new_index": 0,
 				"skin_id": 764,
 				"wear": 0,
-				"stattrak_kills": -1,
+				"stattrak_kills": 12,
 				"seed": 0,
 				"quality": 0,
 				"custom_name": "UwU"

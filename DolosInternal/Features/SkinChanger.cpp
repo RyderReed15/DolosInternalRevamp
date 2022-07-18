@@ -4,6 +4,7 @@ std::unordered_map<int, unsigned int> g_mSkinIndices;
 std::unordered_map<int, int> g_mNewModels;
 std::unordered_map<int, std::string> g_mModelNames;
 std::unordered_map<std::string, int> g_mWeapIds;
+std::unordered_map<int, std::string> g_mWeaps;
 
 unsigned int iLastSize = UINT_MAX;
 
@@ -63,24 +64,27 @@ void SkinChanger::OverrideSkin(CBaseCombatWeapon* pWeapon, SkinInfo* pSkinInfo) 
 	if (!pItemIdHigh) return;
 
 	if (!pSkinInfo->nItemDefIndex || pWeapon->GetWeaponId() == pSkinInfo->nItemDefIndex) {
+
+		*pItemIdHigh = -1;
 		//Update skin info
 		*pWeapon->EntityQuality()		= pSkinInfo->iQuality;
 		*pWeapon->FallbackPaintKit()	= pSkinInfo->iPaintKit;
 		*pWeapon->FallbackWear()		= pSkinInfo->flWear;
-		*pWeapon->FallbackStatTrak()	= pSkinInfo->iStatTrak;
 		*pWeapon->FallbackSeed()		= pSkinInfo->iSeed;
-
 
 		if (strcmp(pSkinInfo->szCustomName, "") && strcmp(pSkinInfo->szCustomName, pWeapon->CustomName()) != 0) {
 			strcpy_s(pWeapon->CustomName(), 32, pSkinInfo->szCustomName);
 		}
 
-		*pItemIdHigh = -1;
-
 		if (pSkinInfo->iStatTrak) {
+			if (*pWeapon->FallbackStatTrak() != pSkinInfo->iStatTrak) {
+				*pWeapon->FallbackStatTrak() = pSkinInfo->iStatTrak;
+				ForceWeaponUpdate(pWeapon); // Need to force update or change in stattrak will not show
+			}
 			player_info_s playerInfo;
-			g_pEngineClient->GetPlayerInfo(g_pEngineClient->GetLocalPlayer(), &playerInfo);
-			*(pWeapon->AccountID()) = playerInfo.xuid_low;
+			if (g_pEngineClient->GetPlayerInfo(g_pEngineClient->GetLocalPlayer(), &playerInfo)) {
+				*(pWeapon->AccountID()) = playerInfo.xuid_low;
+			}
 		}
 	}
 }
@@ -168,6 +172,7 @@ bool SkinChanger::InitializeModels(JsonObject* pItems) {
 				g_mModelNames[strtol(pItem->m_szName.c_str(), 0, 10)] = ParseModelName(pItem, pPrefabs);
 				g_mWeapNames[strtol(pItem->m_szName.c_str(), 0, 10)] = g_pLocalize->LocalizeStringSafeW(ParseItemName(pItem, pPrefabs).c_str());
 				g_mWeapIds[pItem->GetString("name")] = strtol(pItem->m_szName.c_str(), 0, 10);
+				g_mWeaps[strtol(pItem->m_szName.c_str(), 0, 10)] = pItem->GetString("name");
 
 			}
 		}
@@ -228,7 +233,6 @@ bool SkinChanger::InitializeSkins(JsonObject* pItems, std::string szPath) {
 				iStart = skinName.find('_', iStart) + 1;
 			}
 		}
-		g_mWeapIds.clear();
 		fCDN.close();
 		return true;
 	}
@@ -265,4 +269,49 @@ bool SkinChanger::InitializeSkinChanger() {
 	return false;
 
 	
+}
+
+void SkinChanger::UpdateStatTrak(IGameEvent* pEvent) {
+
+	if (g_pLocalPlayer == 0 || !Settings.SkinChanger.TrackKills) return;
+
+	EntityData::LocalPlayerData* pLocalPlayerData = EntityData::GetLocalPlayerData();
+
+	if (pEvent->GetInt("attacker") != pLocalPlayerData->iUserID || pEvent->GetInt("userid") == pLocalPlayerData->iUserID) return; // Player is killer and did not kill self
+
+	CBaseCombatWeapon* pWeapon = g_pLocalPlayer->GetWeapon();
+
+	if (!pWeapon) return;
+
+	int nItemIndex = pWeapon->GetWeaponId();
+
+	if (g_mSkinIndices.count(nItemIndex)) {
+		SkinInfo* pSkin = &Settings.SkinChanger.Skins[g_mSkinIndices[nItemIndex]];
+		if (pSkin->iStatTrak >= 0) {
+			pSkin->iStatTrak++;
+		}
+	}
+}
+
+void SkinChanger::OverrideKillIcon(IGameEvent* pEvent) {
+
+	if (g_pLocalPlayer == 0) return;
+
+	EntityData::LocalPlayerData* pLocalPlayerData = EntityData::GetLocalPlayerData();
+
+	if (pEvent->GetInt("attacker") != pLocalPlayerData->iUserID) return;
+
+	int nItemIndex = g_mWeapIds[std::string("weapon_") + pEvent->GetString("weapon")];
+
+	SkinInfo* pSkin = &Settings.SkinChanger.Skins[g_mSkinIndices[nItemIndex]];
+
+	if (pSkin->nItemDefIndex != nItemIndex) {
+		pEvent->SetString("weapon", g_mWeaps[pSkin->nItemDefIndex].c_str() + 7); // Set event data to match changed skin weapon_ is 7 chars
+	}
+}
+
+
+void SkinChanger::ForceWeaponUpdate(CBaseCombatWeapon* pWeapon) {
+	pWeapon->PostDataUpdate(DATA_UPDATE_CREATED);
+	pWeapon->OnDataChanged(DATA_UPDATE_CREATED);
 }

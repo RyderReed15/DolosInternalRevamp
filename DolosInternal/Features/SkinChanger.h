@@ -6,6 +6,7 @@
 #include "../SDK/SDK.h"
 #include "Json--/JsonParser.h"
 #include "../Utils/LocalizationManager.h"
+#include "../Utils/EntityData.h"
 
 #include <map>
 
@@ -41,6 +42,11 @@ namespace SkinChanger {
     bool InitializeSkins        (JsonObject* pItems, std::string szPath);
 
     bool InitializeSkinChanger  (void);
+
+    void UpdateStatTrak(IGameEvent* pEvent);
+    void OverrideKillIcon(IGameEvent* pEvent);
+
+    void ForceWeaponUpdate(CBaseCombatWeapon* pWeapon);
 
 
     inline std::map<int, std::map<int, std::wstring>> g_mWeapSkins;

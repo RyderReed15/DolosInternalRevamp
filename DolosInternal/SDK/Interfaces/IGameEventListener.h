@@ -8,13 +8,28 @@ class KeyValues;
 
 class IGameEvent {
 public:
-    virtual         ~IGameEvent();
-    virtual char*   GetName();
-    VFUNC(int           , GetInt    , 6 , (const char* szKeyName, int iDefaultValue = 0)            , (this, szKeyName, iDefaultValue));
-    VFUNC(float         , GetFloat  , 8 , (const char* szKeyName, float flDefaultValue = 0)         , (this, szKeyName, flDefaultValue));
-    VFUNC(const char*   , GetString , 9 , (const char* szKeyName, const char* szDefaultValue = "")  , (this, szKeyName, szDefaultValue));
-    VFUNC(int           , SetInt    , 13, (const char* szKeyName, int iValue)                       , (this, szKeyName, iValue));
-    VFUNC(float         , SetFloat  , 16, (const char* szKeyName, float flValue)                    , (this, szKeyName, flValue));
+    virtual                 ~IGameEvent (void);
+    virtual const char*     GetName     (void) const = 0;
+
+    virtual bool            IsReliable  (void) const = 0;
+    virtual bool            IsLocal     (void) const = 0;
+    virtual bool            IsEmpty     (const char* szKeyName = nullptr) = 0;
+
+    virtual bool            GetBool     (const char* szKeyName = nullptr, bool bDefaultValue = false) = 0;
+    virtual int             GetInt      (const char* szKeyName = nullptr, int iDefaultValue = 0) = 0;
+    virtual uint64_t        GetUint64   (const char* szKeyName = nullptr, unsigned long ulDefaultValue = 0) = 0;
+    virtual float           GetFloat    (const char* szKeyName = nullptr, float flDefaultValue = 0.0f) = 0;
+    virtual const char*     GetString   (const char* szKeyName = nullptr, const char* szDefaultValue = "") = 0;
+    virtual const wchar_t*  GetWString  (const char* szKeyName, const wchar_t* wszDefaultValue = L"") = 0;
+
+    virtual void            Unknown000  (void) = 0;
+
+    virtual void            SetBool     (const char* szKeyName, bool bValue) = 0;
+    virtual void            SetInt      (const char* szKeyName, int iValue) = 0;
+    virtual void            SetUint64   (const char* szKeyName, unsigned long ulValue) = 0;
+    virtual void            SetFloat    (const char* szKeyName, float flValue) = 0;
+    virtual void            SetString   (const char* szKeyName, const char* szValue) = 0;
+    virtual void            SetWString  (const char* szKeyName, const wchar_t* wszValue) = 0;
 
 };
 class IGameEventDescriptor {

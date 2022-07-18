@@ -5,6 +5,7 @@
 
 #include "../SDK/SDK.h"
 #include "../Utils/Hash.h"
+#include "SkinChanger.h"
 
 namespace Events {
 

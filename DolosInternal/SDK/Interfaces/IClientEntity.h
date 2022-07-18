@@ -83,11 +83,9 @@ public:
     VFUNC(float         , GetInaccuracy , 483, (), (this));
     VFUNC(CCSWeaponInfo*, GetWeaponData , 461, (), (this));
 
-    CBaseCombatWeapon* GetWeapon(void)
-    {
 
-        return reinterpret_cast<CBaseCombatWeapon*>(g_pClientEntityList->GetClientEntityFromHandle(GetActiveWeapon()));
-    }
+    VFUNC(CBaseCombatWeapon*, GetWeapon, 268, (), (this));
+
 
     bool SanityCheck() {
         return IsPlayer() && IsAlive() && !IsDormant() && !GetImmunity();

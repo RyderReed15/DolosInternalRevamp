@@ -59,6 +59,7 @@ namespace EntityData {
         int     iHealth;
         int     iArmor;
         int     iTeam;
+        int     iUserID;
 
         EHANDLE eHandle;
 

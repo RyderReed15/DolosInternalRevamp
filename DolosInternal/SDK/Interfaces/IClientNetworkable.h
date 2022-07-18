@@ -6,6 +6,16 @@
 class IClientClass;
 class IClientUnknown;
 
+
+enum DataUpdateType_t
+{
+    DATA_UPDATE_CREATED = 0,
+    DATA_UPDATE_ENTERED_PVS,
+    DATA_UPDATE_DATATABLE_CHANGED,
+    DATA_UPDATE_LEFT_PVS,
+    DATA_UPDATE_DESTROYED,
+};
+
 class IClientNetworkable
 {
 public:
@@ -14,9 +24,9 @@ public:
     virtual IClientClass*   GetClientClass(void) = 0;
     virtual void            NotifyShouldTransmit(void) = 0;
     virtual void            OnPreDataChanged(void) = 0;
-    virtual void            OnDataChanged(void) = 0;
+    virtual void            OnDataChanged(DataUpdateType_t tUpdateType) = 0;
     virtual void            PreDataUpdate(void) = 0;
-    virtual void            PostDataUpdate(void) = 0;
+    virtual void            PostDataUpdate(DataUpdateType_t tUpdateType) = 0;
     virtual void            OnDataUnchangedInPVS(void) = 0;
     virtual bool            IsDormant(void) = 0;
     virtual int             Index(void) const = 0;

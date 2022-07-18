@@ -101,9 +101,9 @@ void EntityData::UpdatePlayerData(CBaseEntity* pPlayer) {
     pPlayerData->iHealth    = pPlayer->GetHealth();
     pPlayerData->iArmor     = pPlayer->GetArmor();
 
-    player_info_t playerInfo; g_pEngineClient->GetPlayerInfo(pPlayer->Index(), &playerInfo);
+    player_info_t playerInfo; 
 
-    if (strcmp(pPlayerData->szName, playerInfo.szName) != 0) {
+    if (g_pEngineClient->GetPlayerInfo(pPlayer->Index(), &playerInfo) && strcmp(pPlayerData->szName, playerInfo.szName) != 0) {
         strcpy_s(pPlayerData->szName, 128, playerInfo.szName);
     }
     
@@ -127,6 +127,12 @@ void EntityData::UpdateLocalPlayerData() {
 
     QAngle qViewAngles; g_pEngineClient->GetViewAngles(qViewAngles);
     dLocalPlayerData.vViewAngles    = { qViewAngles.pitch, qViewAngles.yaw , 0 };
+
+    player_info_t playerInfo; 
+    if (g_pEngineClient->GetPlayerInfo(g_pLocalPlayer->Index(), &playerInfo)) {
+        dLocalPlayerData.iUserID    = playerInfo.userId;
+    }
+    
 
     dLocalPlayerData.bAccessible    = true;
 }
