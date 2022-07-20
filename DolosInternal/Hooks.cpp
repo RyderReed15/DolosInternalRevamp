@@ -201,10 +201,7 @@ char __fastcall hkVerifyReturn(void* _this, void* edx, const char* szModuleName)
 bool __fastcall hkFireEvent(void* _this, void* edx, IGameEvent* pEvent) {
 	Events::HandleEvent(pEvent);
 	return oFireEvent(_this, edx, pEvent);
-	
-	
 }
-
 
 HRESULT APIENTRY hkBeginScene(IDirect3DDevice9* pDevice) {
 
@@ -230,7 +227,7 @@ HRESULT APIENTRY hkPresent(IDirect3DDevice9* pDevice, RECT* pSourceRect, CONST R
 		if (g_pEngineClient->IsInGame()) {
 			ESP::Tick();
 			RadarESP::DrawRadar(g_pRender); 
-			
+			Aimbot::DrawFOV();
 		}
 
 		if (g_bMenuOpen) {

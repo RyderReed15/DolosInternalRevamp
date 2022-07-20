@@ -223,9 +223,6 @@ bool EntityData::WorldToScreen(Vector2D& vScreen, Vector vPos) {
 //Convertes world coordinates to screen space using matrix multiplication
 bool EntityData::WorldToScreen(Vector2D& vScreen, Vector vPos, VMatrix vMatrix) {
 
-    int iScreenWidth, iScreenHeight;
-    g_pEngineClient->GetScreenSize(iScreenWidth, iScreenHeight);
-
     Vector4D vClipCoords;
     //Matrix multiplication
     vClipCoords.x = vPos.x * vMatrix[0][0] + vPos.y * vMatrix[0][1] + vPos.z * vMatrix[0][2] + vMatrix[0][3];
@@ -238,8 +235,8 @@ bool EntityData::WorldToScreen(Vector2D& vScreen, Vector vPos, VMatrix vMatrix) 
     Vector NDC;
     NDC.x = vClipCoords.x / vClipCoords.w;
     NDC.y = vClipCoords.y / vClipCoords.w;
-    vScreen.x = (iScreenWidth / 2.f) + (NDC.x * iScreenWidth / 2.f);
-    vScreen.y = (iScreenHeight / 2.f) - (NDC.y * iScreenHeight / 2.f);
+    vScreen.x = (g_vScreenSize.x / 2.f) + (NDC.x * g_vScreenSize.x / 2.f);
+    vScreen.y = (g_vScreenSize.y / 2.f) - (NDC.y * g_vScreenSize.y / 2.f);
 
     return true;
 

@@ -47,7 +47,7 @@ bool InitializeSDK() {
 
         g_pMouseEnable      = g_pCVar->FindVar("cl_mouseenable");
 
-        
+        int X, Y = 0; g_pEngineClient->GetScreenSize(X, Y); g_vScreenSize = { (float)X, (float)Y };
 
         return true;
     }

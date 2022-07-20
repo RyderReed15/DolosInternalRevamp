@@ -9,21 +9,21 @@
 		"target_all": true,
 		"overaim": false,
 		"overaim_factor": 1,
-		"curve": false,
+		"curve": true,
 		"range_dec_multiplier": 1,
 		"time_to_aim": 0.5,
-		"wait_time": 1,
+		"wait_time": 0.1,
 		"antilock_factor": 0.5,
 		"targets": [
 			{
-				"fov": 10,
+				"fov": 2,
 				"bone": 8,
 				"name": "Head",
 				"enabled": true
 			},
 			{
-				"fov": 1.998602,
-				"bone": -1,
+				"fov": 0.83,
+				"bone": 6,
 				"name": "Chest",
 				"enabled": true
 			}
@@ -110,7 +110,7 @@
 				"new_index": 0,
 				"skin_id": 764,
 				"wear": 0,
-				"stattrak_kills": 19,
+				"stattrak_kills": 23,
 				"seed": 0,
 				"quality": 0,
 				"custom_name": "UwU"

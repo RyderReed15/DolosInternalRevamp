@@ -77,6 +77,8 @@ inline IDirect3DDevice9*            g_pD3DDevice;
 
 inline IConVar*                     g_pMouseEnable;
 
+inline Vector2D                     g_vScreenSize;
+
 
 typedef void* (__cdecl* fnCreateInterface)(const char* szName, int* pReturnCode);
 

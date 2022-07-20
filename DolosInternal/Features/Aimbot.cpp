@@ -1,5 +1,6 @@
 #include "Aimbot.h"
 
+Aimbot::ClosestTarget vClosestTarget;
 
 bool Aimbot::Tick(CUserCmd* pCmd) {
 
@@ -45,6 +46,7 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vViewAngles, Vector v
     Vector vClosest; vClosest.Invalidate();
     float flClosest = INFINITY;
     IClientEntity* pNewTarget = nullptr;
+    vClosestTarget.flFOV = 0;
 
     if (pTarget && pTarget->SanityCheck() && pTarget->GetCollideable()) {
   
@@ -62,18 +64,18 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vViewAngles, Vector v
 
                 float flRotateDistance = vRotateAngle.AngularDistance(vViewAngles);
 
-                if (flRotateDistance <= FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist)) {
+                if (flRotateDistance < flClosest) {
+                    EntityData::WorldToScreen(vClosestTarget.vTarget, vEnemyPos);
+                    vClosestTarget.flFOV = FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist);
 
-                    float flWeight = WeightFormula(Settings.Aimbot.Targets[j].FOV, flDist, flRotateDistance);
+                    flClosest = flRotateDistance;
 
-                    if (flWeight < flClosest) {
-                        flClosest = flWeight;
+                    if (flRotateDistance <= FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist)) {
                         vClosest = vRotateAngle;
                     }
                 }
             }
         }
-        
     }
     if (vClosest.IsValid()) {
         return vClosest;
@@ -104,16 +106,17 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vViewAngles, Vector v
 
                     float flRotateDistance = vRotateAngle.AngularDistance(vViewAngles); //Degrees to rotate to target
 
-                    if (flRotateDistance <= FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist)) {
+                    if (flRotateDistance < flClosest) {
+                        EntityData::WorldToScreen(vClosestTarget.vTarget, vEnemyPos);
+                        vClosestTarget.flFOV = FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist);
+                        
+                        flClosest = flRotateDistance;
 
-                        float flWeight = WeightFormula(Settings.Aimbot.Targets[j].FOV, flDist, flRotateDistance);
-
-                        if (flWeight < flClosest) {
-                            flClosest = flWeight;
+                        if (flRotateDistance <= FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist)) {
                             vClosest = vRotateAngle;
                             pNewTarget = pEntity;
                         }
-                    }  
+                    }
                 }
             } 
         }
@@ -179,14 +182,25 @@ Vector Aimbot::GetNewAngles(Vector vViewAngles, Vector vTargetAngles, int iTick)
     
 }
 
-//Weight distance to player and angular distance
-float Aimbot::WeightFormula(float flFOV, float flDistance, float flRotateDistance){
-    return flRotateDistance + (flFOV / (Settings.Aimbot.RangeFactor * DISTANCE_WEIGHT / flDistance));
+void Aimbot::DrawFOV() {
+
+
+    if (vClosestTarget.flFOV <= 0) return;
+
+    //ScreenFOV = tanf(half fov) * screenx / screeny / (4 / 3)
+    //radius = tanf(closest) / screenFov * screenX / 2
+    //Simplifies to tanf(closest) * screenY * .6666f for 90 degrees - default csgo FOV
+    //https://www.unknowncheats.me/forum/counterstrike-global-offensive/129068-draw-aimbot-fov.html
+    float flScreenFOVX = 1 / g_vScreenSize.y / .6666f;
+
+    g_pRender->Begin(BUFFER_TYPE::BUFFER_LINE);
+    g_pRender->DrawCircleOutline({ vClosestTarget.vTarget.x, vClosestTarget.vTarget.y }, tanf(vClosestTarget.flFOV * DEG_TO_RAD) / flScreenFOVX , 50, RED);
+    g_pRender->End(BUFFER_TYPE::BUFFER_LINE);
 }
 
 //Decrease FOV with range
 float Aimbot::FOVFormula(float flFOV, float flDistance){
-    return flFOV / (1.f + Settings.Aimbot.RangeFactor * flDistance / DISTANCE_REDUCTION_FACTOR);
+    return flFOV / (flDistance / DISTANCE_REDUCTION_FACTOR);
 }
 
 // Calculates the angle required to aim at the destination from the start
@@ -201,5 +215,5 @@ Vector Aimbot::CalculateAngle(Vector vStart, Vector vDest) {
 
     if (vDelta.x >= 0.0f)
         vAngles.y += 180.0f;
-    return vAngles;
+    return vAngles.ToAngles();
 }

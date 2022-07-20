@@ -12,13 +12,17 @@
 
 #define OVERAIM_REDUCTION_FACTOR    30
 #define DISTANCE_REDUCTION_FACTOR   512
-#define DISTANCE_WEIGHT             3584
 #define AIM_CURVE_AMOUNT            0.15f
 
 #define MAX_DEG_PER_TICK            35
 
 
 namespace Aimbot {
+
+    struct ClosestTarget {
+        Vector2D vTarget;
+        float flFOV;
+    };
 
     bool   Tick                 (CUserCmd* pCmd);
 
@@ -27,9 +31,8 @@ namespace Aimbot {
     Vector CalculateOveraim     (Vector vViewAngles, Vector vTargetAngles, int iTick);
     Vector GetNewAngles         (Vector vViewAngles, Vector vTargetAngles, int iTicks);
 
+    void DrawFOV();
 
-
-    float   WeightFormula       (float flFOV, float flDistance, float flRotateDistance);
     float   FOVFormula          (float flFOV, float flDistance);
     Vector  CalculateAngle      (Vector vStart, Vector vDest);
 
