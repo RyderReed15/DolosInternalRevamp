@@ -8,11 +8,13 @@ VMTManager* vModelRender;
 VMTManager* vClientBase;
 VMTManager* vSurface;
 VMTManager* vEventManager;
+VMTManager* vEngineClient;
 
 fnCreateMove            oCreateMove;
 fnDrawModelExecute      oDrawModelExecute;
 fnFrameStageNotify      oFrameStageNotify;
 fnFireEvent				oFireEvent;
+fnClientCmd				oClientCmd;
 fnLockCursor            oLockCursor;
 
 fnBeginScene            oBeginScene;
@@ -41,6 +43,7 @@ bool InitializeHooks() {
 	vModelRender			= new VMTManager((void***)g_pModelRender);
 	vSurface				= new VMTManager((void***)g_pSurface);
 	vEventManager			= new VMTManager((void***)g_pEventManager);
+	vEngineClient			= new VMTManager((void***)g_pEngineClient);
 	
 
 	oCreateMove				= (fnCreateMove)			vClient->HookFunction		(CREATE_MOVE_INDEX			, hkCreateMove);
@@ -48,8 +51,11 @@ bool InitializeHooks() {
 	oFrameStageNotify		= (fnFrameStageNotify)		vClientBase->HookFunction	(FRAME_STAGE_INDEX			, hkFrameStageNotify);
 
 	oDrawModelExecute		= (fnDrawModelExecute)		vModelRender->HookFunction	(DRAW_MODEL_EXECUTE_INDEX	, hkDrawModelExecute);
-
+	
 	oFireEvent				= (fnFireEvent)				vEventManager->HookFunction	(FIRE_EVENT_INDEX			, hkFireEvent);
+	
+	oClientCmd				= (fnClientCmd)				vEngineClient->HookFunction	(CLIENT_CMD_INDEX			, hkClientCmd);
+
 
 	oLockCursor				= (fnLockCursor)			vSurface->HookFunction		(LOCK_CURSOR_INDEX			, hkLockCursor);
 
@@ -77,6 +83,8 @@ bool UninitializeHooks() {
 
 	vEventManager->FreeFunction (FIRE_EVENT_INDEX);
 
+	vEngineClient->FreeFunction (CLIENT_CMD_INDEX);
+
 	vSurface->FreeFunction		(LOCK_CURSOR_INDEX);
 
 	vD3D->FreeFunction			(BEGIN_SCENE_INDEX);
@@ -90,6 +98,7 @@ bool UninitializeHooks() {
 	delete vD3D;
 	delete vModelRender;
 	delete vEventManager;
+	delete vEngineClient;
 	delete vSurface;
 	SetWindowLongPtrW(g_hValveWnd, GWLP_WNDPROC, oWndProc);
 	return true;
@@ -202,6 +211,12 @@ bool __fastcall hkFireEvent(void* _this, void* edx, IGameEvent* pEvent) {
 	Events::HandleEvent(pEvent);
 	return oFireEvent(_this, edx, pEvent);
 }
+
+void __stdcall hkClientCmd(const char* szCmdString, bool bConsoleOrKeybind) {
+	oClientCmd(szCmdString, bConsoleOrKeybind);
+	return;
+}
+
 
 HRESULT APIENTRY hkBeginScene(IDirect3DDevice9* pDevice) {
 

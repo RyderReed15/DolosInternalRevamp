@@ -28,6 +28,8 @@
 
 #define FIRE_EVENT_INDEX            9
 
+#define CLIENT_CMD_INDEX            114
+
 #define LOCK_CURSOR_INDEX           67
 
 #define BEGIN_SCENE_INDEX           41
@@ -45,6 +47,7 @@ typedef void(__thiscall* fnDrawModelExecute)        (void* _this, void* edx, con
 typedef void(__fastcall* fnFrameStageNotify)        (void* _this, void* edx, ClientFrameStage_t stage);
 typedef bool(__fastcall* fnVerifyReturn)            (void* _this, void* edx, const char* szModuleName);
 typedef bool(__fastcall* fnFireEvent)               (void* _this, void* edx, IGameEvent* pEvent);
+typedef void(__stdcall * fnClientCmd)               (const char* szCmdString, bool bConsoleOrKeybind);
 typedef void(__stdcall*  fnLockCursor)              (void);
 
 
@@ -65,6 +68,7 @@ void __fastcall     hkDrawModelExecute          (void* _this, void* edx, void* p
 bool __fastcall     hkCreateMove                (void* _this, void* edx, float flInputSampleTime, CUserCmd* pCmd);
 char __fastcall     hkVerifyReturn              (void* _this, void* edx, const char* szModuleName);
 bool __fastcall     hkFireEvent                 (void* _this, void* edx, IGameEvent* pEvent);
+void __stdcall      hkClientCmd                 (const char* szCmdString, bool bConsoleOrKeybind);
 void __stdcall      hkLockCursor                (void);
 
 HRESULT APIENTRY    hkBeginScene                (IDirect3DDevice9* pDevice);

@@ -60,6 +60,7 @@ namespace EntityData {
         int     iArmor;
         int     iTeam;
         int     iUserID;
+        int     nIndex;
 
         EHANDLE eHandle;
 
@@ -90,6 +91,8 @@ namespace EntityData {
     WeaponData*         GetWeaponData           (const int nIndex);
     WeaponData*         GetWeaponData           (CBaseEntity* pWeapon);
     std::unordered_map<int, WeaponData>* GetAllWeaponData(void);
+
+    void                UpdateLocalPlayer       (void);
 
 
 }

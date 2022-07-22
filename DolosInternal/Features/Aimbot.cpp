@@ -1,6 +1,10 @@
 #include "Aimbot.h"
 
-Aimbot::ClosestTarget vClosestTarget;
+Aimbot::ClosestTarget   vClosestTarget;
+Vector                  vLastAngles;
+int                     iTargetIndex = -1;
+int                     iStartTick = 0;
+Vector                  vOveraim;
 
 bool Aimbot::Tick(CUserCmd* pCmd) {
 
@@ -11,6 +15,8 @@ bool Aimbot::Tick(CUserCmd* pCmd) {
         Vector vAimPunch = pLocalPlayerData->vAimPunch;
         Vector vViewAngles = pLocalPlayerData->vViewAngles;
 
+        if (!vLastAngles.IsValid()) vLastAngles = vViewAngles;
+
         if (Settings.Aimbot.Active) {
             
             Vector vPlayerPos = g_pLocalPlayer->GetEyePos();
@@ -19,22 +25,40 @@ bool Aimbot::Tick(CUserCmd* pCmd) {
 
             if (vTarget.IsValid()) {
 
-                QAngle qNewAngles = GetNewAngles(vViewAngles, vTarget, pCmd->iTickCount);
-
                 if (!Settings.Aimbot.Silent) {
+                    QAngle qNewAngles = GetNewAngles(vViewAngles, vTarget, pCmd->iTickCount);
+
                     RecoilControl::UpdateOldPunch(vAimPunch);
                     g_pEngineClient->SetViewAngles(qNewAngles);
+
+                    pCmd->qViewAngles = qNewAngles;
                 }
                 else {
+                    QAngle qNewAngles = GetNewAngles(vLastAngles, vTarget, pCmd->iTickCount);
+
                     QAngle qRecoil = RecoilControl::RecoilControl(vViewAngles, vAimPunch, false);
                     g_pEngineClient->SetViewAngles(qRecoil); //Using engine set angles moves the players screen as well, pCmd only moves server view
+
+                    pCmd->qViewAngles = qNewAngles;
+                    vLastAngles = { qNewAngles.pitch, qNewAngles.yaw, 0 };
+                    
                 }
-                pCmd->qViewAngles = qNewAngles;
+               
                 return !Settings.Aimbot.Silent;
             }
         }
-        QAngle qNewAngles = RecoilControl::RecoilControl(vViewAngles, vAimPunch, false);
-        pCmd->qViewAngles = qNewAngles;    
+        if (Settings.Aimbot.Silent) {
+            vLastAngles = GetNewAngles(vLastAngles, vViewAngles, pCmd->iTickCount);
+            QAngle qNewAngles = RecoilControl::RecoilControl(vLastAngles, vAimPunch, false);
+            pCmd->qViewAngles = qNewAngles;
+            vLastAngles = { qNewAngles.pitch, qNewAngles.yaw, 0 };
+            return false;
+        }
+        else {
+            QAngle qNewAngles = RecoilControl::RecoilControl(vViewAngles, vAimPunch, false);
+            pCmd->qViewAngles = qNewAngles;
+            return true;
+        } 
         
     }
     return true;
@@ -45,33 +69,38 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vViewAngles, Vector v
 
     Vector vClosest; vClosest.Invalidate();
     float flClosest = INFINITY;
-    IClientEntity* pNewTarget = nullptr;
+    int iNewTargetIndex = -1;
     vClosestTarget.flFOV = 0;
 
-    if (pTarget && pTarget->SanityCheck() && pTarget->GetCollideable()) {
-  
-        for (size_t j = 0; j < Settings.Aimbot.Targets.size(); j++) {
-            if (!Settings.Aimbot.Targets[j].Enabled) continue;
+    std::unordered_map<int, EntityData::PlayerData>* pPlayerData = EntityData::GetAllPlayerData();
 
-            Vector vEnemyPos = pTarget->GetBonePos(Settings.Aimbot.Targets[j].Bone);
+    if (pPlayerData->count(iTargetIndex) && pPlayerData->at(iTargetIndex).bAccessible) {
 
-            if (Trace(g_pEngineTrace, g_pLocalPlayer, pTarget, vPlayerPos, vEnemyPos)) {
-                float flDist = vPlayerPos.Distance(vEnemyPos);
+        IClientEntity* pEntity = g_pClientEntityList->GetClientEntity(iTargetIndex);
+        if (pEntity) {
+            for (size_t j = 0; j < Settings.Aimbot.Targets.size(); j++) {
+                if (!Settings.Aimbot.Targets[j].Enabled) continue;
 
-                Vector vRotateAngle = CalculateAngle(vPlayerPos, vEnemyPos);
+                Vector vEnemyPos = pEntity->GetBonePos(Settings.Aimbot.Targets[j].Bone);
 
-                vRotateAngle = RecoilControl::RecoilControl(vRotateAngle, vAimPunch, true);
+                if (Trace(g_pEngineTrace, g_pLocalPlayer, pEntity, vPlayerPos, vEnemyPos)) {
+                    float flDist = vPlayerPos.Distance(vEnemyPos);
 
-                float flRotateDistance = vRotateAngle.AngularDistance(vViewAngles);
+                    Vector vRotateAngle = CalculateAngle(vPlayerPos, vEnemyPos);
 
-                if (flRotateDistance < flClosest) {
-                    EntityData::WorldToScreen(vClosestTarget.vTarget, vEnemyPos);
-                    vClosestTarget.flFOV = FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist);
+                    vRotateAngle = RecoilControl::RecoilControl(vRotateAngle, vAimPunch, true);
 
-                    flClosest = flRotateDistance;
+                    float flRotateDistance = vRotateAngle.AngularDistance(vViewAngles);
 
-                    if (flRotateDistance <= FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist)) {
-                        vClosest = vRotateAngle;
+                    if (flRotateDistance < flClosest) {
+                        EntityData::WorldToScreen(vClosestTarget.vTarget, vEnemyPos);
+                        vClosestTarget.flFOV = FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist);
+
+                        flClosest = flRotateDistance;
+
+                        if (flRotateDistance <= FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist)) {
+                            vClosest = vRotateAngle;
+                        }
                     }
                 }
             }
@@ -82,7 +111,7 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vViewAngles, Vector v
     }
 
     EntityData::LocalPlayerData* pLocalPlayerData = EntityData::GetLocalPlayerData();
-    std::unordered_map<int, EntityData::PlayerData>* pPlayerData = EntityData::GetAllPlayerData();
+    
 
     //Loop through all possible targets and find best suited one if any
     for (std::unordered_map<int, EntityData::PlayerData>::iterator it = pPlayerData->begin(); it != pPlayerData->end(); it++) {
@@ -114,18 +143,18 @@ Vector Aimbot::FindClosestTarget(Vector vPlayerPos, Vector vViewAngles, Vector v
 
                         if (flRotateDistance <= FOVFormula(Settings.Aimbot.Targets[j].FOV, flDist)) {
                             vClosest = vRotateAngle;
-                            pNewTarget = pEntity;
+                            iNewTargetIndex = it->first;
                         }
                     }
                 }
             } 
         }
     }
-    if (pNewTarget != pTarget) {
+    if (iNewTargetIndex != iTargetIndex) {
         // New target found when there was a prevoius target, ignore case if already a wait time
-        if (pTarget != nullptr && pNewTarget != nullptr && iStartTick <= iTickCount) iStartTick = iTickCount + static_cast<int>(.5f + Settings.Aimbot.WaitTime / g_pGlobalVars->interval_per_tick);
+        if (iNewTargetIndex != -1 && iTargetIndex != -1 && iStartTick <= iTickCount) iStartTick = iTickCount + static_cast<int>(.5f + Settings.Aimbot.WaitTime / g_pGlobalVars->interval_per_tick);
         else if (iStartTick <= iTickCount) iStartTick = iTickCount; // No wait time needed.
-        pTarget = pNewTarget;
+        iTargetIndex = iNewTargetIndex;
         vOveraim.Invalidate();
 
     }

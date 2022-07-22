@@ -105,7 +105,6 @@ bool InitializeGUI(HMODULE hMod) {
 }
 
 bool UninitializeGUI() {
-	g_pInput->EnableInput(true);
 
 	delete pDefaultTarget;
 	delete pDefaultSkin;

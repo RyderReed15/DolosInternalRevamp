@@ -82,6 +82,8 @@ bool ExitCheat() {
 	UninitializeHooks(); //Hook are auto deleted when game is closed so no need 
 
 	UninitializeCheat();
+
+	g_pInput->EnableInput(true);
 	
 	//This will close main exe if not called from thread created from this dll
 	
@@ -131,9 +133,12 @@ LRESULT hkInitWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 }
 
 bool InitializeFeatures(void) {
-	g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer());
-	EntityData::UpdateLocalPlayerDataOnce();
-	RadarESP::LoadRadar(g_pRender, g_pEngineClient->GetLevelNameShort());
+	if (g_pEngineClient->IsInGame()) {
 
+		EntityData::UpdateLocalPlayer();
+		
+		RadarESP::LoadRadar(g_pRender, g_pEngineClient->GetLevelNameShort());
+			
+	}
 	return true;
 }

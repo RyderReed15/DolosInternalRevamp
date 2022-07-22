@@ -63,7 +63,7 @@ void SkinChanger::OverrideSkin(CBaseCombatWeapon* pWeapon, SkinInfo* pSkinInfo) 
 	int* pItemIdHigh = pWeapon->ItemIDHigh();
 	if (!pItemIdHigh) return;
 
-	if (!pSkinInfo->nItemDefIndex || pWeapon->GetWeaponId() == pSkinInfo->nItemDefIndex || *pWeapon->FallbackPaintKit() != pSkinInfo->iPaintKit) {
+	if (!pSkinInfo->nItemDefIndex || pWeapon->GetWeaponId() == pSkinInfo->nItemDefIndex || *pWeapon->FallbackPaintKit() != pSkinInfo->iPaintKit || *pItemIdHigh != -1) {
 
 		*pItemIdHigh = -1;
 		//Update skin info

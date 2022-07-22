@@ -36,9 +36,7 @@ namespace Aimbot {
     float   FOVFormula          (float flFOV, float flDistance);
     Vector  CalculateAngle      (Vector vStart, Vector vDest);
 
-    inline IClientEntity*       pTarget     = nullptr;
-    inline int                  iStartTick  = 0;
-    inline Vector               vOveraim;
+    
 
     
 }

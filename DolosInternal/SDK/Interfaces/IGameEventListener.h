@@ -4,7 +4,7 @@
 #define GAME_EVENT_LISTENER_H
 #include "../../Utils/Macros.h"
 #include "../Math/UtlVector.h"
-class KeyValues;
+typedef long KeyValues;
 
 class IGameEvent {
 public:

@@ -15,6 +15,12 @@ void EntityData::UpdateEntityData() {
 
         CBaseEntity* pEntity = g_pClientEntityList->GetClientEntity(i);
 
+        if (i == dLocalPlayerData.nIndex && g_pLocalPlayer != pEntity) {
+            g_pLocalPlayer = pEntity;
+            UpdateLocalPlayerDataOnce();
+            continue;
+        }
+
         if (!pEntity || !(pEntity->IsWeapon() || pEntity->IsPlayer())) continue;
 
         if (pEntity->IsWeapon()) {
@@ -115,6 +121,7 @@ void EntityData::UpdatePlayerData(CBaseEntity* pPlayer) {
 
 void EntityData::UpdateLocalPlayerData() {
 
+
     dLocalPlayerData.vPosition      = g_pLocalPlayer->GetOrigin();
 
     dLocalPlayerData.iTeam          = g_pLocalPlayer->GetTeam();
@@ -131,7 +138,7 @@ void EntityData::UpdateLocalPlayerData() {
 
 void EntityData::UpdateLocalPlayerDataOnce() {
     dLocalPlayerData.eHandle        = g_pLocalPlayer->GetRefEHandle();
-
+    dLocalPlayerData.nIndex         = g_pLocalPlayer->Index();
     player_info_t playerInfo;
     if (g_pEngineClient->GetPlayerInfo(g_pLocalPlayer->Index(), &playerInfo)) {
         dLocalPlayerData.iUserID    = playerInfo.userId;
@@ -269,4 +276,16 @@ EntityData::WeaponData* EntityData::GetWeaponData(CBaseEntity* pPlayer) {
 
 std::unordered_map<int, EntityData::WeaponData>* EntityData::GetAllWeaponData() {
     return &mWeaponData;
+}
+
+void EntityData::UpdateLocalPlayer() {
+    g_pLocalPlayer = nullptr;
+    mWeaponData.clear();
+    mPlayerData.clear();
+    dLocalPlayerData.bAccessible = false;
+    g_pLocalPlayer = g_pClientEntityList->GetClientEntity(g_pEngineClient->GetLocalPlayer());
+    if (g_pLocalPlayer) {
+        UpdateLocalPlayerDataOnce();
+    }
+    
 }

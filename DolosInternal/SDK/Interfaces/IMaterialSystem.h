@@ -10,7 +10,7 @@
 
 class IAppSystem;
 
-class KeyValues;
+typedef long KeyValues;
 struct MaterialSystem_Config_t;
 struct MaterialSystemHWID_t;
 class IShader;
