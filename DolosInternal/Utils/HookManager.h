@@ -5,7 +5,6 @@
 
 #include <Windows.h>
 #include <winnt.h>
-#include <memoryapi.h>
 #include <iostream>
 
 #ifdef _WIN32

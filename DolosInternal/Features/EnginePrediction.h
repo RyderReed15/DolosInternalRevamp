@@ -5,6 +5,9 @@
 
 #include "../SDK/SDK.h"
 
+
+
+
 namespace EnginePrediction {
 
     int     Begin   (IClientEntity* pLocalPlayer, CUserCmd* pCmd);

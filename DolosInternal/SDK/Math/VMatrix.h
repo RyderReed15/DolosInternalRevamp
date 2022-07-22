@@ -5,7 +5,6 @@
 #include <limits>
 
 #include "Vector.h"
-#include "QAngle.h"
 
 struct cplane_t
 {

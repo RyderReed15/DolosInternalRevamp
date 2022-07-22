@@ -26,8 +26,6 @@ ElementEditor<SkinChanger::SkinInfo>* pSkinEditor = nullptr;
 bool InitializeGUI(HMODULE hMod) {
 
 	g_pInput->EnableInput(false);
-
-	g_Locale = _get_current_locale();
 	
 	g_pRender = new Render(g_pD3DDevice, hMod);
 	g_pGUIContainer = new GUIContainer({ 1920,1080 });

@@ -5,12 +5,16 @@
 
 #define MAX_GUI_ELEMENTS 512
 
-#include "Widgets/IGUIElement.h"
 #include "GUIEventHandler.h"
+#include "Widgets/IGUIElement.h"
 #include <vector>
+#include <d3d9.h>
 
 class GUIEventHandler;
 class IGUIElement;
+class Render;
+
+inline _locale_t        g_Locale;
 
 class GUIContainer {
 public:
@@ -36,6 +40,8 @@ private:
     POINT                       m_ptScreenSize;
     short**                     m_aMap;
     std::vector<IGUIElement*>   m_vElements;
+
+    
 
 };
 

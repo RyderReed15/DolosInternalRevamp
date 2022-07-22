@@ -3,8 +3,7 @@
 #define PATTERNSCANNER_H
 
 #include <Windows.h>
-#include <stdlib.h>
-#include <winnt.h>
+#include <iostream>
 #include <Psapi.h>
 
 char*   ResolveOffsets  (char* pAddress, unsigned int iOffsets[], unsigned int iOffsetsSize);

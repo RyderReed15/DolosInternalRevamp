@@ -3,7 +3,8 @@
 #ifndef MACROS_H
 #define MACROS_H
 
-#include "NetvarManager.h"
+
+char* GetNetvar(const char* szTableName, const char* szVarName);
 
 
 #define VFUNC( type, func, index, args, argscall) type func args noexcept \

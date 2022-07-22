@@ -1,7 +1,7 @@
 #include "NetvarManager.h"
 
 
-
+std::unordered_map<unsigned int, std::unordered_map<unsigned int, char*>> mOffsets;
 
 bool InitializeNetvars(IClientClass* pClientClass) {
     //Loop through all classes getting the pointer to the table

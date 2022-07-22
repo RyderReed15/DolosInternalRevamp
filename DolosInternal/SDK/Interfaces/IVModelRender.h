@@ -3,8 +3,6 @@
 #ifndef MODEL_RENDER_H
 #define MODEL_RENDER_H
 
-#include "../Studio.h"
-
 class IClientRenderable;
 struct Ray_t;
 

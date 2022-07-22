@@ -4,7 +4,6 @@
 #define STRING_MANAGER_H
 
 #include <Windows.h>
-#include <d3d9.h>
 #include <unordered_map>
 #include "Json--/JsonParserW.h"
 #include "../Utils/Hash.h"

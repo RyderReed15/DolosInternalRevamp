@@ -133,6 +133,9 @@ LRESULT hkInitWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 }
 
 bool InitializeFeatures(void) {
+	g_pMouseEnable = g_pCVar->FindVar("cl_mouseenable");
+
+	int X, Y = 0; g_pEngineClient->GetScreenSize(X, Y); g_vScreenSize = { (float)X, (float)Y };
 	if (g_pEngineClient->IsInGame()) {
 
 		EntityData::UpdateLocalPlayer();

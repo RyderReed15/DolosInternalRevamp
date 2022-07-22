@@ -3,6 +3,10 @@
 #ifndef ENTITY_DATA_H
 #define ENTITY_DATA_H
 
+
+#include <vector>
+#include <unordered_map>
+
 #include "../SDK/SDK.h"
 
 #define INCH_TO_METER       0.0254f

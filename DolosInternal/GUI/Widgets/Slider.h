@@ -3,11 +3,8 @@
 #ifndef GUI_SLIDER_H
 #define GUI_SLIDER_H
 
-#include "IGUIElement.h"
 #include "IValueElement.h"
 #include "TextBox.h"
-#include "../GUIEventHandler.h"
-#include "../GUI.h"
 
 
 class GUIEventHandler;

@@ -4,7 +4,6 @@
 #define GUI_BUTTON_H
 
 #include "IGUIElement.h"
-#include "../GUIEventHandler.h"
 #include <functional>
 
 class GUIEventHandler;

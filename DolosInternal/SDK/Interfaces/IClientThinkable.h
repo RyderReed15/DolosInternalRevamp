@@ -3,8 +3,7 @@
 #ifndef CLIENT_THINKABLE_H
 #define CLIENT_THINKABLE_H
 
-#include "IClientUnknown.h"
-
+class IClientUnknown;
 
 class IClientThinkable
 {

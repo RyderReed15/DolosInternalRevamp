@@ -1,11 +1,13 @@
 #pragma once
-#include "../Studio.h"
-#include "IMaterialSystem.h"
-#include "INetChannelInfo.h"
 
 #ifndef ENGINE_CLIENT_H
 #define ENGINE_CLIENT_H
 
+struct model_t;
+
+class IMaterial;
+class INetChannelInfo;
+class IMaterialSystem;
 
 class CPhysCollide;
 class IAchievementMgr;
@@ -21,6 +23,8 @@ class ISpatialQuery;
 class SurfInfo;
 class Frustrum_t;
 class AudioState_t;
+
+typedef long KeyValues;
 
 typedef struct player_info_s
 {

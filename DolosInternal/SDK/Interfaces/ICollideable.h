@@ -2,15 +2,14 @@
 #ifndef COLLIDEABLE_H
 #define COLLIDEABLE_H
 
-#include "IClientUnknown.h"
-#include "IEngineTrace.h"
+
 #include "../Math/Vector.h"
 #include "../Math/QAngle.h"
 #include "../Math/VMatrix.h"
-#include "../Studio.h"
 
-class SolidType_t;
+struct SolidType_t;
 class trace_t;
+struct Ray_t;
 class IClientUnknown;
 
 class ICollideable

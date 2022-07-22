@@ -3,11 +3,9 @@
 #ifndef FONT_MANAGER_H
 #define FONT_MANAGER_H
 
-#include <Windows.h>
 #include "../resource.h"
 #include "../SDK/SDK.h"
 #include <d3d9.h>
-#include <d3dx9.h>
 
 inline HANDLE       g_hAvenir;
 inline HANDLE       g_hWeapons;

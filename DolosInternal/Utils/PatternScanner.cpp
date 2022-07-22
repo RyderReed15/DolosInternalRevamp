@@ -1,5 +1,4 @@
 #include "PatternScanner.h"
-#include <iostream>
 
 
 

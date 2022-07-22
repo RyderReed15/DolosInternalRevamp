@@ -3,7 +3,6 @@
 #ifndef GUI_LIST_H
 #define GUI_LIST_H
 
-#include "IGUIElement.h"
 #include "IValueElement.h"
 
 template <class T> class ListElement;

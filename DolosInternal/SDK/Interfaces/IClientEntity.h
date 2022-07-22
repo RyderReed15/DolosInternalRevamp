@@ -13,14 +13,12 @@
 #include "IClientRenderable.h"
 #include "IClientUnknown.h"
 #include "IClientThinkable.h"
-#include "IClientEntityList.h"
+
+typedef unsigned long EHANDLE;
 
 class CBaseCombatWeapon;
 class CBaseEntity;
 class CCSWeaponInfo;
-class IClientEntityList;
-extern IClientEntityList* g_pClientEntityList;
-
 
 
 class IClientEntity : public IClientUnknown, public IClientRenderable, public IClientNetworkable, public IClientThinkable

@@ -3,13 +3,10 @@
 #define HOOKS_H
 
 #include "Utils/HookManager.h"
-#include "SDK/SDK.h"
 #include "GUI/GUI.h"
 #include "GUI/FontManager.h"
 #include "Utils/HotKeyManager.h"
 #include "Utils/EntityData.h"
-#include <d3d9.h>
-
 
 #include "Features/ESP.h"
 #include "Features/SkinChanger.h"
@@ -19,6 +16,10 @@
 #include "Features/Triggerbot.h"
 #include "Features/Radar.h"
 #include "Features/EventListener.h"
+
+#include "SDK/SDK.h"
+#include "SDK/Interfaces/IVModelRender.h"
+#include "SDK/Interfaces/ISurface.h"
 
 #define CREATE_MOVE_INDEX           24
 

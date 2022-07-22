@@ -5,17 +5,11 @@
 
 
 
-
 #include <unordered_map>
 #include <fstream>
 #include <iomanip>
-#include "../SDK/Interfaces/IBaseClientDLL.h"
 #include "Hash.h"
-
-inline std::unordered_map<unsigned int, std::unordered_map<unsigned int, char*>> mOffsets;
-
-class IClientClass;
-class RecvTable;
+#include "../SDK/Interfaces/IClientClass.h"
 
 
 bool    InitializeNetvars   (IClientClass* pClientClass);

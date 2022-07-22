@@ -1,11 +1,7 @@
 #include "HotKey.h"
 
-char ToUpper(char chKey) {
 
-    return chKey - DIFF_UPPER_LOWER * (chKey >= 'a' && chKey <= 'z');
-
-}
-
+char ToUpper(char chKey);
 
 HotKey::HotKey(const char* szName, int iHotKeyId, HotKeyStruct* pHotKeyInfo, D3DXVECTOR4 vBounds, float flContainerSize, D3DCOLOR cContainerColor, IGUIElement* pParent) : IGUIElement(vBounds, pParent){
     m_szName = szName;
@@ -139,4 +135,10 @@ std::string HotKey::MakeKey(char chKey) {
     case VK_RETURN:     return "ENTER"; 
     default:            return std::string(1, chKey);
     }
+}
+
+char ToUpper(char chKey) {
+
+    return chKey - DIFF_UPPER_LOWER * (chKey >= 'a' && chKey <= 'z');
+
 }

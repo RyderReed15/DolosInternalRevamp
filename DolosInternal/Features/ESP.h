@@ -2,11 +2,14 @@
 
 #ifndef ESP_H
 #define ESP_H
-#include "../SDK/SDK.h"
 #include "../Settings.h"
-#include "../Utils/LocalizationManager.h"
+#include "../GUI/FontManager.h"
 #include "../Utils/EntityData.h"
-#include "../GUI/GUI.h"
+#include "../GUI/Render.h"
+
+
+
+#include "../SDK/Math/Vector4D.h"
 
 #define NAME_PREFIX_LEN     1
 

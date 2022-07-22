@@ -3,7 +3,7 @@
 #ifndef GUI_CHECK_BOX
 #define GUI_CHECK_BOX
 
-#include "IGUIElement.h"
+
 #include "IValueElement.h"
 
 class CheckBox : public IValueElement {

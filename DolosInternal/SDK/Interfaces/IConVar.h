@@ -2,7 +2,9 @@
 
 #ifndef CONVAR_H
 #define CONVAR_H
+
 #include "../../Utils/Macros.h"
+
 class IConVar {
 public:
 

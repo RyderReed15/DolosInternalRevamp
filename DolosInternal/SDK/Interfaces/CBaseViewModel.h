@@ -4,8 +4,9 @@
 #define VIEW_MODEL_H
 
 #include "../../Utils/Macros.h"
-#include "CBaseCombatWeapon.h"
+#include "IClientEntity.h"
 
+typedef unsigned long EHANDLE;
 
 class CBaseViewModel : public CBaseEntity {
 public:

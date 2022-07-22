@@ -2,11 +2,13 @@
 
 #ifndef AIMBOT_H
 #define AIMBOT_H
-#include "../SDK/SDK.h"
+
 #include "../Settings.h"
-#include "../GUI/GUI.h"
 #include "RecoilControl.h"
 #include "../Utils/EntityData.h"
+#include "../GUI/Render.h"
+
+#include "../SDK/SDK.h"
 
 
 

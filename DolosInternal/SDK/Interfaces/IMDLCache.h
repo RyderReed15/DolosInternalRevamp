@@ -3,11 +3,17 @@
 #ifndef MDL_CACHE_H
 #define MDL_CACHE_H
 
-#include "../Studio.h"
 #include "IAppSystem.h"
-#include "IVModelInfoClient.h"
-#include "IEngineTrace.h"
 
+struct vcollide_t;
+
+typedef unsigned short MDLHandle_t;
+
+class studiohdr_t;
+struct studiohwdata_t;
+struct vcollide_t;
+struct virtualmodel_t;
+struct vertexFileHeader_t;
 
 enum MDLCacheDataType_t
 {

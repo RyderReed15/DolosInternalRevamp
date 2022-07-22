@@ -3,7 +3,7 @@
 #ifndef MOVE_HELPER_H
 #define MOVE_HELPER_H
 
-#include "IClientEntity.h"
+class IClientEntity;
 
 class IMoveHelper
 {

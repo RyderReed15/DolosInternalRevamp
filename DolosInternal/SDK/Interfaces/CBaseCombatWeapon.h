@@ -7,7 +7,7 @@
 
 #include "IClientEntity.h"
 
-
+typedef unsigned long EHANDLE;
 
 class CBaseAttributableItem : public CBaseEntity {
 public:

@@ -1,9 +1,6 @@
 #include "HookManager.h"
 
-#include <Windows.h>
-#include <stdlib.h>
-#include <winnt.h>
-#include <Psapi.h>
+
 
 VMTManager::VMTManager() {
 	m_iSize = 0;

@@ -15,7 +15,7 @@ public:
     {
         Init(X, Y, Z);
     }
-    QAngle(Vector V)
+    QAngle(const Vector& V)
     {
         Init(V.x, V.y, V.z);
     }

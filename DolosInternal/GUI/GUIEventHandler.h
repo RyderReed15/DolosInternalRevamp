@@ -3,11 +3,11 @@
 #ifndef GUI_EVENT_HANDLER_H
 #define GUI_EVENT_HANDLER_H
 
-#include "Widgets/IGUIElement.h"
-#include "GUIContainer.h"
 #include <queue>
 #include <functional>
-#include <map>
+#include <d3d9.h>
+#include "GUIContainer.h"
+#include "Widgets/IGUIElement.h"
 
 class GUIContainer;
 class IGUIElement;

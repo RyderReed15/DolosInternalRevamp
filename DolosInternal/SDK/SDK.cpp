@@ -1,5 +1,4 @@
 #include "SDK.h"
-#include <functional>
 
 bool InitializeSDK() {
 
@@ -46,10 +45,6 @@ bool InitializeSDK() {
         g_pD3DDevice                        = **(IDirect3DDevice9***)   (FindPattern(pShaderBase, "A1 ? ? ? ? 50 8B 08 FF 51 0C") + 1);
         //void * g_pGlowObjectManager         = *(void**)                 (FindPattern(pClientBase, "0F 11 05 ? ? ? ? 83 C8 01") + 3);
         //void * g_pClientState               = **(void***)               (FindPattern(pEngineBase, "A1 ? ? ? ? 8B 80 ? ? ? ? C3") + 1);
-
-        g_pMouseEnable      = g_pCVar->FindVar("cl_mouseenable");
-
-        int X, Y = 0; g_pEngineClient->GetScreenSize(X, Y); g_vScreenSize = { (float)X, (float)Y };
 
         return true;
     }

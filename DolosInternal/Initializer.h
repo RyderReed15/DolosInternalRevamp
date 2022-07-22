@@ -12,6 +12,8 @@
 #include "GUI/GUI.h"
 #include "Utils/ConfigManager.h"
 #include "Utils/LocalizationManager.h"
+#include "SDK/Interfaces/IConVar.h"
+#include "SDK/Interfaces/IVEngineClient.h"
 
 #define INIT_MESSAGE    0x9999
 #define EJECT_HOTKEY    0x1000

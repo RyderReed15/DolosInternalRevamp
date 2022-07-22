@@ -3,7 +3,6 @@
 #ifndef GUI_TEXT_BOX_H
 #define GUI_TEXT_BOX_H
 
-#include "IGUIElement.h"
 #include "IValueElement.h"
 
 class GUIEventHanlder;

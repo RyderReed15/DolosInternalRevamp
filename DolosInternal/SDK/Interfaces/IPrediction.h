@@ -3,11 +3,14 @@
 #ifndef PREDICTION_H
 #define PREDICTION_H
 
-#include "IClientEntity.h"
-#include "IMoveHelper.h"
-#include "IBaseClientDLL.h"
-
 #include "../../Utils/Macros.h"
+
+class IClientEntity;
+class CUserCmd;
+class IMoveHelper;
+class Vector;
+
+
 class CMoveData
 {
 public:

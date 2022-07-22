@@ -3,14 +3,11 @@
 #ifndef CLIENT_ENTITY_LIST_H
 #define CLIENT_ENTITY_LIST_H
 
-#include "IHandleEntity.h"
+typedef unsigned long EHANDLE;
 
 class IClientNetworkable;
-class IClientEntity;
 class IClientUnknown;
 class CBaseEntity;
-
-
 
 class IClientEntityList
 {

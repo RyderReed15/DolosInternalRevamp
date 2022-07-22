@@ -426,6 +426,9 @@
     <ClInclude Include="Utils\Hash.h">
       <Filter>Utils\Headers</Filter>
     </ClInclude>
+    <ClInclude Include="SDK\Interfaces\IClientClass.h">
+      <Filter>SDK\Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\TextureAtlas.png">

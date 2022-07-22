@@ -4,11 +4,14 @@
 #define RADAR_H
 
 #include "Json--/JsonParser.h"
-#include "../SDK/SDK.h"
-#include "../GUI/GUI.h"
-#include "../Utils/EntityData.h"
 #include "../GUI/Render.h"
+#include "../Utils/EntityData.h"
 #include "../Settings.h"
+
+
+
+#include "../SDK/Math/Vector.h"
+#include "../SDK/Interfaces/IConVar.h"
 
 #define RADAR_PATH    "\\csgo\\resource\\overviews\\"
 

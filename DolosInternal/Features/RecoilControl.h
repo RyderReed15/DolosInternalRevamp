@@ -3,9 +3,10 @@
 #ifndef RECOIL_CONTROL_H
 #define RECOIL_CONTROL_H
 
-#include "../SDK/SDK.h"
 #include "../Settings.h"
-#include "../GUI/GUI.h"
+
+
+#include "../SDK/Math/Vector.h"
 
 namespace RecoilControl {
 

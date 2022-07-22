@@ -3,8 +3,6 @@
 #ifndef SDK_H
 #define SDK_H
 
-
-#include <Windows.h>
 #include "../Utils/Macros.h"
 #include "../Utils/PatternScanner.h"
 #include <d3d9.h>
@@ -25,6 +23,7 @@
 #include "Interfaces/CGlobalVars.h"
 #include "Interfaces/IAppSystem.h"
 #include "Interfaces/IBaseClientDLL.h"
+#include "Interfaces/IClientClass.h"
 #include "Interfaces/IClientEntity.h"
 #include "Interfaces/IClientEntityList.h"
 #include "Interfaces/IClientMode.h"

@@ -3,9 +3,9 @@
 #ifndef MISC_H
 #define MISC_H
 
-
-#include "../SDK/SDK.h"
 #include "../Settings.h"
+
+#include "../SDK/Interfaces/IBaseClientDLL.h"
 
 namespace Misc {
     void Bhop(CUserCmd* pCmd, int iFlags);

@@ -37,7 +37,9 @@
 
 #define TRANSPARENT_GRAY    0x33333333
 
+class Render;
 
+inline Render* g_pRender;
 
 enum class BUFFER_TYPE {
     BUFFER_ALL,

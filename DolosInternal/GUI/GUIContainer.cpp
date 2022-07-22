@@ -2,7 +2,8 @@
 #include <iostream>
 
 GUIContainer::GUIContainer(POINT ptScreenSize) {
-   
+
+    g_Locale            = _get_current_locale();
     m_ptScreenSize      = ptScreenSize;
     m_pEventHandler     = new GUIEventHandler(this);
     InitializeMap();

@@ -19,7 +19,7 @@
 #include "Widgets/HotKey.h"
 #include "Widgets/Text.h"
 #include "Widgets/List.h"
-#include "../SDK/SDK.h"
+#include "../SDK/Interfaces/IInputSystem.h"
 #include "../Features/SkinChanger.h"
 
 #define COLUMN_WIDTH        300
@@ -29,9 +29,7 @@
 #define PANEL_HEIGHT        600
 
 inline GUIContainer*    g_pGUIContainer;
-inline Render*          g_pRender;
 inline bool             g_bMenuOpen = true;
-inline _locale_t        g_Locale;
 
 bool InitializeGUI      (HMODULE hMod);
 bool UninitializeGUI    ();

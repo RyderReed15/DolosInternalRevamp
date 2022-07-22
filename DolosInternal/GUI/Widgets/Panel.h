@@ -4,7 +4,6 @@
 #define GUI_PANEL_H
 
 #include "IGUIElement.h"
-#include "../GUIEventHandler.h"
 
 
 class GUIEventHandler;

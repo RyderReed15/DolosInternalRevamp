@@ -3,9 +3,10 @@
 #ifndef TRIGGERBOT_H
 #define TRIGGERBOT_H
 
-#include "../SDK/SDK.h"
+
 #include "../Settings.h"
-#include "RecoilControl.h"
+
+#include "../SDK/SDK.h"
 
 namespace Triggerbot {
 

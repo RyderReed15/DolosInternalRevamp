@@ -3,15 +3,17 @@
 #ifndef MODEL_INFO_H
 #define MODEL_INFO_H
 
-#include "../Studio.h"
+
+struct model_t;
+struct vcollide_t;
+struct virtualmodel_t;
 
 
 typedef unsigned short MDLHandle_t;
 class CPhysCollide;
 class CUtlBuffer;
-struct virtualmodel_t;
 class trace_t;
-struct vcollide_t;
+class studiohdr_t;
 class IMaterial;
 class IClientRenderable;
 
