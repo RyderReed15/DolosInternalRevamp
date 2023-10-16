@@ -1,2 +1,4 @@
 # DolosInternalRevamp
 Internal Cheat for CS:GO
+
+DEFUNCT SINCE RELEASE OF CS:GO 2 WITH NO PLANS TO UPDATE
